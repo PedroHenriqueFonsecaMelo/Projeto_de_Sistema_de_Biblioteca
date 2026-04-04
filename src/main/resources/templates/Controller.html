@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Controle de Usuários - Digital Curator</title>
+        <script
+            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Public_Sans:wght@300;400;500;600&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#d5e4f7",
+                    "tertiary": "#5d5a84",
+                    "background": "#f8f9fe",
+                    "primary": "#3a6287",
+                    "on-tertiary-fixed": "#323057",
+                    "surface-container-low": "#f1f3fa",
+                    "surface-bright": "#f8f9fe",
+                    "secondary-fixed-dim": "#c7d6e8",
+                    "on-secondary-fixed-variant": "#4f5d6d",
+                    "surface-tint": "#3a6287",
+                    "on-error": "#fff7f6",
+                    "on-primary-container": "#1d486c",
+                    "tertiary-fixed": "#d1ccfd",
+                    "on-tertiary-container": "#46436b",
+                    "on-tertiary": "#fcf7ff",
+                    "error-dim": "#67040d",
+                    "surface-container-highest": "#dee3ec",
+                    "outline": "#767b83",
+                    "primary-dim": "#2d567a",
+                    "on-secondary-fixed": "#33414f",
+                    "inverse-primary": "#abd3fd",
+                    "primary-container": "#abd3fd",
+                    "surface": "#f8f9fe",
+                    "on-primary": "#f7f9ff",
+                    "tertiary-fixed-dim": "#c3bfef",
+                    "on-primary-fixed-variant": "#285275",
+                    "secondary": "#526070",
+                    "error": "#a83836",
+                    "secondary-dim": "#465464",
+                    "on-secondary": "#f7f9ff",
+                    "outline-variant": "#adb2bb",
+                    "error-container": "#fa746f",
+                    "tertiary-dim": "#514f78",
+                    "surface-dim": "#d5dae3",
+                    "secondary-container": "#d5e4f7",
+                    "on-background": "#2d333a",
+                    "tertiary-container": "#d1ccfd",
+                    "on-surface-variant": "#5a6067",
+                    "on-tertiary-fixed-variant": "#4f4c75",
+                    "inverse-surface": "#0c0e12",
+                    "inverse-on-surface": "#9b9da1",
+                    "primary-fixed-dim": "#9dc5ee",
+                    "on-error-container": "#6e0a12",
+                    "surface-container-high": "#e4e8f0",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#455362",
+                    "surface-container": "#ebeef5",
+                    "on-surface": "#2d333a",
+                    "surface-variant": "#dee3ec",
+                    "on-primary-fixed": "#003557",
+                    "primary-fixed": "#abd3fd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"]
+            }
+          },
+        },
+      }
+    </script>
+        <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8f9fe;
+            color: #2d333a;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+    </head>
+    <body class="flex min-h-screen">
+        <!-- SideNavBar Component -->
+        <aside
+            class="h-screen w-64 bg-[#f8f9fe] flex flex-col py-8 px-4 flex-shrink-0">
+            <div class="mb-10 px-4">
+                <h2
+                    class="text-xl font-bold text-[#3a6287] tracking-tighter">The
+                    Digital Curator</h2>
+                <p
+                    class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mt-1">Library
+                    Admin</p>
+            </div>
+            <nav class="flex-grow space-y-2">
+                <!-- Inactive Tab -->
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-[#526070] font-medium hover:bg-[#dee3ec] transition-colors duration-200 rounded-lg group scale-95 active:scale-90 transition-transform"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="dashboard">dashboard</span>
+                    <span
+                        class="font-['Manrope'] font-bold text-sm tracking-tight">Dashboard</span>
+                </a>
+                <!-- Active Tab: Controle -->
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-[#3a6287] font-extrabold border-r-4 border-[#3a6287] bg-[#dee3ec]/50 group scale-95 active:scale-90 transition-transform"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="admin_panel_settings">admin_panel_settings</span>
+                    <span
+                        class="font-['Manrope'] font-bold text-sm tracking-tight">Controle</span>
+                </a>
+                <!-- Inactive Tab -->
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-[#526070] font-medium hover:bg-[#dee3ec] transition-colors duration-200 rounded-lg group scale-95 active:scale-90 transition-transform"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="menu_book">menu_book</span>
+                    <span
+                        class="font-['Manrope'] font-bold text-sm tracking-tight">Livros</span>
+                </a>
+                <!-- Inactive Tab -->
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-[#526070] font-medium hover:bg-[#dee3ec] transition-colors duration-200 rounded-lg group scale-95 active:scale-90 transition-transform"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="assessment">assessment</span>
+                    <span
+                        class="font-['Manrope'] font-bold text-sm tracking-tight">Relatórios</span>
+                </a>
+            </nav>
+            <div
+                class="mt-auto space-y-2 border-t border-surface-container-high pt-6">
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-[#526070] font-medium hover:bg-[#dee3ec] transition-colors duration-200 rounded-lg group"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="settings">settings</span>
+                    <span
+                        class="font-['Manrope'] font-bold text-sm tracking-tight">Settings</span>
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-3 text-error font-medium hover:bg-error-container/10 transition-colors duration-200 rounded-lg group"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        data-icon="logout">logout</span>
+                    <span
+                        class="font-['Manrope'] font-bold text-sm tracking-tight">Logout</span>
+                </a>
+            </div>
+        </aside>
+        <!-- Main Content Canvas -->
+        <main class="flex-grow flex flex-col min-h-screen overflow-y-auto">
+            <!-- TopNavBar Component -->
+            <header
+                class="flex justify-between items-center w-full px-8 h-16 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+                <div class="flex items-center gap-8">
+                    <h1
+                        class="text-2xl font-extrabold text-on-surface tracking-tight">Controle
+                        de Usuários</h1>
+                    <nav class="hidden md:flex gap-6 items-center">
+                        <a
+                            class="text-[#526070] hover:text-[#3a6287] transition-all font-['Public_Sans'] font-medium text-sm"
+                            href="#">Overview</a>
+                        <a
+                            class="text-[#3a6287] border-b-2 border-[#3a6287] pb-2 font-['Public_Sans'] font-medium text-sm"
+                            href="#">User Directory</a>
+                        <a
+                            class="text-[#526070] hover:text-[#3a6287] transition-all font-['Public_Sans'] font-medium text-sm"
+                            href="#">Permissions</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button
+                        class="p-2 text-[#526070] hover:bg-surface-container-low rounded-full transition-colors opacity-80 hover:opacity-100">
+                        <span class="material-symbols-outlined"
+                            data-icon="notifications">notifications</span>
+                    </button>
+                    <div
+                        class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+                        <img alt="Admin Avatar"
+                            class="w-full h-full object-cover"
+                            data-alt="Close up portrait of a professional male librarian with glasses in a bright library setting"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdbT76WE16KK9A6w2lHXKqWW-k8LAQm-NbhE3DGXvnl3E1ullTaZSSZ5cbVajhBCgOATrS5NpuNzJgYjOFZ3gJw_9HK5PRV40sUqJfkgy4LNaT_RJ1sHTl5bX-rqmbDG6AdISQvI_e0jPrPiBtvYI0zMs-VCmR00GnEue1vORjH3YhTz3p_FsPE1KLbK_UFzOGvPzHZ86yakI4e263yZbpqtHHVDA7g5Ux9Y6XKYXrMxORIToQAv4N5O4nlRncYJLqKvROQxiJanI" />
+                    </div>
+                </div>
+            </header>
+            <!-- Main Body Content -->
+            <div class="p-8 max-w-6xl mx-auto w-full space-y-8">
+                <!-- Registros Section (Bento Style) -->
+                <section
+                    class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <h2
+                                class="text-3xl font-extrabold text-on-surface mb-1">Registros</h2>
+                            <p class="text-on-surface-variant">Gerencie os
+                                membros da sua comunidade de leitores.</p>
+                        </div>
+                        <button
+                            class="bg-[#2d333a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-black transition-all scale-95 active:scale-90">
+                            <span class="material-symbols-outlined text-sm"
+                                data-icon="add">add</span>
+                            Novo
+                        </button>
+                    </div>
+                    <!-- User List -->
+                    <div class="space-y-4">
+                        <!-- User Item: John Doe -->
+                        <div
+                            class="flex items-center justify-between p-4 rounded-xl bg-surface hover:bg-surface-container-low transition-colors group cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-full overflow-hidden">
+                                    <img alt="John Doe avatar"
+                                        class="w-full h-full object-cover"
+                                        data-alt="Portrait of a young man with a friendly expression in casual attire outdoors"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1SJzphLfhcHsXTN2eyDJU6m8A3MWV62jJ4d03KXFtbt_mnSHCBU4FxlcvAiBuGm4PPTdAEnqMPL94xWWocC_iQnoMGVrFCjILITTnfg8RO0GxCdYvqD3MUSe40aN9NQ_tdU2nxgSFWtOsGWodqlM9gJFomFur0YWJe62DbCAPMD9vf1hk3NTWhKhuzLriu_WyBXQJQ7UrycTaNY5zKd5mifvFURIuyU95A65Q2blOBQ145aVxXZ34WOPFaAstGIsYIeCCX9yDy-M" />
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface">John
+                                        Doe</p>
+                                    <span
+                                        class="text-xs px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-semibold">leitor</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p
+                                    class="text-sm font-medium text-on-surface-variant">john.doe@example.com</p>
+                                <p
+                                    class="text-[10px] text-outline uppercase tracking-wider">Último
+                                    acesso: 2h atrás</p>
+                            </div>
+                        </div>
+                        <!-- User Item: Jane Smith -->
+                        <div
+                            class="flex items-center justify-between p-4 rounded-xl bg-surface-container-high border-l-4 border-primary transition-colors group cursor-pointer shadow-sm">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-full overflow-hidden">
+                                    <img alt="Jane Smith avatar"
+                                        class="w-full h-full object-cover"
+                                        data-alt="Professional woman with a warm smile in a brightly lit office environment"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAHLlW6nw03f7RAAgb0klP9u9AV0tXdEPsHLS7EEpcwaVFkoW8l-2jH9HKV2yAn7KXUiCsfsYONuUzLZDmZh__CsiJasncJyF3i-eZDWlaLnCzbSFpzTq4pdVa6TuxxUZdfS1gDZeZZr2zj9M_GioVMdQFDHaPyqb29AAGRKk5kwO4jRwjaKmC4WMy9gQGL70IzNdVRpwNP-ixUPg89MGBQt_6VcMSVfFpW79vznwdy_K7cy-6KfjtZuYocSKRkQ2Kt3rE3ZENhvc" />
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface">Jane
+                                        Smith</p>
+                                    <span
+                                        class="text-xs px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container font-semibold">funcionaria</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p
+                                    class="text-sm font-medium text-on-surface-variant">jane.smith@curator.lib</p>
+                                <p
+                                    class="text-[10px] text-outline uppercase tracking-wider">Ativo
+                                    agora</p>
+                            </div>
+                        </div>
+                        <!-- User Item: Mark Johnson -->
+                        <div
+                            class="flex items-center justify-between p-4 rounded-xl bg-surface hover:bg-surface-container-low transition-colors group cursor-pointer">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-full overflow-hidden">
+                                    <img alt="Mark Johnson avatar"
+                                        class="w-full h-full object-cover"
+                                        data-alt="Cheerful man in his late twenties with short hair and a modern beard"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf7ESQs9O0tSRyoBAKQXziVQyUj_aNXpgp_urR0qNN3M8zCrpbB5VeMuG3n9JWGUJz-AVJEgxjbliX6nipkd4XGELZjiBy_AS2l9dFco20nSRcwDfjLW1P-5Xtqpux_vCnH2axEtf4p6msX8LF1-BX9o4ZiNSleZwpgza0Ee-M219mOohEouxzrtrIc8I8S3op6dcSGpqe1q2cdpxsj2TIRtim3dFnelhM__Ae_eP-MKm1aepoe-Zv7rYgdkya2GTTi0vlvfNhb2U" />
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface">Mark
+                                        Johnson</p>
+                                    <span
+                                        class="text-xs px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-semibold">leitor</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p
+                                    class="text-sm font-medium text-on-surface-variant">m.johnson@provider.net</p>
+                                <p
+                                    class="text-[10px] text-outline uppercase tracking-wider">Inativo
+                                    há 3 dias</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Detalhes Section (Asymmetric Layout) -->
+                <section
+                    class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="material-symbols-outlined text-primary"
+                            data-icon="edit_note">edit_note</span>
+                        <h2
+                            class="text-2xl font-bold text-on-surface">Detalhes</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <label
+                                    class="block text-sm font-semibold text-on-surface-variant ml-1">Endereço</label>
+                                <div class="relative">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline"
+                                        data-icon="home">home</span>
+                                    <input
+                                        class="w-full pl-12 pr-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-on-surface font-medium"
+                                        placeholder="Rua das Flores, 123 - Centro"
+                                        type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <label
+                                    class="block text-sm font-semibold text-on-surface-variant ml-1">Telefone</label>
+                                <div class="relative">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline"
+                                        data-icon="call">call</span>
+                                    <input
+                                        class="w-full pl-12 pr-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-on-surface font-medium"
+                                        placeholder="(11) 98765-4321"
+                                        type="tel" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div
+                        class="flex justify-end gap-4 mt-12 pt-8 border-t border-surface-container">
+                        <button
+                            class="px-8 py-3 text-on-surface-variant font-bold rounded-xl border border-outline-variant/30 hover:bg-surface-container-high transition-colors">
+                            Cancelar
+                        </button>
+                        <button
+                            class="px-10 py-3 bg-[#2d333a] text-white font-bold rounded-xl hover:bg-black transition-all shadow-md active:scale-95">
+                            Salvar
+                        </button>
+                    </div>
+                </section>
+            </div>
+            <!-- Decorative Spacer Footer -->
+            <footer
+                class="mt-auto p-8 text-center text-on-surface-variant/40 text-xs font-medium tracking-widest uppercase">
+                © 2024 The Digital Curator • Editorial excellence in information
+            </footer>
+        </main>
+    </body></html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet" />
+        <script
+            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-dim": "#465464",
+                        "tertiary-fixed": "#d1ccfd",
+                        "error-container": "#fa746f",
+                        "outline": "#767b83",
+                        "tertiary-container": "#d1ccfd",
+                        "on-error-container": "#6e0a12",
+                        "surface-container-highest": "#dee3ec",
+                        "tertiary": "#5d5a84",
+                        "inverse-primary": "#abd3fd",
+                        "surface-bright": "#f8f9fe",
+                        "on-tertiary-container": "#46436b",
+                        "surface-tint": "#3a6287",
+                        "on-tertiary": "#fcf7ff",
+                        "secondary-fixed": "#d5e4f7",
+                        "on-secondary": "#f7f9ff",
+                        "on-primary-fixed": "#003557",
+                        "inverse-on-surface": "#9b9da1",
+                        "error": "#a83836",
+                        "primary-dim": "#2d567a",
+                        "on-surface": "#2d333a",
+                        "on-secondary-fixed": "#33414f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#455362",
+                        "on-secondary-fixed-variant": "#4f5d6d",
+                        "tertiary-dim": "#514f78",
+                        "on-tertiary-fixed-variant": "#4f4c75",
+                        "surface-container": "#ebeef5",
+                        "on-primary": "#f7f9ff",
+                        "on-background": "#2d333a",
+                        "primary-fixed": "#abd3fd",
+                        "primary-fixed-dim": "#9dc5ee",
+                        "surface-dim": "#d5dae3",
+                        "surface-container-low": "#f1f3fa",
+                        "background": "#f8f9fe",
+                        "error-dim": "#67040d",
+                        "tertiary-fixed-dim": "#c3bfef",
+                        "outline-variant": "#adb2bb",
+                        "on-primary-fixed-variant": "#285275",
+                        "secondary-container": "#d5e4f7",
+                        "on-surface-variant": "#5a6067",
+                        "surface-container-high": "#e4e8f0",
+                        "on-tertiary-fixed": "#323057",
+                        "secondary": "#526070",
+                        "on-primary-container": "#1d486c",
+                        "secondary-fixed-dim": "#c7d6e8",
+                        "on-error": "#fff7f6",
+                        "inverse-surface": "#0c0e12",
+                        "surface-variant": "#dee3ec",
+                        "primary": "#3a6287",
+                        "primary-container": "#abd3fd",
+                        "surface": "#f8f9fe"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+        <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Public Sans', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+    </head>
+    <body class="bg-surface text-on-surface">
+        <!-- TopAppBar -->
+        <header
+            class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md fixed top-0 w-full z-50 shadow-sm shadow-blue-900/5 flex justify-between items-center px-6 h-16">
+            <div
+                class="text-xl font-bold text-blue-900 dark:text-blue-100 tracking-tighter">
+                BIBLIOTECARIO SYSTEM
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span
+                        class="material-symbols-outlined text-slate-500">notifications</span>
+                    <span
+                        class="material-symbols-outlined text-slate-500">account_circle</span>
+                </div>
+            </div>
+        </header>
+        <!-- SideNavBar -->
+        <nav
+            class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-950 flex flex-col h-full py-4 pt-20 font-public-sans text-sm font-medium z-40">
+            <div class="px-6 mb-8">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+                        <img alt="User avatar"
+                            class="w-full h-full object-cover"
+                            data-alt="Close-up portrait of a professional librarian man with glasses in a soft lit indoor environment"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuArMDgMtDlEUDTNOtl97WpRYyr3RKnHtBu1SgTrEE9xVKdzo-gszPcjA4U_qCEB8IrrnCDZtdnjj7Aiy65YMpm0s-_xU7Q8BQas-S4YEgph83z9KXQaKjNJ_XgCk7V_PtxY0bzrmlVMdperXlhzfpoHyvoPstQIVlaYkC2V5z7RMMBOxnaXnrItytDOW5b_EkXWX1GN213KfUC8nF_LtvGnCploJtuHxbJtzuWE_tXQCCZiG87x7irP8101WdP-78mLgMvXQmxL3WA" />
+                    </div>
+                    <div>
+                        <div
+                            class="text-blue-900 dark:text-blue-50 font-extrabold text-lg leading-tight">The
+                            Curator</div>
+                        <div class="text-xs text-slate-500">System Admin</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-grow space-y-1 px-2">
+                <a
+                    class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 mx-2 my-1 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 mx-2 my-1 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+                    href="#">
+                    <span
+                        class="material-symbols-outlined">settings_input_component</span>
+                    Controle
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-2 bg-blue-100/50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 rounded-lg mx-2 my-1 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    Livros
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 mx-2 my-1 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined">assessment</span>
+                    Relatórios
+                </a>
+            </div>
+            <button
+                class="mx-6 mt-4 mb-8 py-2.5 bg-primary text-on-primary rounded-xl font-bold shadow-md hover:brightness-110 transition-all">
+                New Entry
+            </button>
+            <div class="px-2 border-t border-slate-200/50 pt-4">
+                <a
+                    class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 mx-2 my-1 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Support
+                </a>
+                <a
+                    class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 mx-2 my-1 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined">logout</span>
+                    Logout
+                </a>
+            </div>
+        </nav>
+        <!-- Main Content -->
+        <main class="ml-64 pt-24 px-10 pb-12 min-h-screen">
+            <div class="max-w-6xl mx-auto">
+                <!-- Hero Header Section -->
+                <section class="mb-12 relative">
+                    <div
+                        class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div class="space-y-2">
+                            <h1
+                                class="text-4xl font-extrabold text-on-surface tracking-tight">Reservas</h1>
+                            <p
+                                class="text-on-surface-variant text-lg font-light max-w-xl">
+                                Manage user waiting lists and reservations for
+                                unavailable books.
+                            </p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button
+                                class="px-6 py-2.5 border border-outline-variant text-on-surface font-semibold rounded-xl hover:bg-surface-container-low transition-colors">
+                                Reservar Livro
+                            </button>
+                            <button
+                                class="px-6 py-2.5 bg-inverse-surface text-background font-semibold rounded-xl shadow-lg hover:opacity-90 transition-opacity">
+                                Ver Reservas
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Books List Section (Asymmetric Left) -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h2
+                                class="text-xl font-bold font-headline flex items-center gap-2">
+                                <span
+                                    class="material-symbols-outlined text-primary">local_library</span>
+                                Livros Disponiveis
+                            </h2>
+                            <span
+                                class="text-xs font-medium text-on-surface-variant uppercase tracking-widest">Awaiting
+                                Action</span>
+                        </div>
+                        <div class="space-y-4">
+                            <!-- Book A -->
+                            <div
+                                class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-4 hover:shadow-md transition-shadow group cursor-pointer border-l-4 border-primary">
+                                <div
+                                    class="w-14 h-20 bg-surface-container flex items-center justify-center rounded shadow-sm overflow-hidden flex-shrink-0">
+                                    <img alt="Book cover"
+                                        class="w-full h-full object-cover"
+                                        data-alt="Cover of a classic minimalist book with elegant typography on a textured cream paper background"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFf_gFBVJ53xxGn7MVKgQGSIZxbwCNdSPcohV9l2DJ8OXroA_GGlW5ZADlkjXlEcFvmu5yz34544NEynHzylLeo076VG2-ER34a-XgXNqInfLjhn-pGdBFWMKTidURlJqIYVsyl7UDJQ79KfOlBztMxfNd3-733GCJm8V6o-u5Bi2qr7Pw4cQH76LMza0HzTBQ9HBbp7BgcfYSby5k73xx16qoJHt9357kW7BNBshDAfmqnDYVxHQjjXnzG6YWGhbixCtf_WvaJv0" />
+                                </div>
+                                <div class="flex-grow">
+                                    <h3
+                                        class="font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Livro
+                                        A</h3>
+                                    <p
+                                        class="text-sm text-on-surface-variant">ISBN:
+                                        978-3-16-148410-0</p>
+                                    <div
+                                        class="mt-2 inline-flex items-center px-2 py-0.5 bg-tertiary-container text-on-tertiary-container text-xs font-semibold rounded-sm">
+                                        5 na fila
+                                    </div>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+                            </div>
+                            <!-- Book B -->
+                            <div
+                                class="bg-surface-container-low p-5 rounded-xl flex items-center gap-4 hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div
+                                    class="w-14 h-20 bg-surface-container flex items-center justify-center rounded shadow-sm overflow-hidden flex-shrink-0">
+                                    <img alt="Book cover"
+                                        class="w-full h-full object-cover"
+                                        data-alt="Close up of several old books with leather spines sitting on a dark wooden library shelf"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSjm3oNFeBQuA3LCXdbHFLnXvXlcxpswB-wi5oHas-NQ3n08lNttRsqDmOHkU7TdBgBxQfQm1Zg6rEhbj9Dn6kGXQ9NpN4BtfPLXfXCEUayEVmHkG9d3-qwR27KrqGXze9WFn1IP3hjiFWqTiZkfGgx3VtL6QM-j3rHiebB41DOXfC4opjxIgQcxL5Omqwu8rZT6Ik6EujA055UsJYQpKSerL8EWZtQ6xlUbnUailDT1hcDB_jJqeiI8uqiLV77XhffPNfRwSphlg" />
+                                </div>
+                                <div class="flex-grow">
+                                    <h3
+                                        class="font-bold text-lg text-on-surface">Livro
+                                        B</h3>
+                                    <p
+                                        class="text-sm text-on-surface-variant">ISBN:
+                                        978-1-56-619909-4</p>
+                                    <div
+                                        class="mt-2 inline-flex items-center px-2 py-0.5 bg-tertiary-container text-on-tertiary-container text-xs font-semibold rounded-sm">
+                                        2 na fila
+                                    </div>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                            </div>
+                            <!-- Book C -->
+                            <div
+                                class="bg-surface-container-low p-5 rounded-xl flex items-center gap-4 hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div
+                                    class="w-14 h-20 bg-surface-container flex items-center justify-center rounded shadow-sm overflow-hidden flex-shrink-0">
+                                    <img alt="Book cover"
+                                        class="w-full h-full object-cover"
+                                        data-alt="A colorful modern book cover lying open on a clean white marble surface with soft daylight shadows"
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPLKb_2eVOfB1c-buMcFF8jFchQNGQqHyHCkv3vWKuofwKjrt1RAV07TwwanRdJZAABX9WwUE-pimCZ-3vBhzVE-vR74-80GW2VFyfOkVlVID3ZsHaCHqGsGSKPV58zAaaKzqk27FNv0yVeuaC7DMR2AfWPhkf4hvPNtu_MyKGXJEcARU5AtomNYoHjFti_medJjNXEBWYpuaUR2Lk0jy5B_1zCbymbL77r4t5iS5KfE8b_GhMaIw17heHeCmcC3Lozxhv2Anz1zs" />
+                                </div>
+                                <div class="flex-grow">
+                                    <h3
+                                        class="font-bold text-lg text-on-surface">Livro
+                                        C</h3>
+                                    <p
+                                        class="text-sm text-on-surface-variant">ISBN:
+                                        978-0-20-137962-4</p>
+                                    <div
+                                        class="mt-2 inline-flex items-center px-2 py-0.5 bg-tertiary-container text-on-tertiary-container text-xs font-semibold rounded-sm">
+                                        0 na fila
+                                    </div>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Detailed View Section (Bento Right) -->
+                    <div class="lg:col-span-7">
+                        <div
+                            class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/10 shadow-sm">
+                            <div
+                                class="flex items-center justify-between mb-10">
+                                <div>
+                                    <h2
+                                        class="text-2xl font-extrabold font-headline text-on-surface">Detalhes
+                                        do Livro A</h2>
+                                    <p
+                                        class="text-on-surface-variant text-sm mt-1">Lista
+                                        de espera prioritária por ordem de
+                                        reserva</p>
+                                </div>
+                                <button
+                                    class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+                                    <span
+                                        class="material-symbols-outlined">filter_list</span>
+                                </button>
+                            </div>
+                            <div class="space-y-2">
+                                <!-- Client Header (Implicitly via spacing) -->
+                                <div
+                                    class="hidden md:grid grid-cols-12 px-4 py-2 text-xs font-bold text-outline uppercase tracking-wider">
+                                    <div class="col-span-6">Usuário</div>
+                                    <div class="col-span-4">Data da
+                                        Reserva</div>
+                                    <div
+                                        class="col-span-2 text-right">Status</div>
+                                </div>
+                                <!-- Client 1 -->
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-12 items-center gap-4 px-4 py-4 rounded-xl hover:bg-surface-container-low transition-colors border-b border-surface-container last:border-0">
+                                    <div
+                                        class="col-span-6 flex items-center gap-3">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center overflow-hidden">
+                                            <img alt="Avatar"
+                                                class="w-full h-full object-cover"
+                                                data-alt="Portrait of a young professional woman with a friendly smile, clean corporate style, bright studio lighting"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCTj61Vm_8_jmSvxzBpp_r1-4GD3FSuzRBbEnPtRZfSJ9PJYohzV99gUiBY-iwkXlfrYlaHaSjKoDejXUrU2KUmyv1_FHwh5YBHjfd3fUwbHa1GNPp0Hj1yXtI5Qm3AVy9G2gAPv_q4KBcMllLWpepWXlfo1YLnesT57EFh7RUG_iTDNnN-7y6bTHOVg7zALozB-cUBi2lmqX4_UpW66itqaBU9qaYohyq_Wqaz_YyESNpV_bnu2us1vCH4bSUHbSgw9rZy4Fsk1Q" />
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-bold text-on-surface">Cliente
+                                                1</div>
+                                            <div
+                                                class="text-xs text-on-surface-variant">user1@example.com</div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-span-4 text-sm text-on-surface font-medium">
+                                        2023-10-01
+                                    </div>
+                                    <div class="col-span-2 text-right">
+                                        <span
+                                            class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                    </div>
+                                </div>
+                                <!-- Client 2 -->
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-12 items-center gap-4 px-4 py-4 rounded-xl hover:bg-surface-container-low transition-colors border-b border-surface-container last:border-0">
+                                    <div
+                                        class="col-span-6 flex items-center gap-3">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center overflow-hidden">
+                                            <img alt="Avatar"
+                                                class="w-full h-full object-cover"
+                                                data-alt="Close up portrait of a young man with professional look, warm lighting, blurred library background"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIYvvdCUdsx586XvTQIC6xRMAAG69XOdI9GZnAa-td9iph_5iPcUFLl7aoGwZiOsPSngyv_AtY337Io80pCaJfL0qvnzEJi6_4SRfbcN8BFm0o8PjKoozLiAHw2LByqGUuxy_YG2mxjuzxbvMQIff_bqswLjIEvVD3P-QlNdW7i0y2FmO8CMlVoYQpAoa9TVexRGjuzULi57IoWvpEi0BHw6aMSGI0xAJSNrCjG1oh951gMDPr-qOnAVlS3Za5BALeAAoa75sP7JM" />
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-bold text-on-surface">Cliente
+                                                2</div>
+                                            <div
+                                                class="text-xs text-on-surface-variant">user2@example.com</div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-span-4 text-sm text-on-surface font-medium">
+                                        2023-10-02
+                                    </div>
+                                    <div class="col-span-2 text-right">
+                                        <span
+                                            class="inline-block w-2 h-2 rounded-full bg-outline-variant"></span>
+                                    </div>
+                                </div>
+                                <!-- Client 3 -->
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-12 items-center gap-4 px-4 py-4 rounded-xl hover:bg-surface-container-low transition-colors border-b border-surface-container last:border-0">
+                                    <div
+                                        class="col-span-6 flex items-center gap-3">
+                                        <div
+                                            class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center overflow-hidden">
+                                            <img alt="Avatar"
+                                                class="w-full h-full object-cover"
+                                                data-alt="Confident businesswoman with glasses looking at camera, high end office interior soft focus background"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtOqS6vGuz5xfYX4NRnXRkPcD4CP3iiC1fBzW25X0qdQwf8tIICdWEvJACWnnVdiix7sx_5--kMYtp19F4y0iS3KAdKFxPTmSLTVcDU3Xa32KjVTUzY9FS902dk8QmiiI9MOB4vdbf1e6_CbsiWdZxPIxiFR52lG7BQuF3p0kk5iQlcBDLavmuiUYlLjZhbLtWRX8nsd4QMHGEWrclCVg3Uqc9AXiOyeKccyATK8lZKuc2gsx1XaEkqOCJPVoaWs093IyY9GD2MoQ" />
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-bold text-on-surface">Cliente
+                                                3</div>
+                                            <div
+                                                class="text-xs text-on-surface-variant">user3@example.com</div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-span-4 text-sm text-on-surface font-medium">
+                                        2023-10-03
+                                    </div>
+                                    <div class="col-span-2 text-right">
+                                        <span
+                                            class="inline-block w-2 h-2 rounded-full bg-outline-variant"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="mt-8 pt-6 border-t border-surface-container">
+                                <button
+                                    class="w-full py-4 text-primary font-bold hover:bg-primary/5 rounded-xl transition-all flex items-center justify-center gap-2">
+                                    <span
+                                        class="material-symbols-outlined">expand_more</span>
+                                    View Full Waiting List
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Decorative Graphic/Summary -->
+                        <div class="mt-8 grid grid-cols-2 gap-4">
+                            <div
+                                class="bg-primary/5 rounded-2xl p-6 border border-primary/10">
+                                <div
+                                    class="text-primary text-3xl font-extrabold">12</div>
+                                <div
+                                    class="text-xs font-bold uppercase tracking-widest text-primary-dim mt-1">Total
+                                    Active Reservations</div>
+                            </div>
+                            <div
+                                class="bg-tertiary/5 rounded-2xl p-6 border border-tertiary/10">
+                                <div
+                                    class="text-tertiary text-3xl font-extrabold">4.2d</div>
+                                <div
+                                    class="text-xs font-bold uppercase tracking-widest text-tertiary-dim mt-1">Avg.
+                                    Waiting Time</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- BottomNavBar (Mobile Only) -->
+        <nav
+            class="md:hidden fixed bottom-0 left-0 w-full bg-slate-50/90 backdrop-blur-md flex justify-around items-center h-16 z-50 px-4">
+            <button class="flex flex-col items-center text-slate-500">
+                <span class="material-symbols-outlined">dashboard</span>
+            </button>
+            <button class="flex flex-col items-center text-slate-500">
+                <span
+                    class="material-symbols-outlined">settings_input_component</span>
+            </button>
+            <button class="flex flex-col items-center text-blue-700">
+                <span class="material-symbols-outlined"
+                    style="font-variation-settings: 'FILL' 1;">menu_book</span>
+            </button>
+            <button class="flex flex-col items-center text-slate-500">
+                <span class="material-symbols-outlined">assessment</span>
+            </button>
+        </nav>
+    </body></html>

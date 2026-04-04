@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Erro - The Grand Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .brand-font { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center border border-slate-100">
+        <div class="w-20 h-20 bg-red-100 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+            <span class="material-symbols-outlined text-4xl text-error">warning</span>
+        </div>
+        <h1 class="text-4xl font-black text-slate-900 mb-2 brand-font">Erro <span th:text="${errorCode}">500</span></h1>
+        <p class="text-lg text-slate-600 mb-4 font-medium" th:text="${errorMessage}">Algo deu errado!</p>
+        <p class="text-sm text-slate-500 mb-8" th:text="${solution}">Verifique a conexão e tente novamente.</p>
+        
+        <div class="space-y-3">
+            <a th:href="@{/login}" 
+               class="block w-full bg-primary text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-all text-center">
+                Ir para Login
+            </a>
+            <a th:href="@/{/}" class="block w-full text-primary font-semibold hover:underline">
+                ← Voltar ao Início
+            </a>
+        </div>
+        
+        <div class="mt-8 pt-6 border-t border-slate-100">
+            <p class="text-xs text-slate-500">
+                Dica: admin@library.com / admin123 para login admin
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
