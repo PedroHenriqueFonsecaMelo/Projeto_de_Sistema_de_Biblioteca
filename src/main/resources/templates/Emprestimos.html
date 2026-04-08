@@ -1,300 +1,273 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+    <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Empréstimos - Digital Curator</title>
         <script
             src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
         <link
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Public_Sans:wght@300;400;500;600;700&amp;display=swap"
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Public+Sans:wght@300;400;500;600;700&display=swap"
             rel="stylesheet" />
         <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
             rel="stylesheet" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-            rel="stylesheet" />
-        <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "outline-variant": "#adb2bb",
-                    "tertiary-dim": "#514f78",
-                    "secondary-container": "#d5e4f7",
-                    "primary-fixed-dim": "#9dc5ee",
-                    "on-primary-fixed-variant": "#285275",
-                    "error-container": "#fa746f",
-                    "on-background": "#2d333a",
-                    "on-tertiary": "#fcf7ff",
-                    "on-error": "#fff7f6",
-                    "inverse-surface": "#0c0e12",
-                    "on-tertiary-fixed": "#323057",
-                    "surface-container-highest": "#dee3ec",
-                    "error": "#a83836",
-                    "surface-container-lowest": "#ffffff",
-                    "background": "#f8f9fe",
-                    "on-error-container": "#6e0a12",
-                    "tertiary-container": "#d1ccfd",
-                    "primary-dim": "#2d567a",
-                    "on-secondary-fixed": "#33414f",
-                    "on-tertiary-fixed-variant": "#4f4c75",
-                    "on-surface-variant": "#5a6067",
-                    "primary": "#3a6287",
-                    "error-dim": "#67040d",
-                    "on-tertiary-container": "#46436b",
-                    "surface-dim": "#d5dae3",
-                    "surface": "#f8f9fe",
-                    "tertiary-fixed-dim": "#c3bfef",
-                    "secondary-fixed": "#d5e4f7",
-                    "outline": "#767b83",
-                    "on-secondary-container": "#455362",
-                    "on-secondary": "#f7f9ff",
-                    "surface-container": "#ebeef5",
-                    "surface-tint": "#3a6287",
-                    "on-secondary-fixed-variant": "#4f5d6d",
-                    "surface-variant": "#dee3ec",
-                    "secondary-fixed-dim": "#c7d6e8",
-                    "on-primary": "#f7f9ff",
-                    "surface-container-low": "#f1f3fa",
-                    "surface-bright": "#f8f9fe",
-                    "on-surface": "#2d333a",
-                    "on-primary-fixed": "#003557",
-                    "inverse-on-surface": "#9b9da1",
-                    "inverse-primary": "#abd3fd",
-                    "tertiary": "#5d5a84",
-                    "primary-container": "#abd3fd",
-                    "primary-fixed": "#abd3fd",
-                    "on-primary-container": "#1d486c",
-                    "secondary-dim": "#465464",
-                    "tertiary-fixed": "#d1ccfd",
-                    "surface-container-high": "#e4e8f0",
-                    "secondary": "#526070"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Public Sans"],
-                    "label": ["Public Sans"]
-            }
-          },
-        },
-      }
-    </script>
+
+        <script th:replace="~{fragments/tailwind-config :: script}"></script>
+
         <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined { vertical-align: middle; }
+        body { font-family: 'Public Sans', sans-serif; background-color: #f8f9fe; color: #2d333a; }
         h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        @media (min-width: 768px) {
+            .main-content { margin-left: 16rem; }
+        }
     </style>
     </head>
     <body class="bg-surface text-on-surface flex min-h-screen">
-        <!-- SideNavBar Execution -->
-        <aside
-            class="h-screen w-64 fixed left-0 top-0 border-r border-[#dee3ec]/15 bg-[#f1f3fa] flex flex-col p-6 space-y-2 z-40">
-            <div
-                class="text-lg font-black text-[#3a6287] mb-8 tracking-tighter">Library
-                Admin</div>
-            <nav class="flex-grow space-y-1">
-                <a
-                    class="flex items-center gap-3 px-4 py-3 text-[#526070] hover:translate-x-1 transition-transform duration-200 rounded-lg"
-                    href="#">
-                    <span class="material-symbols-outlined">dashboard</span>
-                    <span class="font-medium text-sm">Dashboard</span>
-                </a>
-                <a
-                    class="flex items-center gap-3 px-4 py-3 text-[#526070] hover:translate-x-1 transition-transform duration-200 rounded-lg"
-                    href="#">
-                    <span
-                        class="material-symbols-outlined">admin_panel_settings</span>
-                    <span class="font-medium text-sm">Controle</span>
-                </a>
-                <!-- Active State Logic: Livros is active for this screen -->
-                <a
-                    class="flex items-center gap-3 px-4 py-3 bg-[#abd3fd] text-[#3a6287] rounded-lg font-bold"
-                    href="#">
-                    <span class="material-symbols-outlined">menu_book</span>
-                    <span class="font-medium text-sm">Livros</span>
-                </a>
-                <a
-                    class="flex items-center gap-3 px-4 py-3 text-[#526070] hover:translate-x-1 transition-transform duration-200 rounded-lg"
-                    href="#">
-                    <span class="material-symbols-outlined">assessment</span>
-                    <span class="font-medium text-sm">Relatórios</span>
-                </a>
-            </nav>
-            <div class="pt-6 border-t border-[#dee3ec]/30 space-y-1">
-                <a
-                    class="flex items-center gap-3 px-4 py-3 text-[#526070] hover:translate-x-1 transition-transform duration-200 rounded-lg"
-                    href="#">
-                    <span class="material-symbols-outlined">settings</span>
-                    <span class="font-medium text-sm">Configurações</span>
-                </a>
-                <a
-                    class="flex items-center gap-3 px-4 py-3 text-[#526070] hover:translate-x-1 transition-transform duration-200 rounded-lg"
-                    href="#">
-                    <span class="material-symbols-outlined">logout</span>
-                    <span class="font-medium text-sm">Sair</span>
-                </a>
-            </div>
-        </aside>
-        <!-- Main Content Canvas -->
-        <main class="ml-64 flex-grow p-10 bg-surface">
-            <!-- TopAppBar Execution -->
+
+        <div
+            th:replace="~{fragments/sidebar :: sidebar(activePage='emprestimos')}"></div>
+
+        <main
+            class="main-content flex-grow p-6 md:p-10 bg-surface transition-all">
+
             <header
-                class="flex justify-between items-center w-full mb-12 sticky top-0 bg-surface/80 backdrop-blur-md z-30 py-4">
-                <h1
-                    class="text-3xl font-extrabold text-[#3a6287] tracking-tight">Empréstimos</h1>
-                <div class="flex items-center gap-6">
-                    <div class="relative">
+                class="flex flex-col md:flex-row justify-between items-start md:items-center w-full mb-12 gap-6">
+                <div>
+                    <h1
+                        class="text-3xl font-extrabold text-primary tracking-tight">Empréstimos</h1>
+                    <p
+                        class="text-sm text-on-surface-variant font-medium">Controle
+                        de circulação e prazos.</p>
+                </div>
+
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div class="relative flex-grow">
                         <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
                         <input
-                            class="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20"
-                            placeholder="Global search..." type="text" />
+                            class="w-full md:w-64 bg-surface-container-low border-none rounded-full py-2.5 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/20 transition-all"
+                            placeholder="Buscar empréstimo..." type="text" />
                     </div>
-                    <div class="flex items-center gap-4 text-[#3a6287]">
-                        <span
-                            class="material-symbols-outlined cursor-pointer hover:opacity-80 transition-all">notifications</span>
-                        <span
-                            class="material-symbols-outlined cursor-pointer hover:opacity-80 transition-all">account_circle</span>
+                    <div class="flex items-center gap-3 text-primary">
+                        <button
+                            class="p-2 hover:bg-primary/5 rounded-full transition-colors">
+                            <span
+                                class="material-symbols-outlined">notifications</span>
+                        </button>
+                        <button
+                            class="p-2 hover:bg-primary/5 rounded-full transition-colors">
+                            <span
+                                class="material-symbols-outlined">account_circle</span>
+                        </button>
                     </div>
                 </div>
             </header>
-            <!-- Search & Filter Section -->
-            <section class="mb-16">
-                <div class="bg-surface-container-low p-8 rounded-xl max-w-4xl">
-                    <div
-                        class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                        <div class="md:col-span-2">
-                            <label
-                                class="block text-sm font-semibold text-on-surface-variant mb-2 font-body">Autor
-                                / Título</label>
-                            <input
-                                class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all"
-                                placeholder="digite aqui" type="text" />
-                        </div>
-                        <div class="flex gap-3">
-                            <button
-                                class="flex-1 px-6 py-3 border border-outline-variant/30 text-on-surface font-semibold rounded-lg hover:bg-surface-container-high transition-colors">
-                                Apagar
-                            </button>
-                            <button
-                                class="flex-1 px-6 py-3 bg-on-surface text-surface font-semibold rounded-lg hover:opacity-90 transition-all">
-                                Buscar
-                            </button>
-                        </div>
+
+            <section class="mb-12">
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-sm border border-outline-variant/10 flex flex-col md:flex-row gap-4 items-end">
+                    <div class="flex-grow w-full">
+                        <label
+                            class="block text-[10px] font-bold text-outline uppercase tracking-widest mb-2 ml-1">Filtrar
+                            por Título ou Usuário</label>
+                        <input
+                            class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+                            placeholder="Ex: Machado de Assis..." type="text" />
                     </div>
+                    <button
+                        class="w-full md:w-auto px-8 py-3 bg-on-surface text-surface font-bold rounded-xl hover:opacity-90 transition-all text-sm">
+                        Buscar
+                    </button>
                 </div>
             </section>
-            <!-- Main Content Grid -->
-            <div class="grid grid-cols-1 xl:grid-cols-12 gap-12">
-                <!-- Borrowed Books Section ('Emprestados') -->
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-10">
+
                 <section class="xl:col-span-7">
-                    <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center justify-between mb-6">
                         <h2
-                            class="text-2xl font-bold text-on-surface">Emprestados</h2>
+                            class="text-xl font-bold text-on-surface flex items-center gap-2">
+                            <span
+                                class="material-symbols-outlined text-primary">pending_actions</span>
+                            Em Uso <span
+                                class="text-sm font-normal text-on-surface-variant"
+                                th:text="${'(' + totalEmprestimos + ')'}"></span>
+                        </h2>
                         <span
-                            class="text-sm font-medium text-primary hover:underline cursor-pointer">Ver
-                            todos</span>
+                            class="text-xs font-bold text-primary hover:underline cursor-pointer uppercase tracking-tighter">Ver
+                            Histórico</span>
                     </div>
+
                     <div class="space-y-4">
-                        <div th:if="${activeLoans == null or activeLoans.isEmpty()}" class="text-center text-on-surface-variant py-8">
-                            <span class="material-symbols-outlined text-4xl mb-2 block">library_books</span>
-                            <p>Nenhum empréstimo ativo encontrado</p>
+                        <!-- Mostra empréstimos ativos -->
+                        <div th:if="${#lists.isEmpty(emprestimosAtivos)}"
+                            class="bg-white p-8 rounded-2xl text-center border border-outline-variant/5">
+                            <span
+                                class="material-symbols-outlined text-4xl text-on-surface-variant opacity-50">inbox</span>
+                            <p
+                                class="text-on-surface-variant text-sm mt-2">Nenhum
+                                empréstimo ativo no momento</p>
                         </div>
-                        <div th:each="loan : ${activeLoans}" class="bg-surface-container-lowest p-5 rounded-xl flex gap-6 items-center hover:shadow-sm transition-all border border-transparent hover:border-outline-variant/15 group">
-                            <div class="w-20 h-28 bg-surface-container-high rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
-                                <div class="w-full h-full flex flex-col items-center justify-center bg-surface-container-low text-outline">
-                                    <span class="material-symbols-outlined text-3xl">menu_book</span>
-                                    <span class="text-[10px] font-bold mt-1">LIVRO</span>
-                                </div>
+
+                        <div th:each="emprestimo : ${emprestimosAtivos}"
+                            class="bg-white p-5 rounded-2xl flex gap-6 items-center hover:shadow-md transition-all border border-outline-variant/5 group">
+                            <div
+                                class="w-16 h-24 bg-surface-container-high rounded-lg flex items-center justify-center shrink-0 overflow-hidden shadow-sm flex-col justify-center items-center">
+                                <span
+                                    class="material-symbols-outlined text-outline text-3xl">book</span>
                             </div>
                             <div class="flex-grow">
-                                <h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors" th:text="${loan.bookTitle}">Título do Livro</h3>
-                                <p class="text-sm text-on-surface-variant mb-3" th:text="${loan.borrowerName}">Nome do Usuário</p>
-                                <div class="flex gap-6">
+                                <h3
+                                    class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">
+                                    <span th:each="livro : ${livros}"
+                                        th:if="${livro.id == emprestimo.bookId}"
+                                        th:text="${livro.titulo}">Livro</span>
+                                </h3>
+                                <p
+                                    class="text-xs text-on-surface-variant font-medium mb-4">
+                                    <span th:each="livro : ${livros}"
+                                        th:if="${livro.id == emprestimo.bookId}"
+                                        th:text="${livro.autor}">Autor</span>
+                                </p>
+
+                                <div class="flex gap-8">
                                     <div>
-                                        <span class="block text-[10px] uppercase tracking-widest text-outline font-bold">Em:</span>
-                                        <span class="text-sm font-semibold" th:text="${#temporals.format(loan.loanDate, 'yyyy-MM-dd')}">2023-09-15</span>
+                                        <span
+                                            class="block text-[9px] uppercase tracking-widest text-outline font-black">Retirada</span>
+                                        <span
+                                            class="text-xs font-bold text-on-surface"
+                                            th:text="${#dates.format(emprestimo.dataEmprestimo, 'dd MMM yyyy')}">15
+                                            Set 2023</span>
                                     </div>
                                     <div>
-                                        <span class="block text-[10px] uppercase tracking-widest text-outline font-bold">Vence:</span>
-                                        <span class="text-sm font-semibold text-primary" th:text="${#temporals.format(loan.dueDate, 'yyyy-MM-dd')}">2023-10-15</span>
+                                        <span
+                                            class="block text-[9px] uppercase tracking-widest text-outline font-black">Devolução</span>
+                                        <span
+                                            class="text-xs font-bold text-primary"
+                                            th:text="${#dates.format(emprestimo.dataVencimento, 'dd MMM yyyy')}">15
+                                            Out 2023</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="material-symbols-outlined text-outline hover:text-error transition-colors">info</button>
+                            <button
+                                class="p-2 text-outline hover:text-primary transition-colors">
+                                <span
+                                    class="material-symbols-outlined">edit_square</span>
+                            </button>
                         </div>
+                    </div>
                 </section>
-                <!-- Returned Books Section ('Retornados') -->
+
                 <section class="xl:col-span-5">
-                    <div class="mb-8">
-                        <h2 class="text-2xl font-bold text-on-surface">Atrasados</h2>
-                        <p class="text-sm text-on-surface-variant">Empréstimos com devolução pendente</p>
-                    </div>
-                    <div th:if="${overdueLoans == null or overdueLoans.isEmpty()}" class="text-center text-on-surface-variant py-8">
-                        <span class="material-symbols-outlined text-4xl mb-2 block">check_circle</span>
-                        <p>Nenhum empréstimo atrasado</p>
-                    </div>
-                    <div th:if="${overdueLoans != null and !overdueLoans.isEmpty()}" class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/10">
-                        <div th:each="loan : ${overdueLoans}" class="mb-8">
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h3 class="text-xl font-extrabold text-on-surface mb-1" th:text="${loan.bookTitle}">Título do Livro</h3>
-                                    <p class="text-sm text-on-surface-variant" th:text="${loan.borrowerName}">Nome do Usuário</p>
-                                </div>
-                                <div class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold">
-                                    ATRASADO
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center py-3 border-b border-outline-variant/15">
-                                    <span class="text-sm text-on-surface-variant">Data do empréstimo</span>
-                                    <span class="text-sm font-semibold font-mono" th:text="${#temporals.format(loan.loanDate, 'yyyy-MM-dd')}">2023-10-01</span>
-                                </div>
-                                <div class="flex justify-between items-center py-3 border-b border-outline-variant/15">
-                                    <span class="text-sm text-on-surface-variant">Data de vencimento</span>
-                                    <span class="text-sm font-semibold font-mono text-error" th:text="${#temporals.format(loan.dueDate, 'yyyy-MM-dd')}">2023-10-05</span>
-                                </div>
-                                <div th:if="${loan.fine != null and loan.fine > 0}" class="flex justify-between items-center py-3 border-b border-outline-variant/15">
-                                    <span class="text-sm text-on-surface-variant">Multa</span>
-                                    <span class="text-sm font-semibold font-mono text-error" th:text="'R$ ' + ${loan.fine}">R$ 5,00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div th:if="${overdueLoans != null and !overdueLoans.isEmpty()}" class="flex gap-4">
-                            <button class="flex-1 px-6 py-4 border border-outline-variant/30 text-on-surface font-bold rounded-xl hover:bg-surface-container-high transition-colors text-sm">
-                                Detalhes
-                            </button>
-                            <button class="flex-1 px-6 py-4 bg-on-surface text-surface font-bold rounded-xl hover:opacity-90 transition-all text-sm">
-                                Devolver
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Subtle Decorative Element -->
-                    <div
-                        class="mt-8 p-6 bg-primary-container/20 rounded-xl flex items-center gap-4">
-                        <span class="material-symbols-outlined text-primary"
-                            style="font-variation-settings: 'FILL' 1;">info</span>
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold text-on-surface">Painel de
+                            Retorno</h2>
                         <p
-                            class="text-xs text-on-primary-container font-medium leading-relaxed">
-                            Note: Fines are calculated automatically based on
-                            the return delay beyond the estimated date.
-                        </p>
+                            class="text-xs text-on-surface-variant font-medium">Confirmação
+                            de recebimento e multas.</p>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-3xl p-8 border border-outline-variant/10 shadow-sm">
+                        <!-- Mostra empréstimo atrasado se existir -->
+                        <div th:if="${#lists.isEmpty(emprestimosAtrasados)}">
+                            <div
+                                class="flex flex-col items-center justify-center py-8">
+                                <span
+                                    class="material-symbols-outlined text-4xl text-on-surface-variant opacity-50">thumb_up</span>
+                                <p
+                                    class="text-on-surface-variant text-sm mt-2 text-center">Nenhum
+                                    empréstimo atrasado. Tudo em dia!</p>
+                            </div>
+                        </div>
+
+                        <div th:each="atrasado : ${emprestimosAtrasados}"
+                            th:if="${atrasado.multaCalculada != null}">
+                            <div class="mb-8">
+                                <div
+                                    class="flex justify-between items-start mb-6">
+                                    <div>
+                                        <h3
+                                            class="text-xl font-extrabold text-on-surface leading-tight">
+                                            <span th:each="livro : ${livros}"
+                                                th:if="${livro.id == atrasado.bookId}"
+                                                th:text="${livro.titulo}">Livro</span>
+                                        </h3>
+                                        <p
+                                            class="text-xs text-on-surface-variant font-medium">
+                                            <span th:each="livro : ${livros}"
+                                                th:if="${livro.id == atrasado.bookId}"
+                                                th:text="${livro.autor}">Autor</span>
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="bg-error-container/20 text-error px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">
+                                        Multa: <span
+                                            th:text="${'R$ ' + #numbers.formatDecimal(atrasado.multaCalculada, 1, 2, 'COMMA')}">R$
+                                            5,00</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <div
+                                        class="flex justify-between items-center py-3 border-b border-surface-container">
+                                        <span
+                                            class="text-xs font-medium text-on-surface-variant">Data
+                                            Esperada</span>
+                                        <span
+                                            class="text-xs font-bold font-mono"
+                                            th:text="${#dates.format(atrasado.dataVencimento, 'dd/MM/yyyy')}">01/10/2023</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center py-3 border-b border-surface-container">
+                                        <span
+                                            class="text-xs font-medium text-on-surface-variant">Data
+                                            Real</span>
+                                        <span
+                                            class="text-xs font-bold font-mono text-error"
+                                            th:text="${#dates.format(atrasado.dataDevolucao, 'dd/MM/yyyy')}">05/10/2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button
+                                    class="flex-1 py-4 border border-outline-variant/30 text-on-surface font-bold rounded-xl hover:bg-surface-container-low transition-colors text-xs uppercase tracking-widest">
+                                    Detalhes
+                                </button>
+                                <button
+                                    class="flex-1 py-4 bg-primary text-white font-bold rounded-xl hover:brightness-110 shadow-lg shadow-primary/20 transition-all text-xs uppercase tracking-widest">
+                                    Confirmar
+                                </button>
+                            </div>
+
+                            <div
+                                class="mt-8 p-4 bg-primary/5 rounded-xl flex items-start gap-3">
+                                <span
+                                    class="material-symbols-outlined text-primary text-lg"
+                                    style="font-variation-settings: 'FILL' 1;">info</span>
+                                <p
+                                    class="text-[10px] text-on-primary-container font-semibold leading-relaxed">
+                                    O sistema calcula multas automaticamente com
+                                    base no atraso em dias úteis.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
         </main>
-        <!-- Floating Action Button (FAB) - Suppression Logic: Usually on Dashboard/Main. Shown here as it is a core management action -->
+
         <button
-            class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-lg shadow-primary/20 flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+            class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50 group">
             <span class="material-symbols-outlined text-3xl">add</span>
+            <span
+                class="absolute right-20 bg-on-surface text-surface text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity font-bold pointer-events-none uppercase tracking-widest whitespace-nowrap">
+                Novo Empréstimo
+            </span>
         </button>
-    </body></html>
+
+    </body>
+</html>

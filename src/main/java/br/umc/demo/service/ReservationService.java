@@ -17,6 +17,7 @@ public class ReservationService {
     @Autowired
     private BookRepository bookRepository;
 
+    @SuppressWarnings("null")
     @Transactional
     public Reservation solicitarReserva(String leitorId, String bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow();

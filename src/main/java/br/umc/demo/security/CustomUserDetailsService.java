@@ -22,8 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword()) // Deve estar em Argon2 no Atlas
-                .roles(user.getRoles().stream()
-                    .map(role -> role.replace("ROLE_", "")) // Remove prefixo se houver
+.roles(user.getRoles().stream()
+                    .map(role -> role) // Keep original "ROLE_" prefix from DB
                     .toArray(String[]::new))
                 .build();
     }

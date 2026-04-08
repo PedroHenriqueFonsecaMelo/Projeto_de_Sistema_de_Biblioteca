@@ -14,8 +14,9 @@ public class Book {
     private String autor;
     private String editora;
     private Integer anoPublicacao;
-    private String localizacaoFisica; // Ex: Corredor A, Estante 3
-    
+    private String localizacaoFisica;
+    private String isbn;
+    private String imagemUrl;
     private Integer totalExemplares;
     private Integer exemplaresDisponiveis; // Calculado: Total - Emprestados
     
@@ -23,3 +24,4 @@ public class Book {
         return this.exemplaresDisponiveis > 0;
     }
 }
+

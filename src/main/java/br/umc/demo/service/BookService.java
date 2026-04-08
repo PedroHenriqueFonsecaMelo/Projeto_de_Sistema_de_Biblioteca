@@ -18,6 +18,7 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    @SuppressWarnings("null")
     public void atualizarEstoque(String bookId, int quantidadeAdicional) {
         Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new RuntimeException("Livro não encontrado"));

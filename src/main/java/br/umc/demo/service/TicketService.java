@@ -19,6 +19,7 @@ public class TicketService {
     }
 
 
+    @SuppressWarnings("null")
     public SupportTicket responderTicket(String ticketId, String resposta, String bibliotecarioId) {
         SupportTicket ticket = ticketRepository.findById(ticketId).orElseThrow();
         

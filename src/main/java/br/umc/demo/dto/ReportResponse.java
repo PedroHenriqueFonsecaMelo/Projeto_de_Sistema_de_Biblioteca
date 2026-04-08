@@ -15,7 +15,7 @@ public class ReportResponse {
     private Long totalBooks;
     private Long activeLoans;
     private Long overdueLoans;
-    private Long pendingFines; // Adicionado para bater com o seu construtor
+    private Long pendingFines;
     private List<Map<String, Object>> popularBooks;
 
     public ReportResponse(long totalBooks, long totalUsers, long pendingFines, long overdueLoans, List<Map<String, Object>> popularBooks) {
