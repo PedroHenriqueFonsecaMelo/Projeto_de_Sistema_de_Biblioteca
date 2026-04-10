@@ -18,15 +18,14 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-
     @SuppressWarnings("null")
     public SupportTicket responderTicket(String ticketId, String resposta, String bibliotecarioId) {
         SupportTicket ticket = ticketRepository.findById(ticketId).orElseThrow();
-        
+
         ticket.setRespostaBibliotecario(resposta);
         ticket.setBibliotecarioId(bibliotecarioId);
         ticket.setStatus(TicketStatus.CLOSED);
-        
+
         return ticketRepository.save(ticket);
     }
 }

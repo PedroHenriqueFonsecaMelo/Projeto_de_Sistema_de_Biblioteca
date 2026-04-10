@@ -16,6 +16,6 @@ public class Reservation {
     private String leitorId;
     private LocalDateTime dataSolicitacao;
     private Integer posicaoNaFila;
-    private boolean notificado; // Se o bibliotecário já avisou que o livro chegou
+    private boolean notificado;
     private boolean ativa = true;
 }

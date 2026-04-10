@@ -8,7 +8,7 @@ public class ViewController {
 
     @GetMapping("/")
     public String index() {
-        return "index"; // Retorna o index.html da pasta templates
+        return "index";
     }
 
     @GetMapping("/login")
@@ -16,4 +16,3 @@ public class ViewController {
         return "index";
     }
 }
-

@@ -22,12 +22,9 @@ public class ReservationService {
     public Reservation solicitarReserva(String leitorId, String bookId) {
         Book book = bookRepository.findById(bookId).orElseThrow();
 
-
         if (book.getExemplaresDisponiveis() > 0) {
             throw new RuntimeException("Ainda existem exemplares disponíveis. Realize um empréstimo direto.");
         }
-
-
 
         long posicao = reservationRepository.countByBookIdAndAtivaTrue(bookId) + 1;
 
@@ -41,7 +38,6 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-
     @Transactional
     public void processarProximaReserva(String bookId) {
 
@@ -51,9 +47,8 @@ public class ReservationService {
         if (proxima != null) {
 
             proxima.setNotificado(true);
-            proxima.setAtiva(false); // Reserva concluída/atendida
+            proxima.setAtiva(false);
             reservationRepository.save(proxima);
-
 
             atualizarPosicoesFila(bookId);
         }
@@ -75,5 +70,12 @@ public class ReservationService {
 
     public List<Reservation> getTodasReservasAtivas() {
         return reservationRepository.findByAtivaTrueOrderByDataSolicitacaoAsc();
+    }
+
+    @SuppressWarnings("null")
+    @Transactional
+    public void salvar(Reservation reserva) {
+
+        reservationRepository.save(reserva);
     }
 }

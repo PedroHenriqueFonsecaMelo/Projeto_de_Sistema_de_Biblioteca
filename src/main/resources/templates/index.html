@@ -7,160 +7,200 @@
 
         <link
             href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Public+Sans:wght@300;400;500;600&display=swap"
-            rel="stylesheet" />
+            rel="stylesheet"
+        />
         <link
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"
-            rel="stylesheet" />
+            rel="stylesheet"
+        />
 
         <script
-            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"
+        ></script>
         <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#3a6287",
-                        "primary-dim": "#2d567a",
-                        "primary-container": "#abd3fd",
-                        "on-primary": "#f7f9ff",
-                        "surface": "#f8f9fe",
-                        "on-surface": "#2d333a",
-                        "on-surface-variant": "#5a6067",
-                        "outline-variant": "#adb2bb",
-                        "surface-container-low": "#f1f3fa",
-                        "surface-container-lowest": "#ffffff"
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#3a6287",
+                            "primary-dim": "#2d567a",
+                            "primary-container": "#abd3fd",
+                            "on-primary": "#f7f9ff",
+                            "surface": "#f8f9fe",
+                            "on-surface": "#2d333a",
+                            "on-surface-variant": "#5a6067",
+                            "outline-variant": "#adb2bb",
+                            "surface-container-low": "#f1f3fa",
+                            "surface-container-lowest": "#ffffff",
+                        },
+                        fontFamily: {
+                            "headline": ["Manrope"],
+                            "body": ["Public Sans"],
+                        },
                     },
-                    fontFamily: {
-                        "headline": ["Manrope"],
-                        "body": ["Public Sans"]
-                    }
-                }
-            }
-        }
-    </script>
+                },
+            };
+        </script>
         <style>
-        body { font-family: 'Public Sans', sans-serif; }
-        h1, h2, .headline { font-family: 'Manrope', sans-serif; }
-    </style>
+            body {
+                font-family: "Public Sans", sans-serif;
+            }
+            h1, h2, .headline {
+                font-family: "Manrope", sans-serif;
+            }
+        </style>
     </head>
 
     <body class="bg-surface text-on-surface min-h-screen flex flex-col">
-
         <header
-            class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-100">
+            class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-100"
+        >
             <nav
-                class="flex justify-between items-center px-8 h-20 max-w-7xl mx-auto">
-                <div
-                    class="text-2xl font-bold tracking-tight text-slate-800">The
-                    Digital Curator</div>
+                class="flex justify-between items-center px-8 h-20 max-w-7xl mx-auto"
+            >
+                <div class="text-2xl font-bold tracking-tight text-slate-800">
+                    The Digital Curator
+                </div>
                 <div class="hidden md:flex items-center gap-8">
                     <a
                         class="text-slate-600 hover:text-primary transition-colors"
-                        href="#">Home</a>
+                        href="#"
+                    >Home</a>
                     <a
                         class="text-slate-600 hover:text-primary transition-colors"
-                        href="#">Sobre</a>
+                        href="#"
+                    >Sobre</a>
                     <a
                         class="text-slate-600 hover:text-primary transition-colors"
-                        href="#">Serviços</a>
+                        href="#"
+                    >Serviços</a>
                 </div>
                 <div class="flex items-center">
                     <span
-                        class="material-symbols-outlined text-slate-800 text-3xl">account_circle</span>
+                        class="material-symbols-outlined text-slate-800 text-3xl"
+                    >account_circle</span>
                 </div>
             </nav>
         </header>
 
         <main class="flex-grow flex items-center justify-center pt-24 pb-12">
             <div class="container mx-auto px-6 max-w-5xl">
-
                 <div
-                    class="grid grid-cols-1 md:grid-cols-12 shadow-2xl rounded-2xl overflow-hidden bg-white">
-
+                    class="grid grid-cols-1 md:grid-cols-12 shadow-2xl rounded-2xl overflow-hidden bg-white"
+                >
                     <div
-                        class="md:col-span-5 relative bg-primary p-12 flex flex-col justify-between text-white">
+                        class="md:col-span-5 relative bg-primary p-12 flex flex-col justify-between text-white"
+                    >
                         <div class="relative z-10">
                             <h1 class="text-4xl font-extrabold mb-4">Login</h1>
                             <p
-                                class="text-primary-container text-lg leading-relaxed opacity-90">
+                                class="text-primary-container text-lg leading-relaxed opacity-90"
+                            >
                                 Acesse o painel administrativo da biblioteca
                                 para gerenciar o acervo e usuários.
                             </p>
                         </div>
                         <div class="relative z-10">
                             <div
-                                class="w-12 h-1 bg-primary-container rounded-full mb-4"></div>
+                                class="w-12 h-1 bg-primary-container rounded-full mb-4"
+                            >
+                            </div>
                             <p
-                                class="text-xs uppercase tracking-widest opacity-70">Sistemas
-                                UMC - TCC</p>
+                                class="text-xs uppercase tracking-widest opacity-70"
+                            >
+                                Sistemas UMC - TCC
+                            </p>
                         </div>
                     </div>
 
                     <div class="md:col-span-7 p-8 md:p-16">
                         <div class="max-w-sm mx-auto">
-                            <h2
-                                class="text-2xl font-bold mb-8 text-slate-800">Acesse
-                                sua conta</h2>
+                            <h2 class="text-2xl font-bold mb-8 text-slate-800">
+                                Acesse sua conta
+                            </h2>
 
-                            <div th:if="${param.error}"
-                                class="mb-4 p-3 bg-red-100 text-red-700 text-sm rounded-lg">
+                            <div
+                                th:if="${param.error}"
+                                class="mb-4 p-3 bg-red-100 text-red-700 text-sm rounded-lg"
+                            >
                                 E-mail ou senha incorretos.
                             </div>
 
-                            <form th:action="@{/api/auth/login}" method="POST"
-                                class="space-y-6">
-
+                            <form
+                                th:action="@{/api/auth/login}"
+                                method="POST"
+                                class="space-y-6"
+                            >
                                 <div class="space-y-2">
                                     <label
                                         class="block text-sm font-semibold text-slate-600"
-                                        for="username">E-mail
-                                        Administrativo</label>
-                                    <input type="email" id="username"
+                                        for="username"
+                                    >E-mail Administrativo</label>
+                                    <input
+                                        type="email"
+                                        id="username"
                                         name="username"
                                         class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                        placeholder="exemplo@umc.br" required />
+                                        placeholder="exemplo@umc.br"
+                                        required
+                                    />
                                 </div>
 
                                 <div class="space-y-2">
                                     <div class="flex justify-between">
                                         <label
                                             class="block text-sm font-semibold text-slate-600"
-                                            for="password">Senha</label>
-                                        <a href="#"
-                                            class="text-xs text-primary hover:underline">Esqueceu
-                                            a senha?</a>
+                                            for="password"
+                                        >Senha</label>
+                                        <a
+                                            href="#"
+                                            class="text-xs text-primary hover:underline"
+                                        >Esqueceu a senha?</a>
                                     </div>
-                                    <input type="password" id="password"
+                                    <input
+                                        type="password"
+                                        id="password"
                                         name="password"
                                         class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                        placeholder="••••••••" required />
+                                        placeholder="••••••••"
+                                        required
+                                    />
                                 </div>
 
                                 <div class="flex items-center gap-2">
-                                    <input type="checkbox" id="remember"
-                                        class="rounded border-slate-300 text-primary focus:ring-primary" />
-                                    <label for="remember"
-                                        class="text-sm text-slate-500">Lembrar
-                                        neste dispositivo</label>
+                                    <input
+                                        type="checkbox"
+                                        id="remember"
+                                        class="rounded border-slate-300 text-primary focus:ring-primary"
+                                    />
+                                    <label
+                                        for="remember"
+                                        class="text-sm text-slate-500"
+                                    >Lembrar neste dispositivo</label>
                                 </div>
 
                                 <div class="pt-4 space-y-3">
-                                    <button type="submit"
-                                        class="w-full bg-primary hover:bg-primary-dim text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95">
+                                    <button
+                                        type="submit"
+                                        class="w-full bg-primary hover:bg-primary-dim text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95"
+                                    >
                                         Acessar Sistema
                                     </button>
-                                    <button type="button"
-                                        class="w-full border border-slate-200 text-slate-600 font-semibold py-4 rounded-xl hover:bg-slate-50 transition-colors">
+                                    <button
+                                        type="button"
+                                        class="w-full border border-slate-200 text-slate-600 font-semibold py-4 rounded-xl hover:bg-slate-50 transition-colors"
+                                    >
                                         Solicitar Acesso
                                     </button>
                                 </div>
                             </form>
 
                             <div class="mt-8 text-center">
-                                <p class="text-xs text-slate-400">© 2026 The
-                                    Digital Curator. Uso restrito a funcionários
-                                    e alunos autorizados.</p>
+                                <p class="text-xs text-slate-400">
+                                    © 2026 The Digital Curator. Uso restrito a
+                                    funcionários e alunos autorizados.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -170,7 +210,8 @@
 
         <footer class="w-full py-6 bg-white border-t border-slate-100">
             <div
-                class="max-w-7xl mx-auto px-12 flex justify-between items-center text-slate-400 text-sm">
+                class="max-w-7xl mx-auto px-12 flex justify-between items-center text-slate-400 text-sm"
+            >
                 <p>Universidade Mogi das Cruzes</p>
                 <div class="flex gap-6">
                     <a href="#" class="hover:text-primary">Privacidade</a>
@@ -178,6 +219,5 @@
                 </div>
             </div>
         </footer>
-
     </body>
 </html>

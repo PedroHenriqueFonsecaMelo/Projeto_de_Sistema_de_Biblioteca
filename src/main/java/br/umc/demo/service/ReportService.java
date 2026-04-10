@@ -1,13 +1,16 @@
 package br.umc.demo.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.umc.demo.dto.ReportResponse;
+import br.umc.demo.entity.Book;
+import br.umc.demo.entity.Loan;
 import br.umc.demo.entity.LoanStatus;
 import br.umc.demo.repository.BookRepository;
 import br.umc.demo.repository.LoanRepository;
@@ -16,35 +19,69 @@ import br.umc.demo.repository.UserRepository;
 @Service
 public class ReportService {
 
-    @Autowired
-    private LoanRepository loanRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private BookRepository bookRepository;
+        @Autowired
+        private LoanRepository loanRepository;
 
-    public ReportResponse getLibraryReport() {
+        @Autowired
+        private UserRepository userRepository;
 
-        long totalBooks = bookRepository.count();
-        long totalUsers = userRepository.count();
+        @Autowired
+        private BookRepository bookRepository;
 
-        long overdue = loanRepository.countByStatusAndDataVencimentoBefore(
-            LoanStatus.ACTIVE,
-            LocalDateTime.now()
-        );
+        public Map<String, Object> getLibraryReport() {
 
-        // Sample popular from massive data (in prod: Mongo aggregate $group by bookId from loans)
-        List<Map<String, Object>> popular = List.of(
-            Map.of("title", "Clean Code", "count", 12, "percentage", 80),
-            Map.of("title", "O Senhor dos Anéis", "count", 10, "percentage", 70),
-            Map.of("title", "Java: Como Programar", "count", 8, "percentage", 60),
-            Map.of("title", "1984", "count", 5, "percentage", 40),
-            Map.of("title", "Dom Casmurro", "count", 4, "percentage", 30)
-        );
+                long totalBooks = bookRepository.count();
+                long totalUsers = userRepository.count();
 
-        return new ReportResponse(totalBooks, totalUsers, (long) (loanRepository.countByStatus(LoanStatus.OVERDUE) * 2.0), overdue, popular);
-    }
+                long overdue = loanRepository.countByStatusAndDataVencimentoBefore(
+                                LoanStatus.ACTIVE,
+                                LocalDateTime.now());
+
+                long totalFines = loanRepository.countByStatus(LoanStatus.OVERDUE) * 2;
+
+                // Real top 5 popular books by loan count (recent returned loans) - no lambdas
+                List<Loan> returnedLoans = loanRepository
+                                .findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus.RETURNED);
+
+                // Group by bookId count
+                Map<String, Long> bookCountsMap = new HashMap<>();
+                for (Loan loan : returnedLoans) {
+                        String bookId = loan.getBookId();
+                        Long currentCount = bookCountsMap.getOrDefault(bookId, 0L);
+                        bookCountsMap.put(bookId, currentCount + 1);
+                }
+
+                List<Map.Entry<String, Long>> sortedEntries = new ArrayList<>(bookCountsMap.entrySet());
+                sortedEntries.sort((e1, e2) -> (int) (e2.getValue() - e1.getValue()));
+                List<Map<String, Object>> popular = new ArrayList<>();
+                for (int i = 0; i < Math.min(5, sortedEntries.size()); i++) {
+
+                        Map.Entry<String, Long> entry = sortedEntries.get(i);
+                        if (entry.getValue() == 0) {
+                                continue;
+                        }
+
+                        
+                        @SuppressWarnings("null")
+                        Book b = bookRepository.findById(entry.getKey()).orElse(null);
+
+                        if (b != null) {
+                                Map<String, Object> item = new HashMap<>();
+                                item.put("title", b.getTitulo());
+                                item.put("count", entry.getValue());
+                                item.put("percentage", (int) (entry.getValue() * 20));
+                                popular.add(item);
+                        }
+                }
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("totalBooks", totalBooks);
+                data.put("activeLoans", loanRepository.countByStatus(LoanStatus.ACTIVE));
+                data.put("overdue", overdue);
+                data.put("activeUsers", totalUsers);
+                data.put("totalFines", totalFines);
+                data.put("popularBooks", popular);
+
+                return data;
+        }
 }
-

@@ -16,7 +16,7 @@ public class SupportTicket {
     private String assunto;
     private String mensagem;
     private LocalDateTime dataRegistro;
-    private TicketStatus status; // OPEN, IN_PROGRESS, CLOSED
+    private TicketStatus status;
     private String respostaBibliotecario;
     private String bibliotecarioId;
 }

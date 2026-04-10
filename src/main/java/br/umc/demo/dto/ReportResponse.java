@@ -18,7 +18,8 @@ public class ReportResponse {
     private Long pendingFines;
     private List<Map<String, Object>> popularBooks;
 
-    public ReportResponse(long totalBooks, long totalUsers, long pendingFines, long overdueLoans, List<Map<String, Object>> popularBooks) {
+    public ReportResponse(long totalBooks, long totalUsers, long pendingFines, long overdueLoans,
+            List<Map<String, Object>> popularBooks) {
         this.totalBooks = totalBooks;
         this.totalUsers = totalUsers;
         this.pendingFines = pendingFines;

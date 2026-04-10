@@ -1,5 +1,16 @@
 package br.umc.demo.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class LivroDTO {
     private String isbn;
     private String titulo;
@@ -7,38 +18,4 @@ public class LivroDTO {
     private String status;
     private String localizacao;
     private String imagemUrl;
-
-    public LivroDTO(String isbn, String titulo, String autor, String status, String localizacao, String imagemUrl) {
-        this.isbn = isbn;
-        this.titulo = titulo;
-        this.autor = autor;
-        this.status = status;
-        this.localizacao = localizacao;
-        this.imagemUrl = imagemUrl;
-    }
-
-    // Getters
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getLocalizacao() {
-        return localizacao;
-    }
-
-    public String getImagemUrl() {
-        return imagemUrl;
-    }
 }

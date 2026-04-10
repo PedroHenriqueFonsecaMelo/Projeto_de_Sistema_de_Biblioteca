@@ -21,8 +21,8 @@ public class BookService {
     @SuppressWarnings("null")
     public void atualizarEstoque(String bookId, int quantidadeAdicional) {
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
-        
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+
         book.setTotalExemplares(book.getTotalExemplares() + quantidadeAdicional);
         book.setExemplaresDisponiveis(book.getExemplaresDisponiveis() + quantidadeAdicional);
         bookRepository.save(book);
@@ -34,5 +34,9 @@ public class BookService {
 
     public List<Book> searchBooks(String query) {
         return bookRepository.findByTituloContainingIgnoreCase(query);
+    }
+
+    public void deleteByIsbn(String isbn) {
+        bookRepository.deleteByIsbn(isbn);
     }
 }

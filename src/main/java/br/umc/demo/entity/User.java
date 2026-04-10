@@ -1,9 +1,9 @@
 package br.umc.demo.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,8 +14,8 @@ import lombok.Data;
 
 @Document(collection = "users")
 @Data
-public class User implements UserDetails { // <-- Agora o Spring entende quem é você
-    
+public class User implements UserDetails {
+
     @Id
     private String id;
     private String nome;
@@ -24,24 +24,23 @@ public class User implements UserDetails { // <-- Agora o Spring entende quem é
     private String telefone;
     private String endereco;
     private String documentoIdentidade;
-    
 
     private Set<String> roles;
     private boolean ativo = true;
 
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
 
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        for (String role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
     }
 
     @Override
     public String getUsername() {
-        return this.email; // O e-mail é o login do seu sistema
+        return this.email;
     }
 
     @Override
@@ -51,7 +50,7 @@ public class User implements UserDetails { // <-- Agora o Spring entende quem é
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; 
+        return true;
     }
 
     @Override
@@ -66,6 +65,6 @@ public class User implements UserDetails { // <-- Agora o Spring entende quem é
 
     @Override
     public boolean isEnabled() {
-        return this.ativo; // Usa o seu campo 'ativo' para bloquear login se necessário
+        return this.ativo;
     }
 }

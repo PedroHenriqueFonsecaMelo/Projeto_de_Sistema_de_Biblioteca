@@ -19,7 +19,6 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest req) {
         return ResponseEntity.ok(reservationService.solicitarReserva(req.getLeitorId(), req.getBookId()));
@@ -30,11 +29,10 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getFilaPorLivro(bookId));
     }
 
-
     @GetMapping("/active")
     public ResponseEntity<List<Reservation>> getActiveReservations() {
 
         return ResponseEntity.ok(reservationService.getTodasReservasAtivas());
     }
-    
+
 }

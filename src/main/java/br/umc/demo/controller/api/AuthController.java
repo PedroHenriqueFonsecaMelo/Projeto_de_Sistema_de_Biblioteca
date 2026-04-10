@@ -33,21 +33,21 @@ public class AuthController {
      * try {
      * logger.info("Tentativa de login para o usuário: {}", username);
      *
-     * // 1. Autentica o usuário
+     * 
      * Authentication auth = authenticationManager.authenticate(
      * new UsernamePasswordAuthenticationToken(username, password));
      *
-     * // 2. Gera o Token JWT
+     * 
      * String token = jwtService.generateToken(auth.getName());
      *
-     * // 3. Cria e configura o Cookie
+     * 
      * Cookie cookie = new Cookie("AUTH-TOKEN", token);
      * cookie.setHttpOnly(true);
-     * cookie.setSecure(false); // Obrigatório false para localhost sem HTTPS
-     * cookie.setPath("/"); // Essencial para o cookie ser enviado ao /dashboard
-     * cookie.setMaxAge(86400); // 24 horas
+     * cookie.setSecure(false);
+     * cookie.setPath("/");
+     * cookie.setMaxAge(86400);
      *
-     * // Adiciona o atributo SameSite manualmente para garantir compatibilidade com
+     * 
      * o Chrome
      * response.setHeader("Set-Cookie",
      * String.format("%s=%s; Max-Age=%d; Path=%s; HttpOnly; SameSite=Lax",
@@ -64,12 +64,12 @@ public class AuthController {
      *
      * @PostMapping("/logout")
      * public String logout(HttpServletResponse response) {
-     * // Invalida o cookie removendo-o
+     * 
      * Cookie cookie = new Cookie("AUTH-TOKEN", null);
      * cookie.setHttpOnly(true);
-     * cookie.setSecure(false); // Obrigatório false para localhost sem HTTPS
-     * cookie.setPath("/"); // Essencial para o cookie ser enviado ao /dashboard
-     * cookie.setMaxAge(0); // Expira imediatamente
+     * cookie.setSecure(false);
+     * cookie.setPath("/");
+     * cookie.setMaxAge(0);
      * response.addCookie(cookie);
      *
      * logger.info("Logout realizado. Redirecionando para a página inicial...");
@@ -80,26 +80,40 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, HttpServletResponse response) {
         try {
-            logger.info("Tentativa de login para o usuário: {}", username);
+            logger.info("========================================");
+            logger.info("🔐 Tentativa de LOGIN para user: {}", username);
+            logger.info("========================================");
 
+            // Authenticate user
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
 
-            String token = jwtService.generateToken(auth.getName());
+            logger.info("✓ Autenticação bem-sucedida para: {}", auth.getName());
+            logger.info("✓ Autoridades do user: {}", auth.getAuthorities());
 
+            // Generate JWT token
+            String token = jwtService.generateToken(auth.getName());
+            logger.info("✓ Token JWT gerado com sucesso");
+
+            // Create and set cookie
             Cookie cookie = new Cookie("AUTH-TOKEN", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(false);
             cookie.setPath("/");
             cookie.setMaxAge(86400);
-
             response.addCookie(cookie);
 
-            logger.info("Login bem-sucedido. Cookie gerado. Redirecionando...");
+            logger.info("✓ Cookie AUTH-TOKEN setado com sucesso");
+            logger.info("========================================");
+            logger.info("✓ Redirecionando para /dashboard...");
+            logger.info("========================================");
+            
             return "redirect:/dashboard";
 
         } catch (Exception e) {
-            logger.error("Erro na autenticação: {}", e.getMessage());
+            logger.error("========================================");
+            logger.error("✗ ERRO NA AUTENTICAÇÃO: {}", e.getMessage());
+            logger.error("========================================", e);
             return "redirect:/?error=true";
         }
     }

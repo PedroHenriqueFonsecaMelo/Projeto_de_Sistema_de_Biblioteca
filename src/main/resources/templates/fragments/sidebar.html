@@ -2,89 +2,123 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <style>
-        /* Classe de apoio para o item ativo, caso não esteja no seu CSS global */
-        .sidebar-item-active {
-            background-color: #abd3fd !important;
-            color: #3a6287 !important;
-            font-weight: 700 !important;
-            border-radius: 0 1.5rem 1.5rem 0;
-        }
-    </style>
+            /* Classe de apoio para o item ativo, caso não esteja no seu CSS global */
+            .sidebar-item-active {
+                background-color: #abd3fd !important;
+                color: #3a6287 !important;
+                font-weight: 700 !important;
+                border-radius: 0 1.5rem 1.5rem 0;
+            }
+        </style>
     </head>
     <body>
-        <aside th:fragment="sidebar(activePage)"
-            class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-[#f1f3fa] dark:bg-[#1a1c1e] py-6 pr-4 z-50 shadow-xl border-r border-outline-variant/10">
-
+        <aside
+            th:fragment="sidebar(activePage)"
+            class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-[#f1f3fa] dark:bg-[#1a1c1e] py-6 pr-4 z-50 shadow-xl border-r border-outline-variant/10"
+        >
             <div class="px-6 mb-10 flex items-center gap-3">
                 <div
-                    class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-lg shadow-primary/20">
-                    <span class="material-symbols-outlined"
-                        style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+                    class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-lg shadow-primary/20"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1"
+                    >auto_stories</span>
                 </div>
                 <div>
                     <h2
-                        class="font-black text-primary dark:text-[#abd3fd] text-lg leading-none tracking-tighter">Grand
-                        Library</h2>
+                        class="font-black text-primary dark:text-[#abd3fd] text-lg leading-none tracking-tighter"
+                    >
+                        Grand Library
+                    </h2>
                     <p
-                        class="text-[10px] text-on-surface-variant font-bold uppercase mt-1 tracking-widest opacity-70">Administrator</p>
+                        class="text-[10px] text-on-surface-variant font-bold uppercase mt-1 tracking-widest opacity-70"
+                    >
+                        Administrator
+                    </p>
                 </div>
             </div>
 
             <nav class="flex-1 flex flex-col gap-1">
-
-                <a th:href="@{/dashboard}"
+                <a
+                    th:href="@{/dashboard}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'dashboard'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'">
-                    <span class="material-symbols-outlined"
-                        th:style="${activePage == 'dashboard'} ? 'font-variation-settings: \'FILL\' 1;' : ''">dashboard</span>
+                    th:classappend="${activePage == 'dashboard'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'dashboard'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >dashboard</span>
                     <span>Dashboard</span>
                 </a>
 
-                <a th:href="@{/livros/emprestimos}"
+                <a
+                    th:href="@{/livros/emprestimos}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'emprestimos'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'">
-                    <span class="material-symbols-outlined"
-                        th:style="${activePage == 'emprestimos'} ? 'font-variation-settings: \'FILL\' 1;' : ''">sync_alt</span>
+                    th:classappend="${activePage == 'emprestimos'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'emprestimos'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >sync_alt</span>
                     <span>Empréstimos</span>
                 </a>
 
-                <a th:href="@{/livros/reservas}"
+                <a
+                    th:href="@{/livros/reservas}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'reservas'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'">
-                    <span class="material-symbols-outlined"
-                        th:style="${activePage == 'reservas'} ? 'font-variation-settings: \'FILL\' 1;' : ''">bookmark_manager</span>
+                    th:classappend="${activePage == 'reservas'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'reservas'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >bookmark_manager</span>
                     <span>Reservas</span>
                 </a>
 
-                <a th:href="@{/livros}"
+                <a
+                    th:href="@{/livros}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'livros'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'">
-                    <span class="material-symbols-outlined"
-                        th:style="${activePage == 'livros'} ? 'font-variation-settings: \'FILL\' 1;' : ''">book_5</span>
+                    th:classappend="${activePage == 'livros'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'livros'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >book_5</span>
                     <span>Acervo</span>
                 </a>
 
-                <a th:href="@{/relatorios}"
+                <a
+                    th:href="@{/relatorios}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'relatorios'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'">
-                    <span class="material-symbols-outlined"
-                        th:style="${activePage == 'relatorios'} ? 'font-variation-settings: \'FILL\' 1;' : ''">analytics</span>
+                    th:classappend="${activePage == 'relatorios'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'relatorios'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >analytics</span>
                     <span>Estatísticas</span>
                 </a>
 
-                <a th:href="@{/controle}"
+                <a
+                    th:href="@{/controle}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'controle'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'">
-                    <span class="material-symbols-outlined"
-                        th:style="${activePage == 'controle'} ? 'font-variation-settings: \'FILL\' 1;' : ''">settings_input_component</span>
+                    th:classappend="${activePage == 'controle'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'controle'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >settings_input_component</span>
                     <span>Controle</span>
                 </a>
             </nav>
 
             <div class="mt-auto px-6 pt-6 border-t border-outline-variant/10">
                 <form th:action="@{/api/auth/logout}" method="POST">
-                    <button type="submit"
-                        class="flex items-center gap-3 w-full py-3 text-error hover:opacity-80 transition-opacity font-bold text-sm">
+                    <button
+                        type="submit"
+                        class="flex items-center gap-3 w-full py-3 text-error hover:opacity-80 transition-opacity font-bold text-sm"
+                    >
                         <span class="material-symbols-outlined">logout</span>
                         <span>Sair do Sistema</span>
                     </button>

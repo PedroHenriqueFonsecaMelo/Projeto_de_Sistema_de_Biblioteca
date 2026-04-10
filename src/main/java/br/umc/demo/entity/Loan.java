@@ -12,14 +12,17 @@ import lombok.Data;
 public class Loan {
     @Id
     private String id;
-    private String leitorId; // ID do User (Reader)
-    private String bibliotecarioId; // ID do User que realizou a operação
+    private String leitorId;
+    private String bibliotecarioId;
     private String bookId;
-    
+
     private LocalDateTime dataEmprestimo;
-    private LocalDateTime dataVencimento; // DataEmprestimo + 14 dias
-    private LocalDateTime dataDevolucao; // Preenchido no momento da entrega
-    
+    private LocalDateTime dataVencimento;
+    private LocalDateTime dataDevolucao;
+
     private Double multaCalculada;
-    private LoanStatus status; // ACTIVE, RETURNED, OVERDUE
+    private LoanStatus status;
+    
+    private boolean ativo = true;
+    private java.time.LocalDate dataDevolucaoReal;
 }

@@ -18,10 +18,9 @@ public class Book {
     private String isbn;
     private String imagemUrl;
     private Integer totalExemplares;
-    private Integer exemplaresDisponiveis; // Calculado: Total - Emprestados
-    
+    private Integer exemplaresDisponiveis;
+
     public boolean isDisponivel() {
         return this.exemplaresDisponiveis > 0;
     }
 }
-
