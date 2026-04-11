@@ -11,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.umc.demo.dto.LivroDTO;
@@ -28,11 +30,12 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/library")
 public class SidebarController {
 
     private final LivroService bookService;
     private final EmprestimoRepository loanRepository;
-    private final ReservaService reservationService;
+    private final ReservaService reservaService;
     private final UserRepository userRepository;
 
     // --- DASHBOARD ---
@@ -61,14 +64,14 @@ public class SidebarController {
     @PostMapping("/livros/salvar")
     public String processarCadastroLivro(@ModelAttribute Livro livro) {
         // Assume-se que o service lida com lógica de novo vs edição
-        bookService.cadastrarNovoMaterial(livro); 
-        return "redirect:/livros/acervo";
+        bookService.cadastrarNovoMaterial(livro);
+        return "redirect:/library/livros/acervo";
     }
 
     @DeleteMapping("/livros/remover")
     public String processarRemocaoLivro(@RequestParam("isbn") String isbn) {
         bookService.deleteByIsbn(isbn);
-        return "redirect:/livros/acervo";
+        return "redirect:/library/livros/acervo";
     }
 
     // --- EMPRÉSTIMOS (LOANS) ---
@@ -107,7 +110,9 @@ public class SidebarController {
 
     @GetMapping("/reservas")
     public String exibirPaginaReservas(Model model) {
-        var reservasAtivas = reservationService.getTodasReservasAtivas();
+
+        List<Reserva> reservasAtivas = reservaService.listarAtivas();
+
         List<Livro> livros = bookService.findAll();
         List<User> usuarios = userRepository.findAll();
 
@@ -119,18 +124,40 @@ public class SidebarController {
         return "Reservas";
     }
 
-    @PostMapping("/reservar/reservas")
+    @PostMapping("/reservas/reservar")
     public String processarNovaReserva(@ModelAttribute Reserva reserva) {
+ 
         reserva.setDataSolicitacao(LocalDateTime.now());
-        reservationService.salvar(reserva);
-        return "redirect:/reservas";
+        reservaService.salvar(reserva);
+        return "redirect:/library/reservas";
+    }
+
+    @PostMapping("/reservas/liberar")
+    public String processarLiberacaoReserva(@RequestParam("reservaId") String reservaId) {
+        // Ajustado para 'concluirReserva' ou 'liberarReserva' conforme seu Service
+        reservaService.concluirReserva(reservaId);
+        return "redirect:/library/reservas";
+    }
+
+    @GetMapping("/reservas/deletar/{id}")
+    public String deletarReserva(@PathVariable String id) {
+        reservaService.cancelarReserva(id);
+        return "redirect:/library/reservas";
     }
 
     // --- RELATÓRIOS ---
 
     @GetMapping("/relatorios")
     public String exibirPaginaRelatorios() {
-        return "relatorios";
+        return "Relatorio";
+    }
+
+    // --- CONTROLE DE USUARIOS ---
+    @GetMapping("/controle")
+    public String exibirControleAcesso(Model model) {
+        List<User> usuarios = userRepository.findAll();
+        model.addAttribute("usuarios", usuarios);
+        return "Controle";
     }
 
     // --- MÉTODOS AUXILIARES (PRIVATE) ---

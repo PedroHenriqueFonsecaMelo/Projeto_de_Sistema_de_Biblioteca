@@ -108,7 +108,7 @@ public class AuthControler {
             logger.info("✓ Redirecionando para /dashboard...");
             logger.info("========================================");
 
-            return "redirect:/dashboard";
+            return "redirect:/library/dashboard";
 
         } catch (Exception e) {
             logger.error("========================================");

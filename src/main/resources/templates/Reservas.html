@@ -16,38 +16,42 @@
             rel="stylesheet"
         />
 
-        <script th:replace="~{fragments/tailwind-config :: script}"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#4f46e5",
+                            surface: "#f8f9fe",
+                            error: "#ef4444",
+                        },
+                    },
+                },
+            };
+        </script>
         <style>
-            .material-symbols-outlined {
-                vertical-align: middle;
-            }
             body {
                 font-family: "Public Sans", sans-serif;
-                background-color: #f8f9fe;
-                color: #2d333a;
             }
             h1, h2, h3 {
                 font-family: "Manrope", sans-serif;
             }
-            @media (min-width: 768px) {
-                .main-content {
-                    margin-left: 16rem;
-                }
-            }
-            .modal-active {
-                overflow: hidden;
-            }
-            .transition-row {
-                transition: all 0.2s ease;
+            .sidebar-item-active {
+                background-color: #abd3fd;
+                color: #2d333a;
+                border-radius: 0 9999px 9999px 0;
+                font-weight: 700;
             }
         </style>
     </head>
-    <body class="bg-surface text-on-surface">
-        <div th:replace="~{fragments/sidebar :: sidebar(activePage='books')}">
+    <body class="bg-surface">
+        <div
+            th:replace="~{fragments/sidebar :: sidebar(activePage='reservas')}"
+        >
         </div>
 
         <main
-            class="main-content pt-20 px-6 md:px-10 pb-12 min-h-screen transition-all"
+            class="md:ml-64 pt-20 px-6 md:px-10 pb-12 min-h-screen transition-all"
         >
             <div class="max-w-6xl mx-auto">
                 <section class="mb-10">
@@ -56,51 +60,50 @@
                     >
                         <div class="space-y-1">
                             <h1
-                                class="text-4xl font-extrabold text-on-surface tracking-tight"
+                                class="text-4xl font-extrabold text-slate-900 tracking-tight"
                             >
                                 Reservas
                             </h1>
-                            <p
-                                class="text-on-surface-variant text-lg font-light"
-                            >
+                            <p class="text-slate-500 text-lg font-light">
                                 Gerencie listas de espera e prioridades de
                                 retirada.
                             </p>
                         </div>
-                        <div class="flex gap-3">
-                            <button
-                                onclick="openModal()"
-                                class="px-5 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all active:scale-95 flex items-center gap-2"
-                            >
-                                <span class="material-symbols-outlined"
-                                >add</span> Nova Reserva
-                            </button>
-                        </div>
+                        <button
+                            onclick="openModal()"
+                            class="px-5 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all active:scale-95 flex items-center gap-2"
+                        >
+                            <span class="material-symbols-outlined">add</span>
+                            Nova Reserva
+                        </button>
                     </div>
                 </section>
 
                 <section class="mb-8">
                     <div class="relative max-w-md">
                         <span
-                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline"
+                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                         >search</span>
                         <input
                             type="text"
                             id="searchInput"
                             onkeyup="filterReservas()"
-                            placeholder="Buscar por livro ou autor..."
+                            placeholder="Buscar por usuário ou livro..."
                             class="w-full pl-12 pr-4 py-3 rounded-2xl border-none bg-white shadow-sm focus:ring-2 focus:ring-primary transition-all"
                         >
                     </div>
                 </section>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div class="lg:col-span-5 space-y-6">
-                        <h2 class="text-xl font-bold flex items-center gap-2">
+                    <div class="lg:col-span-4 space-y-6">
+                        <h2
+                            class="text-xl font-bold flex items-center gap-2 text-slate-800"
+                        >
                             <span class="material-symbols-outlined text-primary"
                             >local_library</span>
-                            Livros com Fila <span
-                                class="text-sm font-normal text-on-surface-variant"
+                            Livros Solicitados
+                            <span
+                                class="text-sm font-normal text-slate-400"
                                 th:text="${'(' + totalReservas + ')'}"
                             >(0)</span>
                         </h2>
@@ -108,93 +111,91 @@
                         <div class="space-y-3">
                             <div
                                 th:if="${#lists.isEmpty(livros)}"
-                                class="bg-white p-8 rounded-2xl text-center border border-outline-variant/5"
+                                class="bg-white p-8 rounded-2xl text-center border border-slate-100"
                             >
                                 <span
-                                    class="material-symbols-outlined text-4xl text-on-surface-variant opacity-50"
+                                    class="material-symbols-outlined text-4xl text-slate-200"
                                 >inbox</span>
-                                <p class="text-on-surface-variant text-sm mt-2">
-                                    Nenhum livro solicitado.
+                                <p class="text-slate-400 text-sm mt-2">
+                                    Nenhum livro no catálogo.
                                 </p>
                             </div>
 
                             <div
                                 th:each="livro : ${livros}"
-                                class="bg-white p-5 rounded-2xl flex items-center gap-4 hover:shadow-md transition-all group cursor-pointer border-l-4 border-primary"
+                                class="bg-white p-4 rounded-2xl flex items-center gap-4 border-l-4 border-primary shadow-sm"
                             >
                                 <div
-                                    class="w-14 h-20 bg-surface-container rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden"
+                                    class="w-12 h-16 bg-slate-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden"
                                 >
                                     <span
-                                        class="material-symbols-outlined text-outline"
-                                    >image</span>
+                                        class="material-symbols-outlined text-slate-300"
+                                    >book</span>
                                 </div>
                                 <div class="flex-grow">
                                     <h3
-                                        class="font-bold text-lg text-on-surface group-hover:text-primary transition-colors"
+                                        class="font-bold text-sm text-slate-800 truncate w-40"
                                         th:text="${livro.titulo}"
                                     >
-                                        Título do Livro
+                                        Título
                                     </h3>
                                     <p
-                                        class="text-xs text-on-surface-variant font-medium"
-                                        th:text="${'ISBN: ' + livro.isbn}"
+                                        class="text-[10px] text-slate-400 font-bold uppercase"
+                                        th:text="${livro.isbn}"
                                     >
-                                        ISBN: 000-00
+                                        ISBN
                                     </p>
-                                    <div
-                                        class="mt-2 inline-flex items-center px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-extrabold rounded-full uppercase"
-                                    >
-                                        Fila Ativa
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="lg:col-span-7">
+                    <div class="lg:col-span-8">
                         <div
-                            class="bg-white rounded-3xl p-8 border border-outline-variant/10 shadow-sm"
+                            class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm"
                         >
                             <h2
-                                class="text-2xl font-extrabold text-on-surface mb-6"
+                                class="text-2xl font-extrabold text-slate-900 mb-6"
                             >
-                                Fila de Espera Detalhada
+                                Fila de Espera Ativa
                             </h2>
 
                             <div class="space-y-2">
                                 <div
-                                    class="hidden md:grid grid-cols-12 px-4 py-2 text-[10px] font-bold text-outline uppercase tracking-[0.1em]"
+                                    class="hidden md:grid grid-cols-12 px-4 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest"
                                 >
                                     <div class="col-span-1">Pos.</div>
-                                    <div class="col-span-7">Informações</div>
-                                    <div class="col-span-4 text-right">
+                                    <div class="col-span-8">
+                                        Informações da Reserva
+                                    </div>
+                                    <div class="col-span-3 text-right">
                                         Ações
                                     </div>
                                 </div>
 
                                 <div
                                     th:if="${#lists.isEmpty(reservas)}"
-                                    class="py-10 text-center text-on-surface-variant"
+                                    class="py-10 text-center text-slate-400"
                                 >
-                                    <p>Não há reservas registradas.</p>
+                                    <p>Não há reservas pendentes no momento.</p>
                                 </div>
 
                                 <div
-                                    th:each="reserva, status : ${reservas}"
-                                    class="reserva-item grid grid-cols-1 md:grid-cols-12 items-center gap-4 px-4 py-4 rounded-2xl hover:bg-surface-container-low transition-row border-b border-surface-container last:border-0"
+                                    th:each="reserva, iter : ${reservas}"
+                                    class="reserva-item grid grid-cols-1 md:grid-cols-12 items-center gap-4 px-4 py-4 rounded-2xl hover:bg-slate-50 transition-row border-b border-slate-50 last:border-0"
                                 >
                                     <div
                                         class="col-span-1 font-bold text-primary"
-                                        th:text="${status.count}"
+                                        th:text="${iter.count}"
                                     >
                                         1
                                     </div>
+
                                     <div
-                                        class="col-span-7 flex items-center gap-3"
+                                        class="col-span-8 flex items-center gap-3"
                                     >
                                         <div
-                                            class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-primary"
+                                            class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-primary"
                                         >
                                             <span
                                                 class="material-symbols-outlined"
@@ -202,40 +203,49 @@
                                         </div>
                                         <div>
                                             <div
-                                                class="font-bold text-on-surface text-sm search-target"
+                                                class="font-bold text-slate-800 text-sm"
                                                 th:text="${reserva.usuarioNome}"
                                             >
-                                                Nome do Usuário
+                                                Nome
                                             </div>
-                                            <div
-                                                class="text-xs text-on-surface-variant search-target"
-                                                th:text="${reserva.livroTitulo}"
-                                            >
-                                                Título do Livro
+                                            <div class="text-xs text-slate-500">
+                                                Reserva de: <span
+                                                    class="font-medium"
+                                                    th:text="${reserva.livroTitulo}"
+                                                >Título</span>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
-                                        class="col-span-4 flex justify-end gap-2"
+                                        class="col-span-3 flex justify-end gap-2"
                                     >
                                         <form
-                                            th:action="@{/reservas/liberar/{id}(id=${reserva.id})}"
+                                            th:action="@{/library/reservas/liberar}"
                                             method="POST"
+                                            class="inline"
                                         >
+                                            <input
+                                                type="hidden"
+                                                name="reservaId"
+                                                th:value="${reserva.id}"
+                                            />
                                             <button
                                                 type="submit"
-                                                class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                                                title="Liberar Livro"
+                                                class="p-2 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors"
                                             >
                                                 <span
                                                     class="material-symbols-outlined"
                                                 >check_circle</span>
                                             </button>
                                         </form>
+
                                         <button
-                                            th:onclick="'confirmDelete(' + ${reserva.id} + ')'"
-                                            class="p-2 text-error hover:bg-error/10 rounded-lg transition-colors"
-                                            title="Excluir"
+                                            type="button"
+                                            th:data-id="${reserva.id}"
+                                            onclick="confirmDelete(this.getAttribute('data-id'))"
+                                            class="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Cancelar Reserva"
                                         >
                                             <span
                                                 class="material-symbols-outlined"
@@ -252,61 +262,60 @@
 
         <div
             id="reservaModal"
-            class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+            class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
         >
             <div
-                class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200"
+                class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden"
             >
                 <div class="p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-extrabold text-on-surface">
+                        <h2 class="text-2xl font-extrabold text-slate-900">
                             Nova Reserva
                         </h2>
                         <button
                             onclick="closeModal()"
-                            class="p-2 hover:bg-surface-container rounded-full transition-colors"
+                            class="p-2 hover:bg-slate-100 rounded-full transition-colors"
                         >
                             <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
 
                     <form
-                        th:action="@{/reservas/salvar}"
+                        th:action="@{/library/reservas/reservar}"
                         method="POST"
                         class="space-y-5"
                     >
                         <div>
                             <label
-                                class="block text-xs font-bold uppercase text-outline mb-2 ml-1"
+                                class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
                             >Livro para Reserva</label>
                             <select
                                 name="bookId"
                                 required
-                                class="w-full rounded-xl border-outline-variant bg-surface-container-low focus:ring-primary focus:border-primary py-3"
+                                class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3"
                             >
                                 <option value="" disabled selected>
-                                    Selecione um livro...
+                                    Selecione um título...
                                 </option>
                                 <option
                                     th:each="l : ${livros}"
                                     th:value="${l.id}"
                                     th:text="${l.titulo}"
                                 >
-                                    Título
                                 </option>
                             </select>
                         </div>
 
                         <div>
                             <label
-                                class="block text-xs font-bold uppercase text-outline mb-2 ml-1"
+                                class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
                             >Nome do Solicitante</label>
                             <input
                                 type="text"
                                 name="usuarioNome"
                                 required
-                                placeholder="Ex: João Silva"
-                                class="w-full rounded-xl border-outline-variant bg-surface-container-low focus:ring-primary focus:border-primary py-3"
+                                placeholder="Ex: Ana Clara Oliveira"
+                                class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3"
                             >
                         </div>
 
@@ -314,15 +323,15 @@
                             <button
                                 type="button"
                                 onclick="closeModal()"
-                                class="flex-1 px-5 py-3 font-bold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all"
+                                class="flex-1 px-5 py-3 font-bold text-slate-400 hover:bg-slate-50 rounded-xl"
                             >
-                                Cancelar
+                                Descartar
                             </button>
                             <button
                                 type="submit"
                                 class="flex-1 px-5 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition-all"
                             >
-                                Confirmar
+                                Confirmar Reserva
                             </button>
                         </div>
                     </form>
@@ -330,66 +339,32 @@
             </div>
         </div>
 
-        <footer
-            class="md:ml-64 p-8 text-center text-on-surface-variant/30 text-[10px] font-bold tracking-[0.2em] uppercase"
-        >
-            © 2026 The Digital Curator • Editorial excellence
-        </footer>
-
         <script>
-            // Gerenciamento do Modal
             function openModal() {
-                const modal = document.getElementById("reservaModal");
-                modal.classList.remove("hidden");
+                document.getElementById("reservaModal").classList.remove("hidden");
                 document.body.classList.add("modal-active");
             }
 
             function closeModal() {
-                const modal = document.getElementById("reservaModal");
-                modal.classList.add("hidden");
+                document.getElementById("reservaModal").classList.add("hidden");
                 document.body.classList.remove("modal-active");
             }
 
-            // Filtro de Busca em Tempo Real
             function filterReservas() {
                 const input = document.getElementById("searchInput").value
                     .toLowerCase();
                 const items = document.querySelectorAll(".reserva-item");
-
                 items.forEach((item) => {
-                    const text = item.querySelector(".search-target").innerText
-                        .toLowerCase();
-                    const subText =
-                        item.querySelectorAll(".search-target")[1]?.innerText
-                            .toLowerCase() || "";
-
-                    if (text.includes(input) || subText.includes(input)) {
-                        item.style.display = "";
-                    } else {
-                        item.style.display = "none";
-                    }
+                    const content = item.innerText.toLowerCase();
+                    item.style.display = content.includes(input) ? "" : "none";
                 });
             }
 
-            // Confirmação de Deletar
             function confirmDelete(id) {
-                if (
-                    confirm(
-                        "Deseja realmente cancelar esta reserva? Esta ação não pode ser desfeita.",
-                    )
-                ) {
-                    // Aqui você redirecionaria para a rota de delete do seu controller
-                    window.location.href = "/reservas/deletar/" + id;
+                if (confirm("Deseja realmente cancelar esta reserva?")) {
+                    window.location.href = "/library/reservas/deletar/" + id;
                 }
             }
-
-            // Fechar modal ao clicar fora dele
-            window.onclick = function (event) {
-                const modal = document.getElementById("reservaModal");
-                if (event.target == modal) {
-                    closeModal();
-                }
-            };
         </script>
     </body>
 </html>

@@ -41,7 +41,7 @@
 
             <nav class="flex-1 flex flex-col gap-1">
                 <a
-                    th:href="@{/dashboard}"
+                    th:href="@{/library/dashboard}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'dashboard'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -53,7 +53,7 @@
                 </a>
 
                 <a
-                    th:href="@{/emprestimos}"
+                    th:href="@{/library/emprestimos}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'emprestimos'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -65,7 +65,7 @@
                 </a>
 
                 <a
-                    th:href="@{/reservas}"
+                    th:href="@{/library/reservas}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'reservas'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -77,7 +77,7 @@
                 </a>
 
                 <a
-                    th:href="@{/livros/acervo}"
+                    th:href="@{/library/livros/acervo}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'livros'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -89,7 +89,7 @@
                 </a>
 
                 <a
-                    th:href="@{/relatorios}"
+                    th:href="@{/library/relatorios}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'relatorios'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -101,7 +101,7 @@
                 </a>
 
                 <a
-                    th:href="@{/controle}"
+                    th:href="@{/library/controle}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'controle'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >

@@ -1,81 +1,98 @@
 package br.umc.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.umc.demo.entity.Livro;
 import br.umc.demo.entity.Reserva;
 import br.umc.demo.repository.LivroRepository;
 import br.umc.demo.repository.ReservaRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ReservaService {
-    @Autowired
-    private ReservaRepository reservationRepository;
-    @Autowired
-    private LivroRepository bookRepository;
 
-    @SuppressWarnings("null")
-    @Transactional
-    public Reserva solicitarReserva(String leitorId, String bookId) {
-        Livro book = bookRepository.findById(bookId).orElseThrow();
+    private final ReservaRepository reservaRepository;
+    private final LivroRepository bookRepository;
 
-        if (book.getExemplaresDisponiveis() > 0) {
-            throw new RuntimeException("Ainda existem exemplares disponíveis. Realize um empréstimo direto.");
-        }
+    // --- CONSULTAS (GETTERS) ---
 
-        long posicao = reservationRepository.countByBookIdAndAtivaTrue(bookId) + 1;
-
-        Reserva reservation = new Reserva();
-        reservation.setLeitorId(leitorId);
-        reservation.setBookId(bookId);
-        reservation.setDataSolicitacao(LocalDateTime.now());
-        reservation.setPosicaoNaFila((int) posicao);
-        reservation.setAtiva(true);
-
-        return reservationRepository.save(reservation);
+    public List<Reserva> listarAtivas() {
+        return reservaRepository.findByAtivaTrueOrderByDataSolicitacaoAsc();
     }
+
+    public List<Reserva> buscarFilaPorLivro(String bookId) {
+        return reservaRepository.findByBookIdAndAtivaTrueOrderByPosicaoNaFilaAsc(bookId);
+    }
+
+    // --- OPERAÇÕES PRINCIPAIS ---
 
     @Transactional
-    public void processarProximaReserva(String bookId) {
+    public Reserva criarNovaReserva(String usuarioNome, String bookId) {
+        Livro book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado com ID: " + bookId));
 
-        Reserva proxima = reservationRepository.findFirstByBookIdAndAtivaTrueOrderByDataSolicitacaoAsc(bookId)
-                .orElse(null);
-
-        if (proxima != null) {
-
-            proxima.setNotificado(true);
-            proxima.setAtiva(false);
-            reservationRepository.save(proxima);
-
-            atualizarPosicoesFila(bookId);
+        if (book.isDisponivel()) {
+            throw new RuntimeException("Este livro possui exemplares disponíveis. Use o Empréstimo.");
         }
+
+        int proximaPosicao = (int) (reservaRepository.countByBookIdAndAtivaTrue(bookId) + 1);
+
+        Reserva novaReserva = Reserva.builder()
+                .usuarioNome(usuarioNome)
+                .bookId(bookId)
+                .livroTitulo(book.getTitulo())
+                .dataSolicitacao(LocalDateTime.now())
+                .posicaoNaFila(proximaPosicao)
+                .ativa(true)
+                .build();
+
+        return reservaRepository.save(novaReserva);
     }
 
-    private void atualizarPosicoesFila(String bookId) {
-        List<Reserva> filaRestante = reservationRepository
-                .findByBookIdAndAtivaTrueOrderByDataSolicitacaoAsc(bookId);
-        for (int i = 0; i < filaRestante.size(); i++) {
-            Reserva r = filaRestante.get(i);
-            r.setPosicaoNaFila(i + 1);
-            reservationRepository.save(r);
-        }
+    @Transactional
+    public void concluirReserva(String reservaId) {
+        Reserva reserva = buscarPorId(reservaId);
+
+        reserva.setNotificado(true);
+        reserva.setAtiva(false);
+        reservaRepository.save(reserva);
+
+        reorganizarFila(reserva.getBookId());
     }
 
-    public List<Reserva> getFilaPorLivro(String bookId) {
-        return reservationRepository.findByBookIdAndAtivaTrueOrderByPosicaoNaFilaAsc(bookId);
+    @Transactional
+    public void cancelarReserva(String reservaId) {
+        Reserva reserva = buscarPorId(reservaId);
+        String bookId = reserva.getBookId();
+
+        reservaRepository.delete(reserva);
+        reorganizarFila(bookId);
     }
 
-    public List<Reserva> getTodasReservasAtivas() {
-        return reservationRepository.findByAtivaTrueOrderByDataSolicitacaoAsc();
-    }
-
-    @SuppressWarnings("null")
     @Transactional
     public void salvar(Reserva reserva) {
+        reservaRepository.save(reserva);
+    }
 
-        reservationRepository.save(reserva);
+    // --- AUXILIARES ---
+
+    private Reserva buscarPorId(String id) {
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Reserva não encontrada: " + id));
+    }
+
+    private void reorganizarFila(String bookId) {
+        List<Reserva> fila = reservaRepository.findByBookIdAndAtivaTrueOrderByDataSolicitacaoAsc(bookId);
+
+        for (int i = 0; i < fila.size(); i++) {
+            Reserva r = fila.get(i);
+            r.setPosicaoNaFila(i + 1);
+            reservaRepository.save(r);
+        }
     }
 }
