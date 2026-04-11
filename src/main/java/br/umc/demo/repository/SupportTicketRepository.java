@@ -1,7 +1,8 @@
 package br.umc.demo.repository;
 
 import br.umc.demo.entity.SupportTicket;
-import br.umc.demo.entity.TicketStatus;
+import br.umc.demo.entity.enums.TicketStatus;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 

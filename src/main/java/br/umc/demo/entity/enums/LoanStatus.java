@@ -1,4 +1,4 @@
-package br.umc.demo.entity;
+package br.umc.demo.entity.enums;
 
 public enum LoanStatus {
     ACTIVE,

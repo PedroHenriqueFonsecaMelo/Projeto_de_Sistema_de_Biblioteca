@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Document(collection = "books")
 @Data
-public class Book {
+public class Livro {
     @Id
     private String id;
     private String titulo;
@@ -16,7 +16,6 @@ public class Book {
     private Integer anoPublicacao;
     private String localizacaoFisica;
     private String isbn;
-    private String imagemUrl;
     private Integer totalExemplares;
     private Integer exemplaresDisponiveis;
 

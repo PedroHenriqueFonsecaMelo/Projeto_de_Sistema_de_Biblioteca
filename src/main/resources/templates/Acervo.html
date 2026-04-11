@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <title>Acervo - The Digital Curator</title>
+        <title>Acervo - Digital Curator</title>
         <script
             src="https://cdn.tailwindcss.com?plugins=forms,container-queries"
         ></script>
@@ -16,7 +16,17 @@
             rel="stylesheet"
         />
 
-        <script th:replace="~{fragments/tailwind-config :: script}"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#4f46e5",
+                        },
+                    },
+                },
+            };
+        </script>
 
         <style>
             .material-symbols-outlined {
@@ -30,14 +40,17 @@
             h1, h2, h3, h4 {
                 font-family: "Manrope", sans-serif;
             }
-            .sidebar-item-active {
-                background-color: rgba(222, 227, 236, 0.5);
-                border-right: 4px solid #3a6287;
-                color: #3a6287 !important;
-                font-weight: 800;
-            }
             .modal-active {
                 overflow: hidden;
+            }
+            .truncate-2-lines {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .book-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
         </style>
     </head>
@@ -52,7 +65,7 @@
             >
                 <div class="flex items-center gap-8 flex-1">
                     <h2 class="font-bold tracking-tight text-xl text-slate-900">
-                        Acervo
+                        Gestão de Acervo
                     </h2>
                     <div class="relative w-full max-w-md">
                         <span
@@ -61,28 +74,24 @@
                         <input
                             id="bookSearch"
                             onkeyup="filterBooks()"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                            placeholder="Buscar títulos, autores ou ISBN..."
                             type="text"
+                            placeholder="Filtrar por título, autor ou ISBN..."
+                            class="w-full bg-slate-50 border border-slate-200 rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                         />
                     </div>
                 </div>
+
                 <div class="flex items-center gap-4">
-                    <button
-                        class="p-2 text-slate-500 hover:bg-blue-50 rounded-full transition-colors"
-                    >
-                        <span class="material-symbols-outlined"
-                        >notifications</span>
-                    </button>
-                    <div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
                     <div class="flex items-center gap-3">
                         <div
                             class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs"
                         >
-                            AD
+                            <span
+                                th:text="${#authentication.name != null ? #strings.substring(#authentication.name, 0, 2).toUpperCase() : 'AD'}"
+                            >AD</span>
                         </div>
                         <span class="text-sm font-medium text-slate-700"
-                        >Admin</span>
+                        >Administrador</span>
                     </div>
                 </div>
             </header>
@@ -93,70 +102,21 @@
                 >
                     <div class="max-w-2xl">
                         <h3 class="text-3xl font-extrabold text-primary mb-2">
-                            Coleção de Inverno 2026
+                            Catálogo de Obras
                         </h3>
                         <p class="text-slate-500 leading-relaxed text-sm">
-                            Gerencie o catálogo completo da biblioteca. Utilize
-                            os filtros para localizar edições específicas ou
-                            exportar relatórios.
+                            Visualize e gerencie todos os títulos disponíveis.
+                            Você pode cadastrar novas obras ou remover itens
+                            descontinuados.
                         </p>
                     </div>
-                    <div class="flex gap-3">
-                        <button
-                            class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-white transition-colors"
-                        >
-                            <span class="material-symbols-outlined text-sm"
-                            >file_download</span> Exportar
-                        </button>
-                        <button
-                            onclick="openBookModal()"
-                            class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-lg hover:brightness-110 transition-all transform active:scale-95"
-                        >
-                            <span class="material-symbols-outlined text-sm"
-                            >add</span> Novo Livro
-                        </button>
-                    </div>
-                </section>
-
-                <section
-                    class="bg-white p-6 rounded-xl shadow-sm flex flex-wrap items-center gap-8 border border-slate-100"
-                >
-                    <div class="flex flex-col gap-1.5">
-                        <label
-                            class="text-[10px] uppercase font-bold tracking-widest text-slate-400"
-                        >Categoria</label>
-                        <div class="flex gap-2">
-                            <button
-                                class="px-4 py-1.5 bg-primary text-white rounded-lg text-xs font-bold"
-                            >
-                                Todos
-                            </button>
-                            <button
-                                class="px-4 py-1.5 text-slate-500 hover:bg-slate-100 rounded-lg text-xs font-medium transition-colors"
-                            >
-                                Ficção
-                            </button>
-                            <button
-                                class="px-4 py-1.5 text-slate-500 hover:bg-slate-100 rounded-lg text-xs font-medium transition-colors"
-                            >
-                                Técnico
-                            </button>
-                        </div>
-                    </div>
-                    <div class="h-10 w-[1px] bg-slate-100 hidden lg:block">
-                    </div>
-                    <div class="flex flex-col gap-1.5 flex-1 min-w-[200px]">
-                        <label
-                            class="text-[10px] uppercase font-bold tracking-widest text-slate-400"
-                        >Filtrar por Localização</label>
-                        <select
-                            class="w-full bg-slate-50 border-none rounded-lg py-1.5 px-3 text-xs focus:ring-1 focus:ring-primary/40"
-                        >
-                            <option value="">Todas as Estantes</option>
-                            <option value="A1">Estante A1</option>
-                            <option value="B2">Estante B2</option>
-                        </select>
-                    </div>
+                    <button
+                        onclick="openBookModal()"
+                        class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all"
+                    >
+                        <span class="material-symbols-outlined text-sm"
+                        >add</span> Novo Livro
+                    </button>
                 </section>
 
                 <section
@@ -165,11 +125,11 @@
                 >
                     <div
                         th:if="${#lists.isEmpty(livros)}"
-                        class="col-span-full py-20 text-center"
+                        class="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200"
                     >
                         <span
                             class="material-symbols-outlined text-6xl text-slate-200"
-                        >menu_book</span>
+                        >library_books</span>
                         <p class="text-slate-400 mt-4 font-medium">
                             Nenhum livro encontrado no acervo.
                         </p>
@@ -177,30 +137,23 @@
 
                     <div
                         th:each="livro : ${livros}"
-                        class="book-card group flex flex-col bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl border border-slate-100"
+                        class="book-card group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100"
                     >
                         <div
                             class="aspect-[2/3] overflow-hidden relative bg-slate-100"
                         >
-                            <img
-                                th:src="${livro.capaUrl != null ? livro.capaUrl : 'https://placehold.co/400x600/e2e8f0/64748b?text=Sem+Capa'}"
-                                th:alt="${livro.titulo}"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-
                             <div class="absolute top-4 right-4">
                                 <span
                                     th:text="${livro.status}"
-                                    class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm"
-                                    th:classappend="${livro.status == 'Disponível' ? 'bg-emerald-500 text-white' : 
-                                                  (livro.status == 'Emprestado' ? 'bg-amber-500 text-white' : 'bg-slate-400 text-white')}"
+                                    th:classappend="${livro.status == 'Disponível' ? 'bg-emerald-500' : 'bg-amber-500'}"
+                                    class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-md"
                                 >
                                     Status
                                 </span>
                             </div>
                         </div>
 
-                        <div class="p-6 flex flex-col gap-2">
+                        <div class="p-6 flex flex-col flex-1">
                             <p
                                 class="text-[10px] uppercase font-bold tracking-widest text-slate-400 isbn-text"
                                 th:text="${livro.isbn}"
@@ -208,20 +161,20 @@
                                 ISBN
                             </p>
                             <h4
-                                class="font-bold text-slate-800 text-lg leading-tight truncate-2-lines title-text"
+                                class="font-bold text-slate-800 text-lg leading-tight truncate-2-lines title-text mt-1"
                                 th:text="${livro.titulo}"
                             >
-                                Título do Livro
+                                Título
                             </h4>
                             <p
-                                class="text-slate-500 text-sm author-text"
+                                class="text-slate-500 text-sm author-text mb-4"
                                 th:text="${livro.autor}"
                             >
-                                Nome do Autor
+                                Autor
                             </p>
 
                             <div
-                                class="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center"
+                                class="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center"
                             >
                                 <div class="flex items-center gap-1.5">
                                     <span
@@ -229,15 +182,28 @@
                                     >location_on</span>
                                     <span
                                         class="text-[11px] font-bold text-slate-600"
-                                        th:text="${livro.localizacao}"
-                                    >Estante A1</span>
+                                        th:text="${livro.localizacao != null ? livro.localizacao : 'S/L'}"
+                                    >Local</span>
                                 </div>
-                                <button
-                                    class="p-2 text-slate-300 hover:text-primary transition-colors"
+
+                                <form
+                                    th:action="@{/livros/remover}"
+                                    th:method="delete"
+                                    onsubmit="return confirm('Tem certeza que deseja remover este livro do acervo?')"
                                 >
-                                    <span class="material-symbols-outlined"
-                                    >edit_square</span>
-                                </button>
+                                    <input
+                                        type="hidden"
+                                        name="isbn"
+                                        th:value="${livro.isbn}"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="p-2 text-slate-300 hover:text-red-500 transition-colors"
+                                    >
+                                        <span class="material-symbols-outlined"
+                                        >delete_outline</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -247,52 +213,27 @@
                     class="mt-8 flex items-center justify-between py-6 border-t border-slate-100"
                 >
                     <p class="text-sm text-slate-500 font-medium">
-                        Mostrando <span
-                            class="text-slate-900"
-                            th:text="${livros != null ? livros.size() : 0}"
-                        >0</span> títulos
+                        Total: <span
+                            class="text-slate-900 font-bold"
+                            th:text="${#lists.size(livros)}"
+                        >0</span> títulos cadastrados
                     </p>
-                    <div class="flex items-center gap-2">
-                        <button
-                            class="p-2 text-slate-400 hover:bg-white hover:text-primary rounded-lg transition-all border border-transparent hover:border-slate-100"
-                        >
-                            <span class="material-symbols-outlined"
-                            >chevron_left</span>
-                        </button>
-                        <button
-                            class="w-10 h-10 bg-primary text-white rounded-xl font-bold text-sm shadow-md"
-                        >
-                            1
-                        </button>
-                        <button
-                            class="p-2 text-slate-400 hover:bg-white hover:text-primary rounded-lg transition-all border border-transparent hover:border-slate-100"
-                        >
-                            <span class="material-symbols-outlined"
-                            >chevron_right</span>
-                        </button>
-                    </div>
                 </footer>
             </div>
 
             <div
                 id="bookModal"
-                class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+                class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
             >
                 <div
-                    class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200"
+                    class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden scale-95 opacity-0 transition-all duration-300 transform"
+                    id="modalContent"
                 >
                     <div class="p-8">
-                        <div class="flex justify-between items-center mb-8">
-                            <div>
-                                <h2
-                                    class="text-2xl font-extrabold text-slate-900"
-                                >
-                                    Novo Registro
-                                </h2>
-                                <p class="text-sm text-slate-500">
-                                    Adicione uma nova obra ao acervo digital.
-                                </p>
-                            </div>
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-extrabold text-slate-900">
+                                Cadastrar Obra
+                            </h2>
                             <button
                                 onclick="closeBookModal()"
                                 class="p-2 hover:bg-slate-100 rounded-full transition-colors"
@@ -303,78 +244,83 @@
                         </div>
 
                         <form
-                            th:action="@{/api/livros/salvar}"
+                            th:action="@{/livros/salvar}"
                             method="POST"
-                            class="grid grid-cols-2 gap-6"
+                            class="space-y-4"
                         >
-                            <div class="col-span-2">
+                            <div>
                                 <label
-                                    class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
-                                >Título da Obra</label>
+                                    class="block text-xs font-bold uppercase text-slate-400 mb-1.5 ml-1"
+                                >Título</label>
                                 <input
                                     type="text"
                                     name="titulo"
                                     required
-                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3 px-4"
-                                >
+                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                />
                             </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
-                                >Autor</label>
-                                <input
-                                    type="text"
-                                    name="autor"
-                                    required
-                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3 px-4"
-                                >
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold uppercase text-slate-400 mb-1.5 ml-1"
+                                    >Autor</label>
+                                    <input
+                                        type="text"
+                                        name="autor"
+                                        required
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold uppercase text-slate-400 mb-1.5 ml-1"
+                                    >ISBN</label>
+                                    <input
+                                        type="text"
+                                        name="isbn"
+                                        required
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
-                                >ISBN</label>
-                                <input
-                                    type="text"
-                                    name="isbn"
-                                    required
-                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3 px-4"
-                                >
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold uppercase text-slate-400 mb-1.5 ml-1"
+                                    >Localização Física</label>
+                                    <input
+                                        type="text"
+                                        name="localizacao"
+                                        placeholder="Ex: Corredor B, Estante 3"
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold uppercase text-slate-400 mb-1.5 ml-1"
+                                    >URL da Imagem</label>
+                                    <input
+                                        type="url"
+                                        name="capaUrl"
+                                        placeholder="https://..."
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
-                                >Localização (Estante)</label>
-                                <input
-                                    type="text"
-                                    name="localizacao"
-                                    placeholder="Ex: A1-04"
-                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3 px-4"
-                                >
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase text-slate-400 mb-2 ml-1"
-                                >URL da Capa</label>
-                                <input
-                                    type="url"
-                                    name="capaUrl"
-                                    placeholder="https://..."
-                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary py-3 px-4"
-                                >
-                            </div>
-                            <div class="col-span-2 pt-6 flex gap-4">
+
+                            <div class="pt-6 flex gap-3">
                                 <button
                                     type="button"
                                     onclick="closeBookModal()"
-                                    class="flex-1 px-5 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all"
+                                    class="flex-1 px-5 py-3.5 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all"
                                 >
-                                    Cancelar
+                                    Descartar
                                 </button>
                                 <button
                                     type="submit"
-                                    class="flex-1 px-5 py-4 bg-primary text-white font-bold rounded-2xl shadow-lg hover:brightness-110 transition-all transform active:scale-95"
+                                    class="flex-1 px-5 py-3.5 bg-primary text-white font-bold rounded-2xl shadow-lg hover:brightness-110 transition-all"
                                 >
-                                    Salvar no Acervo
+                                    Confirmar Cadastro
                                 </button>
                             </div>
                         </form>
@@ -384,13 +330,24 @@
         </main>
 
         <script>
+            const modal = document.getElementById("bookModal");
+            const modalContent = document.getElementById("modalContent");
+
             function openBookModal() {
-                document.getElementById("bookModal").classList.remove("hidden");
+                modal.classList.remove("hidden");
+                setTimeout(() => {
+                    modalContent.classList.remove("scale-95", "opacity-0");
+                    modalContent.classList.add("scale-100", "opacity-100");
+                }, 10);
                 document.body.classList.add("modal-active");
             }
 
             function closeBookModal() {
-                document.getElementById("bookModal").classList.add("hidden");
+                modalContent.classList.remove("scale-100", "opacity-100");
+                modalContent.classList.add("scale-95", "opacity-0");
+                setTimeout(() => {
+                    modal.classList.add("hidden");
+                }, 300);
                 document.body.classList.remove("modal-active");
             }
 
@@ -406,14 +363,19 @@
                     const isbn = card.querySelector(".isbn-text").innerText
                         .toLowerCase();
 
-                    const matches = title.includes(query) || author.includes(query) ||
-                        isbn.includes(query);
-                    card.style.display = matches ? "flex" : "none";
+                    if (
+                        title.includes(query) || author.includes(query) ||
+                        isbn.includes(query)
+                    ) {
+                        card.style.display = "flex";
+                    } else {
+                        card.style.display = "none";
+                    }
                 });
             }
 
             window.onclick = (e) => {
-                if (e.target.id === "bookModal") closeBookModal();
+                if (e.target === modal) closeBookModal();
             };
         </script>
     </body>

@@ -7,30 +7,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import br.umc.demo.dto.ReservationRequest;
-import br.umc.demo.entity.Reservation;
-import br.umc.demo.service.ReservationService;
+import br.umc.demo.dto.request.ReservationRequest;
+import br.umc.demo.entity.Reserva;
+import br.umc.demo.service.ReservaService;
 
 @RestController
 @RequestMapping("/api/reservations")
 @PreAuthorize("hasRole('LIBRARIAN')")
-public class ReservationController {
+public class ReservaControler {
 
     @Autowired
-    private ReservationService reservationService;
+    private ReservaService reservationService;
 
     @PostMapping
-    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest req) {
+    public ResponseEntity<Reserva> create(@RequestBody ReservationRequest req) {
         return ResponseEntity.ok(reservationService.solicitarReserva(req.getLeitorId(), req.getBookId()));
     }
 
     @GetMapping("/book/{bookId}")
-    public ResponseEntity<List<Reservation>> getQueue(@PathVariable String bookId) {
+    public ResponseEntity<List<Reserva>> getQueue(@PathVariable String bookId) {
         return ResponseEntity.ok(reservationService.getFilaPorLivro(bookId));
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<Reservation>> getActiveReservations() {
+    public ResponseEntity<List<Reserva>> getActiveReservations() {
 
         return ResponseEntity.ok(reservationService.getTodasReservasAtivas());
     }

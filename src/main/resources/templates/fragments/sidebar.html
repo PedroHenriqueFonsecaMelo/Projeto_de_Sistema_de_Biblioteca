@@ -53,7 +53,7 @@
                 </a>
 
                 <a
-                    th:href="@{/livros/emprestimos}"
+                    th:href="@{/emprestimos}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'emprestimos'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -65,7 +65,7 @@
                 </a>
 
                 <a
-                    th:href="@{/livros/reservas}"
+                    th:href="@{/reservas}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'reservas'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
@@ -77,7 +77,7 @@
                 </a>
 
                 <a
-                    th:href="@{/livros}"
+                    th:href="@{/livros/acervo}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
                     th:classappend="${activePage == 'livros'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >

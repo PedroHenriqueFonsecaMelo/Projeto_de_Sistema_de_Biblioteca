@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import br.umc.demo.entity.enums.TicketStatus;
 import lombok.Data;
 
 @Document(collection = "support_tickets")

@@ -5,11 +5,12 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import br.umc.demo.entity.enums.LoanStatus;
 import lombok.Data;
 
 @Document(collection = "loans")
 @Data
-public class Loan {
+public class Emprestimo {
     @Id
     private String id;
     private String leitorId;
@@ -22,7 +23,7 @@ public class Loan {
 
     private Double multaCalculada;
     private LoanStatus status;
-    
+
     private boolean ativo = true;
     private java.time.LocalDate dataDevolucaoReal;
 }

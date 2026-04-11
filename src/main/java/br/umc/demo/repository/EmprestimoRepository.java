@@ -1,23 +1,24 @@
 package br.umc.demo.repository;
 
-import br.umc.demo.entity.Loan;
-import br.umc.demo.entity.LoanStatus;
+import br.umc.demo.entity.Emprestimo;
+import br.umc.demo.entity.enums.LoanStatus;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface LoanRepository extends MongoRepository<Loan, String> {
+public interface EmprestimoRepository extends MongoRepository<Emprestimo, String> {
 
     long countByLeitorIdAndStatus(String leitorId, LoanStatus status);
 
-    List<Loan> findByStatus(LoanStatus status);
+    List<Emprestimo> findByStatus(LoanStatus status);
 
     long countByStatus(LoanStatus status);
 
-    List<Loan> findByLeitorId(String leitorId);
+    List<Emprestimo> findByLeitorId(String leitorId);
 
     long countByStatusAndDataVencimentoBefore(LoanStatus status, LocalDateTime date);
-    
-    List<Loan> findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus status);
+
+    List<Emprestimo> findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus status);
 }

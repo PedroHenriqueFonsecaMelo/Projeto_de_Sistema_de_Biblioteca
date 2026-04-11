@@ -1,22 +1,24 @@
-{"properties": [
-  {
-    "name": "security.jwt.secret",
-    "type": "java.lang.String",
-    "description": "A description for 'security.jwt.secret'"
-  },
-  {
-    "name": "spring.mongodb.embedded.version",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.mongodb.embedded.version'"
-  },
-  {
-    "name": "spring.mongodb.embedded.storage.database-dir",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.mongodb.embedded.storage.database-dir'"
-  },
-  {
-    "name": "security.jwt.expiration",
-    "type": "java.lang.String",
-    "description": "A description for 'security.jwt.expiration'"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "security.jwt.secret",
+      "type": "java.lang.String",
+      "description": "A description for 'security.jwt.secret'"
+    },
+    {
+      "name": "spring.mongodb.embedded.version",
+      "type": "java.lang.String",
+      "description": "A description for 'spring.mongodb.embedded.version'"
+    },
+    {
+      "name": "spring.mongodb.embedded.storage.database-dir",
+      "type": "java.lang.String",
+      "description": "A description for 'spring.mongodb.embedded.storage.database-dir'"
+    },
+    {
+      "name": "security.jwt.expiration",
+      "type": "java.lang.String",
+      "description": "A description for 'security.jwt.expiration'"
+    }
+  ]
+}

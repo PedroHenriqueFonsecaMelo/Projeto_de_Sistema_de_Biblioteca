@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthControler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthControler.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -107,7 +107,7 @@ public class AuthController {
             logger.info("========================================");
             logger.info("✓ Redirecionando para /dashboard...");
             logger.info("========================================");
-            
+
             return "redirect:/dashboard";
 
         } catch (Exception e) {

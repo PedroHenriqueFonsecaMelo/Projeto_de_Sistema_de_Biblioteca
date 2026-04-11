@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import br.umc.demo.entity.SupportTicket;
-import br.umc.demo.entity.TicketStatus;
+import br.umc.demo.entity.enums.TicketStatus;
 import br.umc.demo.repository.SupportTicketRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package br.umc.demo.dto;
+package br.umc.demo.dto.request;
 
 import lombok.Data;
 

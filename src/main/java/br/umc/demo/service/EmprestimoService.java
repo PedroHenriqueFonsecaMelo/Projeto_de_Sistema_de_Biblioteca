@@ -6,21 +6,21 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import br.umc.demo.entity.Loan;
-import br.umc.demo.entity.Book;
-import br.umc.demo.entity.LoanStatus;
-import br.umc.demo.repository.BookRepository;
-import br.umc.demo.repository.LoanRepository;
+import br.umc.demo.entity.Emprestimo;
+import br.umc.demo.entity.Livro;
+import br.umc.demo.entity.enums.LoanStatus;
+import br.umc.demo.repository.LivroRepository;
+import br.umc.demo.repository.EmprestimoRepository;
 
 @Service
-public class LoanService {
+public class EmprestimoService {
     @Autowired
-    private LoanRepository loanRepository;
+    private EmprestimoRepository loanRepository;
     @Autowired
-    private BookRepository bookRepository;
+    private LivroRepository bookRepository;
 
-    public Loan realizarEmprestimo(String leitorId, String bookId, String bibliotecarioId) {
-        Loan loan = new Loan();
+    public Emprestimo realizarEmprestimo(String leitorId, String bookId, String bibliotecarioId) {
+        Emprestimo loan = new Emprestimo();
         loan.setLeitorId(leitorId);
         loan.setBibliotecarioId(bibliotecarioId);
         loan.setBookId(bookId);
@@ -29,7 +29,7 @@ public class LoanService {
         loan.setStatus(LoanStatus.ACTIVE);
 
         @SuppressWarnings("null")
-        Book book = bookRepository.findById(bookId).orElseThrow();
+        Livro book = bookRepository.findById(bookId).orElseThrow();
         book.setExemplaresDisponiveis(book.getExemplaresDisponiveis() - 1);
         bookRepository.save(book);
 
@@ -42,10 +42,10 @@ public class LoanService {
      * Updates status, dates, book availability, and new fields.
      */
     @SuppressWarnings("null")
-    public Loan finalizarEmprestimo(String id) {
+    public Emprestimo finalizarEmprestimo(String id) {
         // 1. Busca o documento de empréstimo
-        Loan emprestimo = loanRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+        Emprestimo emprestimo = loanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
 
         // 2. Lógica de Negócio: Finaliza empréstimo
         emprestimo.setStatus(LoanStatus.RETURNED);
@@ -63,7 +63,7 @@ public class LoanService {
         return loanRepository.save(emprestimo);
     }
 
-    public List<Loan> getAllLoans() {
+    public List<Emprestimo> getAllLoans() {
         return loanRepository.findAll();
     }
 }

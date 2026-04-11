@@ -9,24 +9,24 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.umc.demo.entity.Book;
-import br.umc.demo.entity.Loan;
-import br.umc.demo.entity.LoanStatus;
-import br.umc.demo.repository.BookRepository;
-import br.umc.demo.repository.LoanRepository;
+import br.umc.demo.entity.Livro;
+import br.umc.demo.entity.Emprestimo;
+import br.umc.demo.entity.enums.LoanStatus;
+import br.umc.demo.repository.LivroRepository;
+import br.umc.demo.repository.EmprestimoRepository;
 import br.umc.demo.repository.UserRepository;
 
 @Service
-public class ReportService {
+public class StatService {
 
         @Autowired
-        private LoanRepository loanRepository;
+        private EmprestimoRepository loanRepository;
 
         @Autowired
         private UserRepository userRepository;
 
         @Autowired
-        private BookRepository bookRepository;
+        private LivroRepository bookRepository;
 
         public Map<String, Object> getLibraryReport() {
 
@@ -40,12 +40,12 @@ public class ReportService {
                 long totalFines = loanRepository.countByStatus(LoanStatus.OVERDUE) * 2;
 
                 // Real top 5 popular books by loan count (recent returned loans) - no lambdas
-                List<Loan> returnedLoans = loanRepository
+                List<Emprestimo> returnedLoans = loanRepository
                                 .findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus.RETURNED);
 
                 // Group by bookId count
                 Map<String, Long> bookCountsMap = new HashMap<>();
-                for (Loan loan : returnedLoans) {
+                for (Emprestimo loan : returnedLoans) {
                         String bookId = loan.getBookId();
                         Long currentCount = bookCountsMap.getOrDefault(bookId, 0L);
                         bookCountsMap.put(bookId, currentCount + 1);
@@ -61,9 +61,8 @@ public class ReportService {
                                 continue;
                         }
 
-                        
                         @SuppressWarnings("null")
-                        Book b = bookRepository.findById(entry.getKey()).orElse(null);
+                        Livro b = bookRepository.findById(entry.getKey()).orElse(null);
 
                         if (b != null) {
                                 Map<String, Object> item = new HashMap<>();

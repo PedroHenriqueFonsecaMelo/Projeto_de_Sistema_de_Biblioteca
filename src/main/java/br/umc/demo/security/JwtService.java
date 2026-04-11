@@ -16,9 +16,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
-    
+
     @Value("${security.jwt.secret}")
     private String secret;
 
@@ -60,13 +60,13 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
             String username = extractUsername(token);
-            boolean isValid = username != null && 
-                             username.equals(userDetails.getUsername()) && 
-                             !isTokenExpired(token);
-            
+            boolean isValid = username != null &&
+                    username.equals(userDetails.getUsername()) &&
+                    !isTokenExpired(token);
+
             if (!isValid) {
-                logger.warn("✗ Token inválido para user: {} (username mismatch ou expired)", 
-                    userDetails.getUsername());
+                logger.warn("✗ Token inválido para user: {} (username mismatch ou expired)",
+                        userDetails.getUsername());
             } else {
                 logger.info("✓ Token válido para user: {}", userDetails.getUsername());
             }

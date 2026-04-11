@@ -7,19 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import br.umc.demo.dto.LoanRequest;
-import br.umc.demo.entity.Loan;
-import br.umc.demo.service.LoanService;
+import br.umc.demo.entity.Emprestimo;
+import br.umc.demo.service.EmprestimoService;
 
 @RestController
 @RequestMapping("/api/loans")
 @PreAuthorize("hasRole('LIBRARIAN')")
-public class LoanController {
+public class EmprestimoControler {
 
     @Autowired
-    private LoanService loanService;
+    private EmprestimoService loanService;
 
     @PostMapping("/checkout")
     public ResponseEntity<Void> checkout(
@@ -30,18 +27,18 @@ public class LoanController {
         loanService.realizarEmprestimo(leitorId, bookId, bibliotecarioId);
 
         return ResponseEntity.status(302)
-                .header("Location", "/livros/emprestimos")
+                .header("Location", "/emprestimos")
                 .build();
     }
 
     @PatchMapping("/{id}/return")
-    public ResponseEntity<Loan> processReturn(@PathVariable String id) {
+    public ResponseEntity<Emprestimo> processReturn(@PathVariable String id) {
 
         return ResponseEntity.ok(loanService.finalizarEmprestimo(id));
     }
 
     @GetMapping
-    public List<Loan> getAllLoans() {
+    public List<Emprestimo> getAllLoans() {
         return loanService.getAllLoans();
     }
 
@@ -62,7 +59,7 @@ public class LoanController {
             loanService.finalizarEmprestimo(id);
 
             return ResponseEntity.status(302)
-                    .header("Location", "/livros/emprestimos")
+                    .header("Location", "/emprestimos")
                     .build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

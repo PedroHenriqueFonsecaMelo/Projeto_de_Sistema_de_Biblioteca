@@ -5,22 +5,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import br.umc.demo.entity.Book;
-import br.umc.demo.entity.Reservation;
-import br.umc.demo.repository.BookRepository;
-import br.umc.demo.repository.ReservationRepository;
+import br.umc.demo.entity.Livro;
+import br.umc.demo.entity.Reserva;
+import br.umc.demo.repository.LivroRepository;
+import br.umc.demo.repository.ReservaRepository;
 
 @Service
-public class ReservationService {
+public class ReservaService {
     @Autowired
-    private ReservationRepository reservationRepository;
+    private ReservaRepository reservationRepository;
     @Autowired
-    private BookRepository bookRepository;
+    private LivroRepository bookRepository;
 
     @SuppressWarnings("null")
     @Transactional
-    public Reservation solicitarReserva(String leitorId, String bookId) {
-        Book book = bookRepository.findById(bookId).orElseThrow();
+    public Reserva solicitarReserva(String leitorId, String bookId) {
+        Livro book = bookRepository.findById(bookId).orElseThrow();
 
         if (book.getExemplaresDisponiveis() > 0) {
             throw new RuntimeException("Ainda existem exemplares disponíveis. Realize um empréstimo direto.");
@@ -28,7 +28,7 @@ public class ReservationService {
 
         long posicao = reservationRepository.countByBookIdAndAtivaTrue(bookId) + 1;
 
-        Reservation reservation = new Reservation();
+        Reserva reservation = new Reserva();
         reservation.setLeitorId(leitorId);
         reservation.setBookId(bookId);
         reservation.setDataSolicitacao(LocalDateTime.now());
@@ -41,7 +41,7 @@ public class ReservationService {
     @Transactional
     public void processarProximaReserva(String bookId) {
 
-        Reservation proxima = reservationRepository.findFirstByBookIdAndAtivaTrueOrderByDataSolicitacaoAsc(bookId)
+        Reserva proxima = reservationRepository.findFirstByBookIdAndAtivaTrueOrderByDataSolicitacaoAsc(bookId)
                 .orElse(null);
 
         if (proxima != null) {
@@ -55,26 +55,26 @@ public class ReservationService {
     }
 
     private void atualizarPosicoesFila(String bookId) {
-        List<Reservation> filaRestante = reservationRepository
+        List<Reserva> filaRestante = reservationRepository
                 .findByBookIdAndAtivaTrueOrderByDataSolicitacaoAsc(bookId);
         for (int i = 0; i < filaRestante.size(); i++) {
-            Reservation r = filaRestante.get(i);
+            Reserva r = filaRestante.get(i);
             r.setPosicaoNaFila(i + 1);
             reservationRepository.save(r);
         }
     }
 
-    public List<Reservation> getFilaPorLivro(String bookId) {
+    public List<Reserva> getFilaPorLivro(String bookId) {
         return reservationRepository.findByBookIdAndAtivaTrueOrderByPosicaoNaFilaAsc(bookId);
     }
 
-    public List<Reservation> getTodasReservasAtivas() {
+    public List<Reserva> getTodasReservasAtivas() {
         return reservationRepository.findByAtivaTrueOrderByDataSolicitacaoAsc();
     }
 
     @SuppressWarnings("null")
     @Transactional
-    public void salvar(Reservation reserva) {
+    public void salvar(Reserva reserva) {
 
         reservationRepository.save(reserva);
     }

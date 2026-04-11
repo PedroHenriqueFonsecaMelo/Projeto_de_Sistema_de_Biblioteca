@@ -17,5 +17,4 @@ public class LivroDTO {
     private String autor;
     private String status;
     private String localizacao;
-    private String imagemUrl;
 }

@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String jwt = extractTokenFromRequest(request);
-            
+
             if (jwt != null) {
                 logger.debug("Processing JWT token for request: {}", request.getRequestURI());
                 authenticateWithToken(jwt, request);
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             logger.error("Error in JWT filter: {}", e.getMessage(), e);
         }
-        
+
         filterChain.doFilter(request, response);
     }
 

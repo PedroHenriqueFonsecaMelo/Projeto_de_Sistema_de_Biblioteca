@@ -1,4 +1,4 @@
-package br.umc.demo.dto;
+package br.umc.demo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportResponse {
+public class StatResponse {
 
     private Long totalUsers;
     private Long totalBooks;
@@ -18,7 +18,7 @@ public class ReportResponse {
     private Long pendingFines;
     private List<Map<String, Object>> popularBooks;
 
-    public ReportResponse(long totalBooks, long totalUsers, long pendingFines, long overdueLoans,
+    public StatResponse(long totalBooks, long totalUsers, long pendingFines, long overdueLoans,
             List<Map<String, Object>> popularBooks) {
         this.totalBooks = totalBooks;
         this.totalUsers = totalUsers;

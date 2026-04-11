@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Document(collection = "reservations")
 @Data
-public class Reservation {
+public class Reserva {
     @Id
     private String id;
     private String bookId;

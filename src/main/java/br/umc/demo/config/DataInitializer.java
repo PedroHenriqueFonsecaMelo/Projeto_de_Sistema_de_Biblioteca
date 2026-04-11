@@ -1,6 +1,8 @@
 package br.umc.demo.config;
 
 import br.umc.demo.entity.*;
+import br.umc.demo.entity.enums.LoanStatus;
+import br.umc.demo.entity.enums.TicketStatus;
 import br.umc.demo.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,16 +18,16 @@ import java.util.Set;
 public class DataInitializer implements CommandLineRunner {
 
         private final UserRepository userRepository;
-        private final BookRepository bookRepository;
-        private final LoanRepository loanRepository;
-        private final ReservationRepository reservationRepository;
+        private final LivroRepository bookRepository;
+        private final EmprestimoRepository loanRepository;
+        private final ReservaRepository reservationRepository;
         private final SupportTicketRepository supportTicketRepository;
         private final PasswordEncoder passwordEncoder;
 
         public DataInitializer(UserRepository userRepository,
-                        BookRepository bookRepository,
-                        LoanRepository loanRepository,
-                        ReservationRepository reservationRepository,
+                        LivroRepository bookRepository,
+                        EmprestimoRepository loanRepository,
+                        ReservaRepository reservationRepository,
                         SupportTicketRepository supportTicketRepository,
                         PasswordEncoder passwordEncoder) {
                 this.userRepository = userRepository;
@@ -77,7 +79,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 String[] userIds = savedUsers.stream().map(User::getId).toArray(String[]::new);
 
-                Book[] books = {
+                Livro[] books = {
                                 createBook("Clean Code", "Robert C. Martin", "Prentice Hall", 2008, "Est A1",
                                                 "9780132350884", 5, 3),
                                 createBook("Java: Como Programar", "Deitel", "Pearson", 2016, "Est B2", "9780134458185",
@@ -142,12 +144,12 @@ public class DataInitializer implements CommandLineRunner {
                                                 "9780988262591", 5, 1)
                 };
 
-                List<Book> savedBooks = bookRepository.saveAll(Arrays.asList(books));
+                List<Livro> savedBooks = bookRepository.saveAll(Arrays.asList(books));
                 System.out.println("Saved " + savedBooks.size() + " books");
 
-                String[] bookIds = savedBooks.stream().map(Book::getId).toArray(String[]::new);
+                String[] bookIds = savedBooks.stream().map(Livro::getId).toArray(String[]::new);
 
-                Loan[] loans = {
+                Emprestimo[] loans = {
                                 createLoan(userIds[1], bookIds[0], LocalDateTime.now().minusDays(5),
                                                 LocalDateTime.now().plusDays(9),
                                                 LoanStatus.ACTIVE),
@@ -199,7 +201,7 @@ public class DataInitializer implements CommandLineRunner {
                 };
                 loanRepository.saveAll(Arrays.asList(loans));
 
-                Reservation[] reservations = {
+                Reserva[] reservations = {
                                 createReservation(bookIds[2], userIds[1], 1),
                                 createReservation(bookIds[2], userIds[2], 2),
                                 createReservation(bookIds[6], userIds[3], 1),
@@ -244,29 +246,28 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("-----------------------------------------");
         }
 
-        private Book createBook(String titulo, String autor, String editora, int ano, String localizacao, String isbn,
+        private Livro createBook(String titulo, String autor, String editora, int ano, String localizacao, String isbn,
                         int total, int disponiveis) {
-                Book b = new Book();
+                Livro b = new Livro();
                 b.setTitulo(titulo);
                 b.setAutor(autor);
                 b.setEditora(editora);
                 b.setAnoPublicacao(ano);
                 b.setLocalizacaoFisica(localizacao);
                 b.setIsbn(isbn);
-                b.setImagemUrl("https://via.placeholder.com/150x200/4A90E2/white?text=" + titulo.replace(" ", "+"));
                 b.setTotalExemplares(total);
                 b.setExemplaresDisponiveis(disponiveis);
                 return b;
         }
 
-        private Loan createLoan(String leitorId, String bookId, LocalDateTime emprestimo, LocalDateTime vencimento,
+        private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo, LocalDateTime vencimento,
                         LoanStatus status) {
                 return createLoan(leitorId, bookId, emprestimo, vencimento, status, 0.0);
         }
 
-        private Loan createLoan(String leitorId, String bookId, LocalDateTime emprestimo, LocalDateTime vencimento,
+        private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo, LocalDateTime vencimento,
                         LoanStatus status, double multa) {
-                Loan l = new Loan();
+                Emprestimo l = new Emprestimo();
                 l.setLeitorId(leitorId);
                 l.setBookId(bookId);
                 l.setDataEmprestimo(emprestimo);
@@ -276,8 +277,8 @@ public class DataInitializer implements CommandLineRunner {
                 return l;
         }
 
-        private Reservation createReservation(String bookId, String leitorId, int posicao) {
-                Reservation r = new Reservation();
+        private Reserva createReservation(String bookId, String leitorId, int posicao) {
+                Reserva r = new Reserva();
                 r.setBookId(bookId);
                 r.setLeitorId(leitorId);
                 r.setDataSolicitacao(LocalDateTime.now().minusHours((long) posicao * 2));
