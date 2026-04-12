@@ -21,4 +21,7 @@ public interface EmprestimoRepository extends MongoRepository<Emprestimo, String
     long countByStatusAndDataVencimentoBefore(LoanStatus status, LocalDateTime date);
 
     List<Emprestimo> findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus status);
+
+    List<Emprestimo> findByDataEmprestimoBetween(LocalDateTime inicio, LocalDateTime fim);
+
 }

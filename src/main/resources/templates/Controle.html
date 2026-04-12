@@ -1,42 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
     <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Controle de Usuários - Digital Curator</title>
-        <script
-            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"
-        ></script>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Public_Sans:wght@300;400;500;600&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-            rel="stylesheet"
-        />
 
         <style>
-            .material-symbols-outlined {
-                vertical-align: middle;
-            }
-            body {
-                font-family: "Public Sans", sans-serif;
-                background-color: #f8f9fe;
-                color: #2d333a;
-            }
-            h1, h2, h3 {
-                font-family: "Manrope", sans-serif;
-            }
-            .sidebar-item-active {
-                background-color: rgba(222, 227, 236, 0.5);
-                border-right: 4px solid #3a6287;
-                color: #3a6287 !important;
-                font-weight: 800;
-            }
-            .modal-active {
-                overflow: hidden;
-            }
             .user-card.active-selection {
                 border-color: #3a6287;
                 ring: 2px;
@@ -44,14 +12,14 @@
             }
         </style>
     </head>
-    <body class="flex min-h-screen">
+    <body class="bg-surface text-on-surface flex min-h-screen">
         <div
             th:replace="~{fragments/sidebar :: sidebar(activePage='controle')}"
         >
         </div>
 
         <main
-            class="flex-grow flex flex-col min-h-screen overflow-y-auto ml-64"
+            class="ml-64 flex-1 flex flex-col min-h-screen relative bg-surface overflow-y-auto"
         >
             <header
                 class="flex justify-between items-center w-full px-8 h-16 bg-white/80 backdrop-blur-md sticky top-0 z-10 shadow-sm"
@@ -73,7 +41,7 @@
                             id="userSearch"
                             onkeyup="filterUsers()"
                             placeholder="Buscar leitor por nome ou e-mail..."
-                            class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full text-xs focus:ring-2 focus:ring-primary/20 w-80 transition-all"
+                            class="pl-10 pr-4 py-1.5 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 w-80 transition-all"
                         >
                     </div>
                     <div
@@ -321,29 +289,21 @@
             </footer>
         </main>
 
+        <th:block th:insert="~{fragments/common-js :: commonJs}" />
         <script>
             function openUserModal() {
-                document.getElementById("userModal").classList.remove("hidden");
-                document.body.classList.add("modal-active");
+                openModal("userModal");
             }
 
             function closeUserModal() {
-                document.getElementById("userModal").classList.add("hidden");
-                document.body.classList.remove("modal-active");
+                closeModal("userModal");
             }
 
             function filterUsers() {
-                const query = document.getElementById("userSearch").value.toLowerCase();
-                const cards = document.querySelectorAll(".user-card");
-                cards.forEach((card) => {
-                    const name = card.querySelector(".search-name").innerText
-                        .toLowerCase();
-                    const email = card.querySelector(".search-email").innerText
-                        .toLowerCase();
-                    card.style.display = (name.includes(query) || email.includes(query))
-                        ? "flex"
-                        : "none";
-                });
+                filterCardsByFields("userSearch", ".user-card", [
+                    ".search-name",
+                    ".search-email",
+                ]);
             }
 
             function editUser(element) {
@@ -395,9 +355,7 @@
                 );
             }
 
-            window.onclick = (e) => {
-                if (e.target.id === "userModal") closeUserModal();
-            };
+            bindModalCloseOnBackground("userModal", closeUserModal);
         </script>
     </body>
 </html>

@@ -1,0 +1,38 @@
+body {
+    font-family: "Public Sans", sans-serif;
+    background-color: #f8f9fe;
+    color: #2d333a;
+}
+
+h1, h2, h3, h4, .headline {
+    font-family: "Manrope", sans-serif;
+}
+
+.material-symbols-outlined {
+    vertical-align: middle;
+}
+
+.modal-active {
+    overflow: hidden;
+}
+
+.sidebar-item-active {
+    background-color: #abd3fd;
+    color: #2d333a;
+    border-radius: 0 9999px 9999px 0;
+    font-weight: 700;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}

@@ -31,6 +31,7 @@ public class ReservaService {
 
     // --- OPERAÇÕES PRINCIPAIS ---
 
+    @SuppressWarnings("null")
     @Transactional
     public Reserva criarNovaReserva(String usuarioNome, String bookId) {
         Livro book = bookRepository.findById(bookId)
@@ -74,6 +75,7 @@ public class ReservaService {
         reorganizarFila(bookId);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void salvar(Reserva reserva) {
         reservaRepository.save(reserva);
@@ -81,6 +83,7 @@ public class ReservaService {
 
     // --- AUXILIARES ---
 
+    @SuppressWarnings("null")
     private Reserva buscarPorId(String id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Reserva não encontrada: " + id));

@@ -18,6 +18,7 @@ public class LivroService {
         return bookRepository.save(book);
     }
 
+    @SuppressWarnings("null")
     public Livro atualizarMaterial(String id, Livro bookAtualizado) {
         Livro existente = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado"));

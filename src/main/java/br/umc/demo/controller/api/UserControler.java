@@ -36,6 +36,7 @@ public class UserControler {
         return ResponseEntity.status(302).header("Location", "/controle").build();
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/update")
     public ResponseEntity<Void> updateUser(@RequestParam String id,
             @RequestParam String endereco,
@@ -50,6 +51,7 @@ public class UserControler {
         return ResponseEntity.status(302).header("Location", "/controle").build();
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/deactivate")
     public ResponseEntity<Void> deactivateUser(@RequestParam String id) {
         userRepository.findById(id).ifPresent(user -> {
@@ -59,6 +61,7 @@ public class UserControler {
         return ResponseEntity.status(302).header("Location", "/controle").build();
     }
 
+    @SuppressWarnings("null")
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteUser(@RequestParam String id) {
         userRepository.deleteById(id);

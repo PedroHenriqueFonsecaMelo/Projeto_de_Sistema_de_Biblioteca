@@ -27,7 +27,7 @@ public class EmprestimoControler {
         loanService.realizarEmprestimo(leitorId, bookId, bibliotecarioId);
 
         return ResponseEntity.status(302)
-                .header("Location", "/emprestimos")
+                .header("Location", "/library/emprestimos")
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class EmprestimoControler {
             loanService.finalizarEmprestimo(id);
 
             return ResponseEntity.status(302)
-                    .header("Location", "/emprestimos")
+                    .header("Location", "/library/emprestimos")
                     .build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

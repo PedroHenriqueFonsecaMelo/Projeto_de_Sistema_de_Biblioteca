@@ -1,42 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
     <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Gestão de Empréstimos - Digital Curator</title>
-        <script
-            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"
-        ></script>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Public+Sans:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-            rel="stylesheet"
-        />
-
-        <script th:replace="~{fragments/tailwind-config :: script}"></script>
 
         <style>
-            .material-symbols-outlined {
-                vertical-align: middle;
-            }
-            body {
-                font-family: "Public Sans", sans-serif;
-                background-color: #f8f9fe;
-                color: #2d333a;
-            }
-            h1, h2, h3 {
-                font-family: "Manrope", sans-serif;
-            }
             @media (min-width: 768px) {
                 .main-content {
                     margin-left: 16rem;
                 }
-            }
-            .modal-active {
-                overflow: hidden;
             }
             .atraso-glow {
                 box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
@@ -277,7 +249,7 @@
         </main>
 
         <button
-            onclick="openModal()"
+            onclick="openLoanModal()"
             class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group"
         >
             <span class="material-symbols-outlined text-3xl">add</span>
@@ -296,7 +268,7 @@
                             Novo Registro
                         </h2>
                         <button
-                            onclick="closeModal()"
+                            onclick="closeLoanModal()"
                             class="p-2 hover:bg-surface-container rounded-full"
                         >
                             <span class="material-symbols-outlined">close</span>
@@ -394,7 +366,7 @@
                         <div class="pt-4 flex gap-3">
                             <button
                                 type="button"
-                                onclick="closeModal()"
+                                onclick="closeLoanModal()"
                                 class="flex-1 px-5 py-3 font-bold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all"
                             >
                                 Cancelar
@@ -411,21 +383,15 @@
             </div>
         </div>
 
+        <th:block th:insert="~{fragments/common-js :: commonJs}" />
         <script>
-            function openModal() {
-                document.getElementById("loanModal").classList.remove("hidden");
-                document.body.classList.add("modal-active");
-                const hoje = new Date().toISOString().split("T")[0];
-                const vencimento = new Date();
-                vencimento.setDate(vencimento.getDate() + 14);
-                document.getElementById("dataRetirada").value = hoje;
-                document.getElementById("dataVencimento").value =
-                    vencimento.toISOString().split("T")[0];
+            function openLoanModal() {
+                openModal("loanModal");
+                setDateInputsWithOffset("dataRetirada", "dataVencimento", 14);
             }
 
-            function closeModal() {
-                document.getElementById("loanModal").classList.add("hidden");
-                document.body.classList.remove("modal-active");
+            function closeLoanModal() {
+                closeModal("loanModal");
             }
 
             function syncAndFilter(val) {
@@ -434,17 +400,10 @@
             }
 
             function filterEmprestimos() {
-                const input = document.getElementById("topSearch").value.toLowerCase();
-                const cards = document.querySelectorAll(".emprestimo-card");
-                cards.forEach((card) => {
-                    const text = card.innerText.toLowerCase();
-                    card.style.display = text.includes(input) ? "" : "none";
-                });
+                filterTextList("topSearch", ".emprestimo-card");
             }
 
-            window.onclick = (e) => {
-                if (e.target.id === "loanModal") closeModal();
-            };
+            bindModalCloseOnBackground("loanModal", closeLoanModal);
         </script>
     </body>
 </html>

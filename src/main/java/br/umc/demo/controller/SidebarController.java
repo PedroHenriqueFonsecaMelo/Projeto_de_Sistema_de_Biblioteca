@@ -1,11 +1,15 @@
 package br.umc.demo.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,9 +27,11 @@ import br.umc.demo.entity.enums.LoanStatus;
 import br.umc.demo.entity.Reserva;
 import br.umc.demo.entity.User;
 import br.umc.demo.repository.EmprestimoRepository;
+import br.umc.demo.repository.LivroRepository;
 import br.umc.demo.repository.UserRepository;
 import br.umc.demo.service.LivroService;
 import br.umc.demo.service.ReservaService;
+import br.umc.demo.service.StatService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -37,6 +43,8 @@ public class SidebarController {
     private final EmprestimoRepository loanRepository;
     private final ReservaService reservaService;
     private final UserRepository userRepository;
+    private final LivroRepository bookRepository;
+    private final StatService statService;
 
     // --- DASHBOARD ---
 
@@ -126,7 +134,7 @@ public class SidebarController {
 
     @PostMapping("/reservas/reservar")
     public String processarNovaReserva(@ModelAttribute Reserva reserva) {
- 
+
         reserva.setDataSolicitacao(LocalDateTime.now());
         reservaService.salvar(reserva);
         return "redirect:/library/reservas";
@@ -147,8 +155,42 @@ public class SidebarController {
 
     // --- RELATÓRIOS ---
 
+    @SuppressWarnings("null")
     @GetMapping("/relatorios")
-    public String exibirPaginaRelatorios() {
+    public String exibirPaginaRelatorios(Model model,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+
+        // 1. Pega os dados estatísticos do seu service
+        Map<String, Object> stats = statService.getLibraryReport();
+        model.addAllAttributes(stats);
+
+        // 2. Busca todos os empréstimos para a tabela
+        List<Emprestimo> emprestimos;
+
+        if (inicio != null && fim != null) {
+            // Ajusta para o início do dia (00:00:00) e fim do dia (23:59:59)
+            LocalDateTime dataInicio = inicio.atStartOfDay();
+            LocalDateTime dataFim = fim.atTime(LocalTime.MAX);
+            emprestimos = loanRepository.findByDataEmprestimoBetween(dataInicio, dataFim);
+        } else {
+            emprestimos = loanRepository.findAll();
+        }
+
+        Map<String, User> usuariosMap = new HashMap<>();
+        for (Emprestimo e : emprestimos) {
+            userRepository.findById(e.getLeitorId()).ifPresent(u -> usuariosMap.put(e.getLeitorId(), u));
+        }
+
+        Map<String, Livro> livrosMap = new HashMap<>();
+        for (Emprestimo e : emprestimos) {
+            bookRepository.findById(e.getBookId()).ifPresent(b -> livrosMap.put(e.getBookId(), b));
+        }
+
+        model.addAttribute("movimentacoes", emprestimos);
+        model.addAttribute("usuarios", usuariosMap);
+        model.addAttribute("livros", livrosMap);
+
         return "Relatorio";
     }
 

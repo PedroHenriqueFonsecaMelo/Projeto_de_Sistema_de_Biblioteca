@@ -6,37 +6,8 @@
     lang="pt-BR"
 >
     <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Archivist Slate - Estatísticas</title>
-
-        <script
-            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"
-        ></script>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Public+Sans:wght@300;400;600&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0"
-            rel="stylesheet"
-        />
-
-        <script th:replace="~{fragments/tailwind-config :: script}"></script>
-        <style>
-            body {
-                font-family: "Public Sans", sans-serif;
-            }
-            h1, h2, h3 {
-                font-family: "Manrope", sans-serif;
-            }
-            .sidebar-item-active {
-                background-color: #abd3fd;
-                color: #2d333a;
-                border-radius: 0 9999px 9999px 0;
-                font-weight: 700;
-            }
-        </style>
     </head>
     <body class="bg-surface text-on-surface flex min-h-screen">
         <div

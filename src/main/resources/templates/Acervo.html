@@ -1,48 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
     <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Acervo - Digital Curator</title>
-        <script
-            src="https://cdn.tailwindcss.com?plugins=forms,container-queries"
-        ></script>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Public+Sans:wght@300;400;500;600&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-            rel="stylesheet"
-        />
-
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            primary: "#4f46e5",
-                        },
-                    },
-                },
-            };
-        </script>
 
         <style>
-            .material-symbols-outlined {
-                vertical-align: middle;
-            }
-            body {
-                font-family: "Public Sans", sans-serif;
-                background-color: #f8f9fe;
-                color: #2d333a;
-            }
-            h1, h2, h3, h4 {
-                font-family: "Manrope", sans-serif;
-            }
-            .modal-active {
-                overflow: hidden;
-            }
             .truncate-2-lines {
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -55,11 +17,11 @@
         </style>
     </head>
 
-    <body class="flex min-h-screen">
+    <body class="bg-surface text-on-surface flex min-h-screen">
         <div th:replace="~{fragments/sidebar :: sidebar(activePage='acervo')}">
         </div>
 
-        <main class="ml-64 flex-1 flex flex-col min-h-screen">
+        <main class="ml-64 flex-1 flex flex-col min-h-screen relative bg-surface">
             <header
                 class="fixed top-0 left-64 right-0 z-30 bg-white/80 backdrop-blur-md flex justify-between items-center px-8 py-3 shadow-sm"
             >
@@ -76,7 +38,7 @@
                             onkeyup="filterBooks()"
                             type="text"
                             placeholder="Filtrar por título, autor ou ISBN..."
-                            class="w-full bg-slate-50 border border-slate-200 rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                            class="w-full bg-gray-100 border-none rounded-xl pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
                         />
                     </div>
                 </div>
@@ -112,7 +74,7 @@
                     </div>
                     <button
                         onclick="openBookModal()"
-                        class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all"
+                        class="bg-[#2d333a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-black transition-all transform active:scale-95"
                     >
                         <span class="material-symbols-outlined text-sm"
                         >add</span> Novo Livro
@@ -329,54 +291,25 @@
             </div>
         </main>
 
+        <th:block th:insert="~{fragments/common-js :: commonJs}" />
         <script>
-            const modal = document.getElementById("bookModal");
-            const modalContent = document.getElementById("modalContent");
-
             function openBookModal() {
-                modal.classList.remove("hidden");
-                setTimeout(() => {
-                    modalContent.classList.remove("scale-95", "opacity-0");
-                    modalContent.classList.add("scale-100", "opacity-100");
-                }, 10);
-                document.body.classList.add("modal-active");
+                openModal("bookModal", "modalContent");
             }
 
             function closeBookModal() {
-                modalContent.classList.remove("scale-100", "opacity-100");
-                modalContent.classList.add("scale-95", "opacity-0");
-                setTimeout(() => {
-                    modal.classList.add("hidden");
-                }, 300);
-                document.body.classList.remove("modal-active");
+                closeModal("bookModal", "modalContent");
             }
 
             function filterBooks() {
-                const query = document.getElementById("bookSearch").value.toLowerCase();
-                const cards = document.querySelectorAll(".book-card");
-
-                cards.forEach((card) => {
-                    const title = card.querySelector(".title-text").innerText
-                        .toLowerCase();
-                    const author = card.querySelector(".author-text").innerText
-                        .toLowerCase();
-                    const isbn = card.querySelector(".isbn-text").innerText
-                        .toLowerCase();
-
-                    if (
-                        title.includes(query) || author.includes(query) ||
-                        isbn.includes(query)
-                    ) {
-                        card.style.display = "flex";
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
+                filterCardsByFields("bookSearch", ".book-card", [
+                    ".title-text",
+                    ".author-text",
+                    ".isbn-text",
+                ]);
             }
 
-            window.onclick = (e) => {
-                if (e.target === modal) closeBookModal();
-            };
+            bindModalCloseOnBackground("bookModal", closeBookModal);
         </script>
     </body>
 </html>
