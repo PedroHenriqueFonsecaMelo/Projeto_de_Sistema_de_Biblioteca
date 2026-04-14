@@ -26,10 +26,10 @@ public class Reserva {
 
     private LocalDateTime dataSolicitacao;
     private Integer posicaoNaFila;
-    
+
     @Builder.Default
     private boolean ativa = true;
-    
+
     @Builder.Default
     private boolean notificado = false;
 

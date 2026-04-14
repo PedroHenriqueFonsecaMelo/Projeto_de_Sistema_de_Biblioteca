@@ -5,6 +5,7 @@ import br.umc.demo.entity.enums.LoanStatus;
 import br.umc.demo.entity.enums.TicketStatus;
 import br.umc.demo.repository.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@DependsOn("mongoConfig")
 public class DataInitializer implements CommandLineRunner {
 
         private final UserRepository userRepository;
@@ -260,12 +262,14 @@ public class DataInitializer implements CommandLineRunner {
                 return b;
         }
 
-        private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo, LocalDateTime vencimento,
+        private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo,
+                        LocalDateTime vencimento,
                         LoanStatus status) {
                 return createLoan(leitorId, bookId, emprestimo, vencimento, status, 0.0);
         }
 
-        private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo, LocalDateTime vencimento,
+        private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo,
+                        LocalDateTime vencimento,
                         LoanStatus status, double multa) {
                 Emprestimo l = new Emprestimo();
                 l.setLeitorId(leitorId);
