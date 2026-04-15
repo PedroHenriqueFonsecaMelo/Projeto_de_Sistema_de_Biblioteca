@@ -26,7 +26,7 @@ public class EmprestimoService {
         loan.setBookId(bookId);
         loan.setDataEmprestimo(LocalDateTime.now());
         loan.setDataVencimento(LocalDateTime.now().plusDays(14));
-        loan.setStatus(LoanStatus.ACTIVE);
+        loan.setStatus(LoanStatus.ATIVO);
 
         @SuppressWarnings("null")
         Livro book = bookRepository.findById(bookId).orElseThrow();
@@ -48,7 +48,7 @@ public class EmprestimoService {
                 .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
 
         // 2. Lógica de Negócio: Finaliza empréstimo
-        emprestimo.setStatus(LoanStatus.RETURNED);
+        emprestimo.setStatus(LoanStatus.RETORNADO);
         emprestimo.setDataDevolucao(LocalDateTime.now());
         emprestimo.setAtivo(false);
         emprestimo.setDataDevolucaoReal(LocalDate.now());

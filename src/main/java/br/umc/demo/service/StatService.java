@@ -33,15 +33,15 @@ public class StatService {
                 long totalBooks = bookRepository.count();
                 long totalUsers = userRepository.count();
 
-                long overdue = loanRepository.countByStatusAndDataVencimentoBefore(
-                                LoanStatus.ACTIVE,
+                long atrasado = loanRepository.countByStatusAndDataVencimentoBefore(
+                                LoanStatus.ATIVO,
                                 LocalDateTime.now());
 
-                long totalFines = loanRepository.countByStatus(LoanStatus.OVERDUE) * 2;
+                long totalFines = loanRepository.countByStatus(LoanStatus.ATRASADO) * 2;
 
                 // Real top 5 popular books by loan count (recent returned loans) - no lambdas
                 List<Emprestimo> returnedLoans = loanRepository
-                                .findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus.RETURNED);
+                                .findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus.RETORNADO);
 
                 // Group by bookId count
                 Map<String, Long> bookCountsMap = new HashMap<>();
@@ -75,8 +75,8 @@ public class StatService {
 
                 Map<String, Object> data = new HashMap<>();
                 data.put("totalBooks", totalBooks);
-                data.put("activeLoans", loanRepository.countByStatus(LoanStatus.ACTIVE));
-                data.put("overdue", overdue);
+                data.put("activeLoans", loanRepository.countByStatus(LoanStatus.ATIVO));
+                data.put("atrasado", atrasado);
                 data.put("activeUsers", totalUsers);
                 data.put("totalFines", totalFines);
                 data.put("popularBooks", popular);

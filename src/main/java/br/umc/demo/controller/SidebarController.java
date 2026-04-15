@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,11 +51,81 @@ public class SidebarController {
 
     // --- DASHBOARD ---
 
+    @SuppressWarnings("null")
     @GetMapping("/dashboard")
     public String exibirDashboard(Model model) {
-        model.addAttribute("totalLoans", loanRepository.count());
+
+        List<Emprestimo> todosEmprestimos = loanRepository.findAll();
+
+        // 1. Métricas Básicas (Cards)
+        long total = todosEmprestimos.size();
+        long atrasado = loanRepository.countByStatus(LoanStatus.ATRASADO);
+
+        model.addAttribute("totalLoans", total);
         model.addAttribute("activeUsers", userRepository.count());
-        model.addAttribute("overdueBooks", loanRepository.countByStatus(LoanStatus.OVERDUE));
+        model.addAttribute("overdueBooks", atrasado);
+
+        // 2. Cálculo do Gráfico de Devoluções
+        int percentualNoPrazo = 100;
+        if (total > 0) {
+            percentualNoPrazo = (int) (((total - atrasado) * 100) / total);
+        }
+        model.addAttribute("percentualNoPrazo", percentualNoPrazo);
+
+        // 3. Lógica para Livros Mais Procurados
+        Map<String, Integer> contagemMap = new HashMap<>();
+        for (Emprestimo e : todosEmprestimos) {
+            String idLivro = e.getBookId();
+            if (idLivro != null) {
+                int atual = contagemMap.getOrDefault(idLivro, 0);
+                contagemMap.put(idLivro, atual + 1);
+            }
+        }
+
+        List<Map<String, Object>> topBooks = new ArrayList<>();
+        int maxEmprestimos = 0;
+
+        for (Integer qtd : contagemMap.values()) {
+            if (qtd > maxEmprestimos)
+                maxEmprestimos = qtd;
+        }
+
+        for (Map.Entry<String, Integer> entry : contagemMap.entrySet()) {
+            Map<String, Object> livroData = new HashMap<>();
+
+            String tituloLivro = "Livro não encontrado";
+            Optional<Livro> livroOpt = bookRepository.findById(entry.getKey());
+            if (livroOpt.isPresent()) {
+                tituloLivro = livroOpt.get().getTitulo();
+            }
+
+            livroData.put("titulo", tituloLivro);
+            livroData.put("quantidadeEmprestimos", entry.getValue());
+
+            int percentualProcura = 0;
+            if (maxEmprestimos > 0) {
+                percentualProcura = (entry.getValue() * 100) / maxEmprestimos;
+            }
+            livroData.put("percentualProcura", percentualProcura);
+
+            topBooks.add(livroData);
+        }
+
+        topBooks.sort(new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> m1, Map<String, Object> m2) {
+                Integer q1 = (Integer) m1.get("quantidadeEmprestimos");
+                Integer q2 = (Integer) m2.get("quantidadeEmprestimos");
+                return q2.compareTo(q1);
+            }
+        });
+
+        if (topBooks.size() > 5) {
+            topBooks = topBooks.subList(0, 5);
+        }
+
+        model.addAttribute("topBooks", topBooks);
+
         return "Dashboard";
     }
 
@@ -86,7 +159,7 @@ public class SidebarController {
 
     @GetMapping("/emprestimos")
     public String exibirPaginaEmprestimos(Model model) {
-        List<Emprestimo> emprestimosAtivos = loanRepository.findByStatus(LoanStatus.ACTIVE);
+        List<Emprestimo> emprestimosAtivos = loanRepository.findByStatus(LoanStatus.ATIVO);
         List<Emprestimo> emprestimosAtrasados = processarMultasEAtrasos();
 
         List<Livro> livros = bookService.findAll();
@@ -205,7 +278,7 @@ public class SidebarController {
     // --- MÉTODOS AUXILIARES (PRIVATE) ---
 
     private List<Emprestimo> processarMultasEAtrasos() {
-        List<Emprestimo> atrasados = loanRepository.findByStatus(LoanStatus.OVERDUE);
+        List<Emprestimo> atrasados = loanRepository.findByStatus(LoanStatus.ATRASADO);
         for (Emprestimo loan : atrasados) {
             if (loan.getDataVencimento() != null
                     && LocalDateTime.now().isAfter(loan.getDataVencimento())
