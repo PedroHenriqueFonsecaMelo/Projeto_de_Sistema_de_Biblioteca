@@ -33,7 +33,7 @@ public class UserControler {
 
         userRepository.save(user);
 
-        return ResponseEntity.status(302).header("Location", "/controle").build();
+        return ResponseEntity.status(302).header("Location", "/library/controle").build();
     }
 
     @SuppressWarnings("null")
@@ -48,7 +48,7 @@ public class UserControler {
             userRepository.save(user);
         });
 
-        return ResponseEntity.status(302).header("Location", "/controle").build();
+        return ResponseEntity.status(302).header("Location", "/library/controle").build();
     }
 
     @SuppressWarnings("null")
@@ -58,14 +58,14 @@ public class UserControler {
             user.setAtivo(false);
             userRepository.save(user);
         });
-        return ResponseEntity.status(302).header("Location", "/controle").build();
+        return ResponseEntity.status(302).header("Location", "/library/controle").build();
     }
 
     @SuppressWarnings("null")
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteUser(@RequestParam String id) {
         userRepository.deleteById(id);
-        return ResponseEntity.status(302).header("Location", "/controle").build();
+        return ResponseEntity.status(302).header("Location", "/library/controle").build();
     }
 
     @GetMapping
