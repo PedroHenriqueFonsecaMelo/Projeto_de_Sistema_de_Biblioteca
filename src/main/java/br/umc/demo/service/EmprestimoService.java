@@ -3,10 +3,11 @@ package br.umc.demo.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.umc.demo.entity.Emprestimo;
 import br.umc.demo.entity.Livro;
 import br.umc.demo.entity.enums.EmprestimoStatus;
@@ -15,61 +16,73 @@ import br.umc.demo.repository.EmprestimoRepository;
 
 @Service
 public class EmprestimoService {
+
     @Autowired
     private EmprestimoRepository loanRepository;
+
     @Autowired
     private LivroRepository bookRepository;
 
-    public Emprestimo realizarEmprestimo(String leitorId, String bookId, String bibliotecarioId) {
-        Emprestimo loan = new Emprestimo();
-        loan.setLeitorId(leitorId);
-        loan.setBibliotecarioId(bibliotecarioId);
-        loan.setBookId(bookId);
-        loan.setDataEmprestimo(LocalDateTime.now());
-        loan.setDataVencimento(LocalDateTime.now().plusDays(14));
-        loan.setStatus(EmprestimoStatus.ATIVO);
+    @SuppressWarnings("null")
+    @Transactional
+    public Emprestimo salvarEmprestimo(Emprestimo emprestimo) {
+        Livro book = bookRepository.findById(emprestimo.getBookId())
+                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
 
-        @SuppressWarnings("null")
-        Optional<Livro> optBookCheck = bookRepository.findById(bookId);
-        if (!optBookCheck.isPresent()) {
-            throw new RuntimeException("Livro não encontrado para empréstimo");
+        if (book.getExemplaresDisponiveis() <= 0) {
+            throw new RuntimeException("Não há exemplares disponíveis para este livro.");
         }
-        Livro book = optBookCheck.get();
+
+        emprestimo.setDataEmprestimo(LocalDateTime.now());
+        emprestimo.setDataVencimento(LocalDateTime.now().plusDays(14));
+        emprestimo.setStatus(EmprestimoStatus.ATIVO);
+        emprestimo.setAtivo(true);
+
+        // Atualiza estoque do livro
         book.setExemplaresDisponiveis(book.getExemplaresDisponiveis() - 1);
         bookRepository.save(book);
 
-        return loanRepository.save(loan);
+        return loanRepository.save(emprestimo);
     }
 
-    /**
-     * Unified method for loan finalization/return.
-     * Merges logic from processarDevolucao and finalizarEmprestimo.
-     * Updates status, dates, book availability, and new fields.
-     */
     @SuppressWarnings("null")
+    @Transactional
     public Emprestimo finalizarEmprestimo(String id) {
-        // 1. Busca o documento de empréstimo
-        Optional<Emprestimo> optEmprestimo = loanRepository.findById(id);
-        if (!optEmprestimo.isPresent()) {
-            throw new RuntimeException("Empréstimo não encontrado");
-        }
-        Emprestimo emprestimo = optEmprestimo.get();
+        Emprestimo emprestimo = loanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
 
-        // 2. Lógica de Negócio: Finaliza empréstimo
+        if (emprestimo.getStatus() == EmprestimoStatus.RETORNADO) {
+            throw new RuntimeException("Este empréstimo já foi finalizado anteriormente.");
+        }
+
+        // Atualiza status do empréstimo
         emprestimo.setStatus(EmprestimoStatus.RETORNADO);
         emprestimo.setDataDevolucao(LocalDateTime.now());
         emprestimo.setAtivo(false);
         emprestimo.setDataDevolucaoReal(LocalDate.now());
 
-        // 3. Atualiza o Livro: incrementa exemplares disponíveis
-        Optional<Livro> optBook = bookRepository.findById(emprestimo.getBookId());
-        if (optBook.isPresent()) {
-            Livro book = optBook.get();
+        // Devolve o exemplar ao estoque
+        bookRepository.findById(emprestimo.getBookId()).ifPresent(book -> {
             book.setExemplaresDisponiveis(book.getExemplaresDisponiveis() + 1);
             bookRepository.save(book);
+        });
+
+        return loanRepository.save(emprestimo);
+    }
+
+    @SuppressWarnings("null")
+    @Transactional
+    public Emprestimo renovar(String id) {
+
+        Emprestimo emprestimo = loanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+
+        if (!emprestimo.isAtivo() || emprestimo.getStatus() == EmprestimoStatus.RETORNADO) {
+            throw new RuntimeException("Não é possível renovar um empréstimo finalizado.");
         }
 
-        // 4. Salva a alteração do empréstimo
+        emprestimo.setDataVencimento(emprestimo.getDataVencimento().plusDays(7));
+
         return loanRepository.save(emprestimo);
     }
 

@@ -8,6 +8,7 @@
         <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Tickets de Suporte - Grande Biblioteca</title>
     </head>
+
     <body class="bg-surface text-on-surface flex min-h-screen">
         <div th:replace="~{fragments/sidebar :: sidebar(activePage='tickets')}">
         </div>
@@ -73,6 +74,15 @@
                             class="px-4 py-2 bg-primary/20 text-primary text-sm font-bold rounded-xl uppercase tracking-wider"
                             th:text="'Total: ' + ${#lists.size(tickets)}"
                         >0 tickets</span>
+
+                        <button
+                            type="button"
+                            onclick="openModal('ticketModal', 'ticketModalContent')"
+                            class="bg-[#2d333a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-black shadow-lg transition-all active:scale-95"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                            >add</span> Novo Ticket
+                        </button>
                     </div>
                 </div>
 
@@ -109,6 +119,11 @@
                                         class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-wider"
                                     >
                                         Status
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-[11px] font-black text-slate-500 uppercase tracking-wider text-right"
+                                    >
+                                        Ações
                                     </th>
                                 </tr>
                             </thead>
@@ -151,16 +166,29 @@
                                     <td class="px-6 py-4">
                                         <span
                                             class="px-2 py-1 text-[10px] font-black rounded uppercase"
-                                            th:classappend="(${ticket.status == T(br.umc.demo.entity.enums.TicketStatus).OPEN} ? 'bg-blue-50 text-blue-700' : (${ticket.status == T(br.umc.demo.entity.enums.TicketStatus).IN_PROGRESS} ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'))"
+                                            th:classappend="(${ticket.status == T(br.umc.demo.entity.enums.TicketStatus).OPEN} ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700')"
                                             th:text="${ticket.status}"
+                                        >Status</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button
+                                            th:if="${ticket.status == T(br.umc.demo.entity.enums.TicketStatus).OPEN}"
+                                            class="bg-primary text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary/90 transition-all"
+                                            th:data-id="${ticket.id}"
+                                            th:data-assunto="${ticket.assunto}"
+                                            onclick="tickets_prepararResposta(this)"
                                         >
-                                            Status
-                                        </span>
+                                            Responder
+                                        </button>
+                                        <span
+                                            th:if="${ticket.status == T(br.umc.demo.entity.enums.TicketStatus).CLOSED}"
+                                            class="text-xs text-slate-400 italic"
+                                        >Respondido</span>
                                     </td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(tickets)}">
                                     <td
-                                        colspan="5"
+                                        colspan="6"
                                         class="px-6 py-20 text-center text-slate-400 text-sm italic"
                                     >
                                         Nenhum ticket encontrado.
@@ -172,6 +200,127 @@
                 </div>
             </section>
 
+            <div
+                id="modalResposta"
+                class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+            >
+                <div
+                    class="bg-white rounded-2xl w-full max-w-md shadow-2xl transform transition-all"
+                >
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-800 mb-1">
+                            Responder Ticket
+                        </h3>
+                        <p
+                            id="modalAssunto"
+                            class="text-sm text-slate-500 mb-6"
+                        >
+                        </p>
+                        <input type="hidden" id="modalTicketId">
+                        <div class="space-y-4">
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase mb-1"
+                                >Sua Resposta</label>
+                                <textarea
+                                    id="textoResposta"
+                                    rows="4"
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                                    placeholder="Digite a orientação para o leitor..."
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex gap-3">
+                            <button
+                                onclick="closeModal('ticketModal', 'ticketModalContent')"
+                                class="flex-1 px-4 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-all"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onclick="tickets_enviarResposta()"
+                                class="flex-1 px-4 py-2 text-sm font-bold text-white bg-primary hover:shadow-lg hover:shadow-primary/30 rounded-xl transition-all"
+                            >
+                                Enviar Resposta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                id="ticketModal"
+                class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+            >
+                <div
+                    id="ticketModalContent"
+                    class="bg-white rounded-2xl w-full max-w-md shadow-2xl transform transition-all scale-95 opacity-0"
+                >
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-slate-800">
+                                Novo Ticket
+                            </h3>
+                            <button
+                                type="button"
+                                onclick="closeModal('ticketModal', 'ticketModalContent')"
+                                class="text-slate-400 hover:text-slate-600"
+                            >
+                                <span class="material-symbols-outlined"
+                                >close</span>
+                            </button>
+                        </div>
+                        <form
+                            th:action="@{/api/tickets/registrar}"
+                            method="POST"
+                            class="space-y-4"
+                            onsubmit="event.preventDefault(); tickets_criarTicket(this);"
+                        >
+                            <div class="space-y-1">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase mb-1"
+                                >Assunto</label>
+                                <input
+                                    type="text"
+                                    name="assunto"
+                                    id="assunto"
+                                    required
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                                    placeholder="Título da dúvida"
+                                >
+                            </div>
+                            <div class="space-y-1">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-widest text-outline ml-1"
+                                >Leitor</label>
+                                <select
+                                    id="leitorId"
+                                    name="leitorId"
+                                    required
+                                    class="w-full p-3 rounded-xl border border-outline-variant bg-surface outline-none text-sm"
+                                >
+                                    <option value="" disabled selected>
+                                        Selecione um leitor...
+                                    </option>
+                                    <option
+                                        th:each="user : ${usuarios}"
+                                        th:value="${user.id}"
+                                        th:text="${user.nome}"
+                                    >
+                                    </option>
+                                </select>
+                            </div>
+                            <button
+                                type="submit"
+                                class="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg hover:brightness-110 transition-all mt-4"
+                            >
+                                Confirmar Ticket
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <footer class="p-8 mt-auto text-center opacity-50">
                 <p class="text-[10px] font-bold uppercase tracking-[0.2em]">
                     Painel da Biblioteca v2.0 • Suporte Técnico
@@ -180,5 +329,6 @@
         </main>
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
+        <script src="/js/common.js"></script>
     </body>
 </html>

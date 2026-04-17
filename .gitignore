@@ -1,7 +1,7 @@
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/
+.mvn/wrapper
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -32,5 +32,4 @@ build/
 
 ### VS Code ###
 .vscode/
-/TODO.md
 /MANUAL_DO_USUARIO_ABNT.md

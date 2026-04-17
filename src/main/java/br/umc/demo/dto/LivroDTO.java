@@ -12,9 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class LivroDTO {
+
+    private String id;
     private String isbn;
     private String titulo;
     private String autor;
     private String status;
     private String localizacao;
+    private Integer totalExemplares;
+    private Integer exemplaresDisponiveis;
+    private boolean disponivel;
 }

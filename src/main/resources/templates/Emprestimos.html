@@ -18,33 +18,39 @@
             ></th:block>
 
             <div class="p-8 mt-16 max-w-7xl mx-auto w-full">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 class="text-3xl font-black text-on-surface">
+                            Circulação
+                        </h1>
+                        <p class="text-on-surface-variant font-medium">
+                            Controle de saídas, retornos e prazos.
+                        </p>
+                    </div>
+                    <button
+                        onclick="openModal('loanModal', 'loanModalContent')"
+                        class="bg-[#2d333a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-black shadow-lg transition-all active:scale-95"
+                    >
+                        <span class="material-symbols-outlined text-sm"
+                        >add</span>
+                        Novo Empréstimo
+                    </button>
+                </div>
+
                 <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
                     <section class="xl:col-span-5 space-y-6">
                         <div class="flex items-center justify-between">
-                            <div>
-                                <h2
-                                    class="text-xl font-bold text-error flex items-center gap-2"
-                                >
-                                    <span class="material-symbols-outlined"
-                                    >warning</span>
-                                    Painel de Retorno
-                                </h2>
-                                <p
-                                    class="text-xs text-on-surface-variant font-medium"
-                                >
-                                    Itens com prazo expirado e pendências.
-                                </p>
-                            </div>
-                            <span
-                                th:if="${not #lists.isEmpty(emprestimosAtrasados)}"
-                                class="bg-error text-white text-[10px] px-2.5 py-1 rounded-lg font-black"
-                                th:text="${#lists.size(emprestimosAtrasados) + ' PENDÊNCIAS'}"
+                            <h2
+                                class="text-xl font-bold text-error flex items-center gap-2"
                             >
-                            </span>
+                                <span class="material-symbols-outlined"
+                                >warning</span>
+                                Painel de Retorno de Livros Atrasados
+                            </h2>
                         </div>
 
                         <div
-                            class="bg-white rounded-3xl p-6 border-2 border-error/10 shadow-sm atraso-glow min-h-[200px]"
+                            class="bg-white rounded-3xl p-6 border-2 border-error/10 shadow-sm min-h-[200px]"
                         >
                             <div
                                 th:if="${#lists.isEmpty(emprestimosAtrasados)}"
@@ -56,8 +62,7 @@
                                 <p
                                     class="text-on-surface-variant text-sm mt-3 font-semibold"
                                 >
-                                    Nenhum atraso detectado.<br>Toda a
-                                    circulação está em dia.
+                                    Tudo em dia!
                                 </p>
                             </div>
 
@@ -70,151 +75,98 @@
                                 >
                                     <div class="min-w-0 flex-1">
                                         <h3
-                                            class="text-md font-extrabold text-on-surface leading-tight truncate"
-                                            th:text="${livros.?[id == #root.atrasado.bookId][0]?.titulo ?: 'Livro não identificado'}"
+                                            class="text-md font-extrabold text-on-surface truncate"
+                                            th:text="${livros.?[id == #root.atrasado.bookId][0]?.titulo ?: 'Livro...'}"
                                         >
                                         </h3>
                                         <p
                                             class="text-xs text-on-surface-variant mt-1"
                                         >
                                             Solicitante: <span
-                                                class="font-bold text-on-surface"
-                                                th:text="${userNameMap[atrasado.leitorId] ?: 'Usuário não encontrado'}"
+                                                class="font-bold"
+                                                th:text="${userNameMap[atrasado.leitorId]}"
                                             ></span>
                                         </p>
                                     </div>
-                                    <div
-                                        class="bg-error-container text-error px-3 py-1.5 rounded-xl text-xs font-black flex flex-col items-center shrink-0 ml-2"
-                                    >
-                                        <span
-                                            class="text-[8px] uppercase opacity-70"
-                                        >Multa</span>
-                                        <span
-                                            th:text="${'R$ ' + #numbers.formatDecimal(atrasado.multaCalculada ?: 0, 1, 2, 'COMMA')}"
-                                        ></span>
-                                    </div>
                                 </div>
-
-                                <form
-                                    th:action="@{/api/loans/devolver/{id}(id=${atrasado.id})}"
-                                    method="POST"
+                                <button
+                                    type="button"
+                                    th:data-id="${atrasado.id}"
+                                    onclick="emprestimos_devolver(this.getAttribute('data-id'))"
+                                    class="w-full py-3 bg-on-surface text-surface font-bold rounded-xl hover:opacity-90 active:scale-[0.98] transition-all text-[10px] uppercase tracking-widest"
                                 >
-                                    <button
-                                        type="submit"
-                                        class="w-full py-3 bg-on-surface text-surface font-bold rounded-xl hover:opacity-90 active:scale-[0.98] transition-all text-[10px] uppercase tracking-widest"
-                                    >
-                                        Quitar e Devolver
-                                    </button>
-                                </form>
+                                    Quitar e Devolver
+                                </button>
                             </div>
                         </div>
                     </section>
 
                     <section class="xl:col-span-7 space-y-6">
                         <div class="flex items-center justify-between">
-                            <div>
-                                <h2
-                                    class="text-xl font-bold text-on-surface flex items-center gap-2"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-primary"
-                                    >inventory_2</span>
-                                    Em Uso Geral
-                                </h2>
-                                <p
-                                    class="text-xs text-on-surface-variant font-medium"
-                                >
-                                    Todos os livros que não estão na estante.
-                                </p>
-                            </div>
-                            <span
-                                class="text-xs font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full"
-                                th:text="${(totalEmprestimos ?: 0) + ' Livros fora'}"
+                            <h2
+                                class="text-xl font-bold text-on-surface flex items-center gap-2"
                             >
-                            </span>
+                                <span
+                                    class="material-symbols-outlined text-primary"
+                                >inventory_2</span>
+                                Em Uso Geral
+                            </h2>
                         </div>
 
                         <div class="space-y-3">
                             <div
-                                th:if="${#lists.isEmpty(emprestimosAtivos)}"
-                                class="bg-white p-10 rounded-3xl text-center border border-dashed border-outline-variant"
-                            >
-                                <p class="text-on-surface-variant text-sm">
-                                    Nenhum livro em circulação.
-                                </p>
-                            </div>
-
-                            <div
                                 th:each="emprestimo : ${emprestimosAtivos}"
-                                class="bg-white p-4 rounded-2xl flex gap-5 items-center hover:shadow-md border border-outline-variant/5 transition-all"
+                                class="bg-white p-4 rounded-2xl flex gap-5 items-center hover:shadow-md border border-outline-variant/10 transition-all"
                             >
-                                <div
-                                    class="w-12 h-16 bg-surface-container rounded-lg flex items-center justify-center shrink-0 border border-outline-variant/10"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-outline"
-                                    >book</span>
-                                </div>
-
                                 <div class="flex-grow min-w-0">
                                     <h3
-                                        class="text-sm font-bold text-on-surface leading-tight truncate"
-                                        th:text="${livros.?[id == #root.emprestimo.bookId][0]?.titulo ?: 'Livro Indisponível'}"
+                                        class="text-sm font-bold text-on-surface truncate"
+                                        th:text="${livros.?[id == #root.emprestimo.bookId][0]?.titulo}"
                                     >
                                     </h3>
-                                    <div
-                                        class="flex flex-wrap gap-x-6 gap-y-1 mt-2"
+                                    <p
+                                        class="text-[11px] text-on-surface-variant mt-1"
+                                        th:text="${userNameMap[emprestimo.leitorId]}"
                                     >
-                                        <span
-                                            class="text-[11px] text-on-surface-variant flex items-center gap-1"
-                                        >
-                                            <span
-                                                class="material-symbols-outlined text-sm"
-                                            >person</span>
-                                            <span
-                                                th:text="${userNameMap[emprestimo.leitorId] ?: 'N/A'}"
-                                            ></span>
-                                        </span>
-                                        <span
-                                            class="text-[11px] text-primary font-bold flex items-center gap-1"
-                                        >
-                                            <span
-                                                class="material-symbols-outlined text-sm"
-                                            >event</span>
-                                            Vencimento: <span
-                                                th:text="${#temporals.format(emprestimo.dataVencimento, 'dd/MM/yyyy') ?: '--/--/----'}"
-                                            ></span>
-                                        </span>
-                                    </div>
+                                    </p>
+                                    <p
+                                        class="text-[10px] text-primary font-black mt-1 uppercase"
+                                    >
+                                        Vence em: <span
+                                            th:text="${#temporals.format(emprestimo.dataVencimento, 'dd/MM/yyyy')}"
+                                        ></span>
+                                    </p>
                                 </div>
 
-                                <form
-                                    th:action="@{/api/loans/devolver/{id}(id=${emprestimo.id})}"
-                                    method="POST"
-                                    class="shrink-0"
-                                >
+                                <div class="flex items-center gap-2">
                                     <button
-                                        type="submit"
-                                        class="w-10 h-10 flex items-center justify-center text-outline hover:text-primary hover:bg-primary/5 rounded-full transition-all"
-                                        title="Devolução Simples"
+                                        type="button"
+                                        th:data-id="${emprestimo.id}"
+                                        onclick="emprestimos_renovar(this.getAttribute('data-id'))"
+                                        class="w-10 h-10 flex items-center justify-center text-primary hover:bg-primary/5 rounded-full"
+                                        title="Renovar Prazo"
+                                    >
+                                        <span class="material-symbols-outlined"
+                                        >update</span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        th:data-id="${emprestimo.id}"
+                                        onclick="emprestimos_devolver(this.getAttribute('data-id'))"
+                                        class="w-10 h-10 flex items-center justify-center text-outline hover:text-success hover:bg-success/5 rounded-full"
+                                        title="Devolver Agora"
                                     >
                                         <span class="material-symbols-outlined"
                                         >assignment_return</span>
                                     </button>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
         </main>
-
-        <button
-            onclick="window.emprestimos_openLoanModal()"
-            class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50"
-        >
-            <span class="material-symbols-outlined text-3xl">add</span>
-        </button>
 
         <div
             id="loanModal"
@@ -230,16 +182,14 @@
                             Novo Registro
                         </h2>
                         <button
-                            onclick="window.emprestimos_closeLoanModal()"
-                            class="p-2 hover:bg-surface-container rounded-full text-outline"
+                            onclick="closeModal('loanModal', 'loanModalContent')"
+                            class="p-2 hover:bg-surface-container rounded-full"
                         >
                             <span class="material-symbols-outlined">close</span>
                         </button>
                     </div>
-
                     <form
-                        th:action="@{/api/loans/checkout}"
-                        method="POST"
+                        onsubmit="event.preventDefault(); emprestimos_salvar(this);"
                         class="space-y-4"
                     >
                         <div>
@@ -249,7 +199,7 @@
                             <select
                                 name="bookId"
                                 required
-                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm outline-none focus:border-primary"
+                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm"
                             >
                                 <option value="" disabled selected>
                                     Selecione um título...
@@ -262,18 +212,17 @@
                                 </option>
                             </select>
                         </div>
-
                         <div>
                             <label
                                 class="block text-xs font-bold uppercase text-outline mb-2"
-                            >Leitor / Aluno</label>
+                            >Leitor</label>
                             <select
                                 name="leitorId"
                                 required
-                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm outline-none focus:border-primary"
+                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm"
                             >
                                 <option value="" disabled selected>
-                                    Selecione quem está retirando...
+                                    Selecione o leitor...
                                 </option>
                                 <option
                                     th:each="u : ${usuarios}"
@@ -283,53 +232,24 @@
                                 </option>
                             </select>
                         </div>
-
                         <input
                             type="hidden"
                             name="bibliotecarioId"
                             th:value="${#authentication.name}"
                         />
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase text-outline mb-2"
-                                >Retirada</label>
-                                <input
-                                    type="date"
-                                    name="dataEmprestimo"
-                                    id="dataRetirada"
-                                    required
-                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm"
-                                >
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold uppercase text-outline mb-2"
-                                >Vencimento</label>
-                                <input
-                                    type="date"
-                                    name="dataVencimento"
-                                    id="dataVencimento"
-                                    required
-                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm"
-                                >
-                            </div>
-                        </div>
-
                         <div class="pt-4 flex gap-3">
                             <button
                                 type="button"
-                                onclick="window.emprestimos_closeLoanModal()"
-                                class="flex-1 px-5 py-3 font-bold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all"
+                                onclick="closeModal('loanModal', 'loanModalContent')"
+                                class="flex-1 px-5 py-3 font-bold text-on-surface-variant"
                             >
                                 Cancelar
                             </button>
                             <button
                                 type="submit"
-                                class="flex-1 px-5 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all"
+                                class="flex-1 px-5 py-3 bg-primary text-white font-bold rounded-xl"
                             >
-                                Confirmar Empréstimo
+                                Confirmar
                             </button>
                         </div>
                     </form>
@@ -338,45 +258,15 @@
         </div>
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
-
-        <script th:inline="javascript">
-            // Gerenciamento do Modal
-            window.emprestimos_openLoanModal = function () {
-                const modal = document.getElementById("loanModal");
-                const content = document.getElementById("loanModalContent");
-                if (modal && content) {
-                    modal.classList.remove("hidden");
-                    // Define data de hoje por padrão
-                    const hoje = new Date().toISOString().split("T")[0];
-                    const inputRetirada = document.getElementById("dataRetirada");
-                    if (inputRetirada) inputRetirada.value = hoje;
-
-                    setTimeout(() => {
-                        content.classList.remove("scale-95", "opacity-0");
-                        content.classList.add("scale-100", "opacity-100");
-                    }, 10);
-                    document.body.classList.add("modal-active");
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const inputVenc = document.getElementById("dataVencimento");
+                if (inputVenc) {
+                    const d = new Date();
+                    d.setDate(d.getDate() + 14);
+                    inputVenc.value = d.toISOString().split("T")[0];
                 }
-            };
-
-            window.emprestimos_closeLoanModal = function () {
-                const modal = document.getElementById("loanModal");
-                const content = document.getElementById("loanModalContent");
-                if (modal && content) {
-                    content.classList.remove("scale-100", "opacity-100");
-                    content.classList.add("scale-95", "opacity-0");
-                    setTimeout(() => modal.classList.add("hidden"), 300);
-                    document.body.classList.remove("modal-active");
-                }
-            };
-
-            // Fechar modal ao clicar fora
-            window.onclick = function (event) {
-                const modal = document.getElementById("loanModal");
-                if (event.target == modal) {
-                    window.emprestimos_closeLoanModal();
-                }
-            };
+            });
         </script>
     </body>
 </html>

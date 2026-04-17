@@ -30,7 +30,7 @@
                             </p>
                         </div>
                         <button
-                            onclick="openUserModal()"
+                            onclick="openModal('userModal', 'Cadastrar Leitor')"
                             class="bg-[#2d333a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-black transition-all transform active:scale-95"
                         >
                             <span class="material-symbols-outlined text-sm"
@@ -59,7 +59,7 @@
                             th:data-nome="${u.nome}"
                             th:data-endereco="${u.endereco}"
                             th:data-telefone="${u.telefone}"
-                            onclick="editUser(this)"
+                            onclick="controle_editUser(this)"
                             class="user-card flex items-center justify-between p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all cursor-pointer border border-transparent hover:border-outline-variant/30"
                         >
                             <div class="flex items-center gap-4">
@@ -161,7 +161,7 @@
                     >
                         <button
                             type="button"
-                            onclick="resetForm()"
+                            onclick="controle_resetForm()"
                             class="px-8 py-3 text-on-surface-variant font-bold rounded-xl border border-outline-variant/30 hover:bg-surface-container-high transition-all"
                         >
                             Limpar
@@ -181,6 +181,7 @@
                 class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
             >
                 <div
+                id="Cadastrar Leitor"
                     class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden"
                 >
                     <div class="p-8">
@@ -189,7 +190,7 @@
                                 Cadastrar Leitor
                             </h2>
                             <button
-                                onclick="closeUserModal()"
+                                onclick="closeModal('userModal', 'Cadastrar Leitor')"
                                 class="p-2 hover:bg-surface-container rounded-full transition-colors"
                             >
                                 <span class="material-symbols-outlined"
@@ -228,7 +229,7 @@
                             <div class="pt-6 flex gap-3">
                                 <button
                                     type="button"
-                                    onclick="closeUserModal()"
+                                    onclick="closeModal('userModal', 'Cadastrar Leitor')"
                                     class="flex-1 px-5 py-3 font-bold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all"
                                 >
                                     Cancelar
@@ -253,14 +254,5 @@
         </main>
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
-        <script>
-            // Init Controle page
-            controle_bindModal();
-            document.getElementById("userSearch").addEventListener(
-                "keyup",
-                controle_filterUsers,
-            );
-            window.controle_openUserModal = controle_openUserModal;
-        </script>
     </body>
 </html>

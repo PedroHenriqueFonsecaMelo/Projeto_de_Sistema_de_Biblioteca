@@ -20,6 +20,8 @@ public class Livro {
     private Integer exemplaresDisponiveis;
 
     public boolean isDisponivel() {
-        return this.exemplaresDisponiveis > 0;
+        if (this.exemplaresDisponiveis == null)
+            return false;
+        return this.exemplaresDisponiveis != null && this.exemplaresDisponiveis > 0;
     }
 }

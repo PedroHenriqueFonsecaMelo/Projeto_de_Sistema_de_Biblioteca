@@ -42,11 +42,9 @@ public class StatService {
 
                 long totalFines = loanRepository.countByStatus(EmprestimoStatus.ATRASADO) * 2;
 
-                // Real top 5 popular books by loan count (recent returned loans) - no lambdas
                 List<Emprestimo> returnedLoans = loanRepository
                                 .findFirst10ByStatusOrderByDataEmprestimoDesc(EmprestimoStatus.RETORNADO);
 
-                // Group by bookId count
                 Map<String, Long> bookCountsMap = new HashMap<>();
                 for (Emprestimo loan : returnedLoans) {
                         String bookId = loan.getBookId();

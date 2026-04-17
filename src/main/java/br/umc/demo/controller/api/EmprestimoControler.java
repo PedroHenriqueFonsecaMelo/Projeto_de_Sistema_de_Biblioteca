@@ -1,68 +1,40 @@
 package br.umc.demo.controller.api;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import br.umc.demo.entity.Emprestimo;
+import br.umc.demo.service.EmprestimoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import br.umc.demo.entity.Emprestimo;
-import br.umc.demo.service.EmprestimoService;
+
 
 @RestController
-@RequestMapping("/api/loans")
+@RequestMapping("/api/emprestimos")
 @PreAuthorize("hasRole('LIBRARIAN')")
+@RequiredArgsConstructor
 public class EmprestimoControler {
 
-    @Autowired
-    private EmprestimoService loanService;
+    private final EmprestimoService emprestimoService;
 
-    @PostMapping("/checkout")
-    public ResponseEntity<Void> checkout(
-            @RequestParam String leitorId,
-            @RequestParam String bookId,
-            @RequestParam(required = false) String bibliotecarioId) {
-
-        loanService.realizarEmprestimo(leitorId, bookId, bibliotecarioId);
-
-        return ResponseEntity.status(302)
-                .header("Location", "/library/emprestimos")
-                .build();
-    }
-
-    @PatchMapping("/{id}/return")
-    public ResponseEntity<Emprestimo> processReturn(@PathVariable String id) {
-
-        return ResponseEntity.ok(loanService.finalizarEmprestimo(id));
-    }
-
-    @GetMapping
-    public List<Emprestimo> getAllLoans() {
-        return loanService.getAllLoans();
-    }
-
+    // REALIZAR NOVO EMPRÉSTIMO
     @PostMapping
-    public Map<String, String> createLoan(@RequestBody Map<String, String> loanData) {
-        System.out.println("Registrando empréstimo do livro: " + loanData.get("bookId"));
-        return Map.of("message", "Empréstimo registrado com sucesso!");
+    public ResponseEntity<Emprestimo> realizarEmprestimo(@RequestBody Emprestimo emprestimo) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(emprestimoService.salvarEmprestimo(emprestimo));
     }
 
-    @PutMapping("/{id}/return")
-    public Map<String, String> returnBook(@PathVariable String id) {
-        return Map.of("message", "Livro devolvido e disponível no acervo.");
-    }
-
+    // DEVOLVER LIVRO (Finalizar empréstimo)
     @PostMapping("/devolver/{id}")
-    public ResponseEntity<Void> devolverLivro(@PathVariable("id") String id) {
-        try {
-            loanService.finalizarEmprestimo(id);
+    public ResponseEntity<Void> devolverLivro(@PathVariable String id) {
+        emprestimoService.finalizarEmprestimo(id);
+        return ResponseEntity.ok().build();
+    }
 
-            return ResponseEntity.status(302)
-                    .header("Location", "/library/emprestimos")
-                    .build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    // RENOVAR EMPRÉSTIMO
+    @PostMapping("/renovar/{id}")
+    public ResponseEntity<Void> renovarEmprestimo(@PathVariable String id) {
+        emprestimoService.renovar(id);
+        return ResponseEntity.ok().build();
     }
 }

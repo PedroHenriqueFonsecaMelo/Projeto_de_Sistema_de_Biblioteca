@@ -96,12 +96,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                logger.info("✓ JWT token válido para user: {}", userEmail);
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                logger.info("✓ User autenticado com sucesso: {} usando JWT", userEmail);
+
             } else {
                 logger.warn("✗ Validação do JWT token falhou para user: {}", userEmail);
             }

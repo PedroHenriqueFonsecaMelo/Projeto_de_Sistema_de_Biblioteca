@@ -30,7 +30,7 @@
                         </p>
                     </div>
                     <button
-                        onclick="openBookModal()"
+                        onclick="openModal('bookModal', 'modalContent')"
                         class="bg-[#2d333a] text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-black transition-all transform active:scale-95"
                     >
                         <span class="material-symbols-outlined text-sm"
@@ -63,15 +63,14 @@
                         >
                             <div class="absolute top-4 right-4">
                                 <span
-                                    th:text="${livro.status}"
-                                    th:classappend="${livro.status == 'Disponível' ? 'bg-emerald-500' : 'bg-amber-500'}"
+                                    th:text="${livro.disponivel ? 'Disponível' : 'Esgotado'}"
+                                    th:classappend="${livro.disponivel ? 'bg-emerald-500' : 'bg-amber-500'}"
                                     class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-md"
                                 >
                                     Status
                                 </span>
                             </div>
                         </div>
-
                         <div class="p-6 flex flex-col flex-1">
                             <p
                                 class="text-[10px] uppercase font-bold tracking-widest text-slate-400 isbn-text"
@@ -102,27 +101,19 @@
                                     <span
                                         class="text-[11px] font-bold text-slate-600"
                                         th:text="${livro.localizacao != null ? livro.localizacao : 'S/L'}"
-                                    >Local</span>
-                                </div>
-
-                                <form
-                                    th:action="@{/livros/remover}"
-                                    th:method="delete"
-                                    onsubmit="return confirm('Tem certeza que deseja remover este livro do acervo?')"
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="isbn"
-                                        th:value="${livro.isbn}"
-                                    />
-                                    <button
-                                        type="submit"
-                                        class="p-2 text-slate-300 hover:text-red-500 transition-colors"
                                     >
-                                        <span class="material-symbols-outlined"
-                                        >delete_outline</span>
-                                    </button>
-                                </form>
+                                        Local
+                                    </span>
+                                </div>
+                                <button
+                                    type="button"
+                                    th:data-id="${livro.id}"
+                                    onclick="acervo_removerLivro(this.getAttribute('data-id'))"
+                                    class="p-2 text-slate-300 hover:text-red-500 transition-colors"
+                                >
+                                    <span class="material-symbols-outlined"
+                                    >delete_outline</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -154,7 +145,7 @@
                                 Cadastrar Obra
                             </h2>
                             <button
-                                onclick="closeBookModal()"
+                                onclick="closeModal('bookModal', 'modalContent')"
                                 class="p-2 hover:bg-slate-100 rounded-full transition-colors"
                             >
                                 <span class="material-symbols-outlined"
@@ -163,8 +154,7 @@
                         </div>
 
                         <form
-                            th:action="@{/livros/salvar}"
-                            method="POST"
+                            onsubmit="event.preventDefault(); acervo_cadastrarLivro(this);"
                             class="space-y-4"
                         >
                             <div>
@@ -175,9 +165,10 @@
                                     type="text"
                                     name="titulo"
                                     required
-                                    class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                    class="w-full rounded-xl border-slate-200 bg-slate-50 py-3"
                                 />
                             </div>
+
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label
@@ -187,7 +178,7 @@
                                         type="text"
                                         name="autor"
                                         required
-                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 py-3"
                                     />
                                 </div>
                                 <div>
@@ -198,10 +189,11 @@
                                         type="text"
                                         name="isbn"
                                         required
-                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 py-3"
                                     />
                                 </div>
                             </div>
+
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label
@@ -209,20 +201,22 @@
                                     >Localização Física</label>
                                     <input
                                         type="text"
-                                        name="localizacao"
-                                        placeholder="Ex: Corredor B, Estante 3"
-                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                        name="localizacaoFisica"
+                                        placeholder="Ex: Estante 3"
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 py-3"
                                     />
                                 </div>
                                 <div>
                                     <label
                                         class="block text-xs font-bold uppercase text-slate-400 mb-1.5 ml-1"
-                                    >URL da Imagem</label>
+                                    >Qtd. Exemplares</label>
                                     <input
-                                        type="url"
-                                        name="capaUrl"
-                                        placeholder="https://..."
-                                        class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary py-3"
+                                        type="number"
+                                        name="totalExemplares"
+                                        value="1"
+                                        min="1"
+                                        required
+                                        class="w-full rounded-xl border-slate-200 bg-slate-50 py-3"
                                     />
                                 </div>
                             </div>
@@ -230,14 +224,14 @@
                             <div class="pt-6 flex gap-3">
                                 <button
                                     type="button"
-                                    onclick="closeBookModal()"
-                                    class="flex-1 px-5 py-3.5 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl transition-all"
+                                    onclick="closeModal('bookModal', 'modalContent')"
+                                    class="flex-1 px-5 py-3.5 font-bold text-slate-500 hover:bg-slate-50 rounded-2xl"
                                 >
                                     Descartar
                                 </button>
                                 <button
                                     type="submit"
-                                    class="flex-1 px-5 py-3.5 bg-primary text-white font-bold rounded-2xl shadow-lg hover:brightness-110 transition-all"
+                                    class="flex-1 px-5 py-3.5 bg-primary text-white font-bold rounded-2xl shadow-lg"
                                 >
                                     Confirmar Cadastro
                                 </button>
@@ -249,15 +243,5 @@
         </main>
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
-        <script>
-            // Init Acervo page
-            acervo_bindModal();
-            document.getElementById("bookSearch").addEventListener(
-                "keyup",
-                acervo_filterBooks,
-            );
-            window.acervo_openBookModal = acervo_openBookModal;
-            window.acervo_closeBookModal = acervo_closeBookModal;
-        </script>
     </body>
 </html>

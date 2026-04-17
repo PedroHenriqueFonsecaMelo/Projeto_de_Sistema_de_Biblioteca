@@ -1,6 +1,7 @@
 package br.umc.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -61,5 +62,9 @@ public class LivroService {
 
     public void deleteByIsbn(String isbn) {
         bookRepository.deleteByIsbn(isbn);
+    }
+    
+    public void excluirMaterial(@NonNull String id) {
+        bookRepository.deleteById(id);
     }
 }

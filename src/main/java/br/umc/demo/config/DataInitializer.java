@@ -221,22 +221,18 @@ public class DataInitializer implements CommandLineRunner {
                 reservationRepository.saveAll(Arrays.asList(reservations));
 
                 SupportTicket[] tickets = {
-                                createTicket(userIds[1], "Problema com empréstimo", "Livro não aparece como devolvido",
-                                                TicketStatus.OPEN),
-                                createTicket(userIds[2], "Dúvida reserva", "Como funciona a fila?",
-                                                TicketStatus.IN_PROGRESS),
-                                createTicket(userIds[3], "Sugestão compra", "Mais livros de Java", TicketStatus.CLOSED,
+                                createTicket(userIds[1], "Livro não aparece como devolvido", TicketStatus.OPEN),
+                                createTicket(userIds[2], "Como funciona a fila?", TicketStatus.OPEN),
+                                createTicket(userIds[3], "Mais livros de Java", TicketStatus.CLOSED,
                                                 "Adicionado ao orçamento"),
-
-                                createTicket(userIds[4], "Multa errada", "Calculo incorreto", TicketStatus.OPEN),
-                                createTicket(userIds[5], "Login problema", "Esqueci senha", TicketStatus.IN_PROGRESS),
-                                createTicket(userIds[6], "Livro danificado", "Clean Code rasgado", TicketStatus.CLOSED,
+                                createTicket(userIds[4], "Calculo incorreto", TicketStatus.OPEN),
+                                createTicket(userIds[5], "Esqueci senha", TicketStatus.OPEN),
+                                createTicket(userIds[6], "Clean Code rasgado", TicketStatus.CLOSED,
                                                 "Novo exemplar enviado"),
-                                createTicket(userIds[7], "Horário", "A Biblioteca fecha cedo", TicketStatus.OPEN),
-                                createTicket(userIds[8], "App bug", "Reserva não salva", TicketStatus.IN_PROGRESS),
-                                createTicket(userIds[9], "Pagamento multa", "Como pagar?", TicketStatus.CLOSED,
-                                                "Link PagSeguro"),
-                                createTicket(adminId, "Teste ticket", "Funciona?", TicketStatus.CLOSED, "Sim")
+                                createTicket(userIds[7], "A Biblioteca fecha cedo", TicketStatus.OPEN),
+                                createTicket(userIds[8], "Reserva não salva", TicketStatus.OPEN),
+                                createTicket(userIds[9], "Como pagar?", TicketStatus.CLOSED, "Link PagSeguro"),
+                                createTicket(adminId, "Funciona?", TicketStatus.CLOSED, "Sim")
                 };
                 supportTicketRepository.saveAll(Arrays.asList(tickets));
 
@@ -291,16 +287,14 @@ public class DataInitializer implements CommandLineRunner {
                 return r;
         }
 
-        private SupportTicket createTicket(String leitorId, String assunto, String mensagem, TicketStatus status) {
-                return createTicket(leitorId, assunto, mensagem, status, null);
+        private SupportTicket createTicket(String leitorId, String assunto, TicketStatus status) {
+                return createTicket(leitorId, assunto, status, null);
         }
 
-        private SupportTicket createTicket(String leitorId, String assunto, String mensagem, TicketStatus status,
-                        String resposta) {
+        private SupportTicket createTicket(String leitorId, String assunto, TicketStatus status, String resposta) {
                 SupportTicket t = new SupportTicket();
                 t.setLeitorId(leitorId);
                 t.setAssunto(assunto);
-                t.setMensagem(mensagem);
                 t.setDataRegistro(LocalDateTime.now().minusDays((long) (Math.random() * 30)));
                 t.setStatus(status);
                 t.setRespostaBibliotecario(resposta);

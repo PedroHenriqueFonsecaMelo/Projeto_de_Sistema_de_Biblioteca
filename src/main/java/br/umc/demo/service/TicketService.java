@@ -28,6 +28,7 @@ public class TicketService {
         SupportTicket ticket = ticketRepository.findById(ticketId).orElseThrow();
 
         ticket.setRespostaBibliotecario(resposta);
+        ticket.setDataResposta(LocalDateTime.now());
         ticket.setBibliotecarioId(bibliotecarioId);
         ticket.setStatus(TicketStatus.CLOSED);
 

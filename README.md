@@ -40,7 +40,7 @@ cd Projeto_de_Sistema_de_Biblioteca
 No Windows:
 
 ```powershell
-./mvnw.cmd clean install spring-boot:run
+./mvnw.cmd clean install spring-boot:run -DskipTests
 ```
 
 Ou executando pela propria IDE
@@ -79,11 +79,7 @@ http://localhost:8080/
   primeira execução.
 - O banco de dados usado para desenvolvimento é o MongoDB embutido via
   `de.flapdoodle.embed.mongo`.
-- Caso precise limpar os dados de demonstração, pare a aplicação e remova o
-  diretório `target` antes de iniciar novamente.
-- As vezes é aconselhavel fazer uma limpeza e reinstallação das bibliotecas do
-  MAVEN
-
+  
 ## Link do repositório
 
 https://github.com/PedroHenriqueFonsecaMelo/Projeto_de_Sistema_de_Biblioteca
