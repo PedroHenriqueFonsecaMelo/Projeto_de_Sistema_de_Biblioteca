@@ -30,6 +30,7 @@ public class StatService {
         @Autowired
         private LivroRepository bookRepository;
 
+        @SuppressWarnings("null")
         public Map<String, Object> getLibraryReport() {
 
                 long totalBooks = bookRepository.count();

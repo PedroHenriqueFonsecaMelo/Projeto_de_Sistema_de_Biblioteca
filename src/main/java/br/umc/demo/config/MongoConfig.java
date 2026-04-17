@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MongoConfig {
 
+
     @Bean(destroyMethod = "close")
     @Conditional(MongoPortCondition.class)
     public TransitionWalker.ReachedState<RunningMongodProcess> runningMongo() {
