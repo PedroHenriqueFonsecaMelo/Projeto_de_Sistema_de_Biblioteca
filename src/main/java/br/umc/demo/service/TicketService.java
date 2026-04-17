@@ -2,15 +2,20 @@ package br.umc.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import br.umc.demo.entity.SupportTicket;
 import br.umc.demo.entity.enums.TicketStatus;
 import br.umc.demo.repository.SupportTicketRepository;
-
 @Service
 public class TicketService {
     @Autowired
     private SupportTicketRepository ticketRepository;
+
+    public List<SupportTicket> listTickets() {
+        return ticketRepository.findAll();
+    }
 
     public SupportTicket registrarDuvida(SupportTicket ticket) {
         ticket.setDataRegistro(LocalDateTime.now());
@@ -29,3 +34,4 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 }
+

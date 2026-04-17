@@ -2,6 +2,7 @@ package br.umc.demo.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,11 @@ public class ReservaService {
     @SuppressWarnings("null")
     @Transactional
     public Reserva criarNovaReserva(String usuarioNome, String bookId) {
-        Livro book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado com ID: " + bookId));
+        Optional<Livro> optBook = bookRepository.findById(bookId);
+        if (!optBook.isPresent()) {
+            throw new RuntimeException("Livro não encontrado com ID: " + bookId);
+        }
+        Livro book = optBook.get();
 
         if (book.isDisponivel()) {
             throw new RuntimeException("Este livro possui exemplares disponíveis. Use o Empréstimo.");
@@ -85,8 +89,11 @@ public class ReservaService {
 
     @SuppressWarnings("null")
     private Reserva buscarPorId(String id) {
-        return reservaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reserva não encontrada: " + id));
+        Optional<Reserva> optReserva = reservaRepository.findById(id);
+        if (!optReserva.isPresent()) {
+            throw new RuntimeException("Reserva não encontrada: " + id);
+        }
+        return optReserva.get();
     }
 
     private void reorganizarFila(String bookId) {

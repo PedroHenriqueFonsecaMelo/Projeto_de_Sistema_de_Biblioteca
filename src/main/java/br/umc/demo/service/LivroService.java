@@ -3,6 +3,7 @@ package br.umc.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 import br.umc.demo.entity.Livro;
 import br.umc.demo.repository.LivroRepository;
@@ -20,8 +21,11 @@ public class LivroService {
 
     @SuppressWarnings("null")
     public Livro atualizarMaterial(String id, Livro bookAtualizado) {
-        Livro existente = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+        Optional<Livro> optExistente = bookRepository.findById(id);
+        if (!optExistente.isPresent()) {
+            throw new RuntimeException("Livro não encontrado");
+        }
+        Livro existente = optExistente.get();
 
         existente.setTitulo(bookAtualizado.getTitulo());
         existente.setAutor(bookAtualizado.getAutor());
@@ -36,8 +40,11 @@ public class LivroService {
 
     @SuppressWarnings("null")
     public void atualizarEstoque(String bookId, int quantidadeAdicional) {
-        Livro book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+        Optional<Livro> optBook = bookRepository.findById(bookId);
+        if (!optBook.isPresent()) {
+            throw new RuntimeException("Livro não encontrado");
+        }
+        Livro book = optBook.get();
 
         book.setTotalExemplares(book.getTotalExemplares() + quantidadeAdicional);
         book.setExemplaresDisponiveis(book.getExemplaresDisponiveis() + quantidadeAdicional);

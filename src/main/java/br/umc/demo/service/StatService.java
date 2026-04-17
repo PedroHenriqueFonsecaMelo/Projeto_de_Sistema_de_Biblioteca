@@ -2,16 +2,18 @@ package br.umc.demo.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.umc.demo.entity.Livro;
 import br.umc.demo.entity.Emprestimo;
-import br.umc.demo.entity.enums.LoanStatus;
+import br.umc.demo.entity.enums.EmprestimoStatus;
 import br.umc.demo.repository.LivroRepository;
 import br.umc.demo.repository.EmprestimoRepository;
 import br.umc.demo.repository.UserRepository;
@@ -34,14 +36,14 @@ public class StatService {
                 long totalUsers = userRepository.count();
 
                 long atrasado = loanRepository.countByStatusAndDataVencimentoBefore(
-                                LoanStatus.ATIVO,
+                                EmprestimoStatus.ATIVO,
                                 LocalDateTime.now());
 
-                long totalFines = loanRepository.countByStatus(LoanStatus.ATRASADO) * 2;
+                long totalFines = loanRepository.countByStatus(EmprestimoStatus.ATRASADO) * 2;
 
                 // Real top 5 popular books by loan count (recent returned loans) - no lambdas
                 List<Emprestimo> returnedLoans = loanRepository
-                                .findFirst10ByStatusOrderByDataEmprestimoDesc(LoanStatus.RETORNADO);
+                                .findFirst10ByStatusOrderByDataEmprestimoDesc(EmprestimoStatus.RETORNADO);
 
                 // Group by bookId count
                 Map<String, Long> bookCountsMap = new HashMap<>();
@@ -52,7 +54,11 @@ public class StatService {
                 }
 
                 List<Map.Entry<String, Long>> sortedEntries = new ArrayList<>(bookCountsMap.entrySet());
-                sortedEntries.sort((e1, e2) -> (int) (e2.getValue() - e1.getValue()));
+                sortedEntries.sort(new Comparator<Map.Entry<String, Long>>() {
+                        public int compare(Map.Entry<String, Long> e1, Map.Entry<String, Long> e2) {
+                                return (int) (e2.getValue() - e1.getValue());
+                        }
+                });
                 List<Map<String, Object>> popular = new ArrayList<>();
                 for (int i = 0; i < Math.min(5, sortedEntries.size()); i++) {
 
@@ -61,8 +67,11 @@ public class StatService {
                                 continue;
                         }
 
-                        @SuppressWarnings("null")
-                        Livro b = bookRepository.findById(entry.getKey()).orElse(null);
+                        Optional<Livro> optB = bookRepository.findById(entry.getKey());
+                        Livro b = null;
+                        if (optB.isPresent()) {
+                                b = optB.get();
+                        }
 
                         if (b != null) {
                                 Map<String, Object> item = new HashMap<>();
@@ -75,7 +84,7 @@ public class StatService {
 
                 Map<String, Object> data = new HashMap<>();
                 data.put("totalBooks", totalBooks);
-                data.put("activeLoans", loanRepository.countByStatus(LoanStatus.ATIVO));
+                data.put("activeLoans", loanRepository.countByStatus(EmprestimoStatus.ATIVO));
                 data.put("atrasado", atrasado);
                 data.put("activeUsers", totalUsers);
                 data.put("totalFines", totalFines);

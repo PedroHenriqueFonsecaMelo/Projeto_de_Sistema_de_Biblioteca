@@ -6,18 +6,18 @@ import de.flapdoodle.embed.mongo.transitions.Mongod;
 import de.flapdoodle.embed.mongo.transitions.RunningMongodProcess;
 import de.flapdoodle.reverse.TransitionWalker;
 import de.flapdoodle.reverse.transitions.ImmutableStart;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MongoConfig {
 
-    private TransitionWalker.ReachedState<RunningMongodProcess> running;
+    @Bean(destroyMethod = "close")
+    @Conditional(MongoPortCondition.class)
+    public TransitionWalker.ReachedState<RunningMongodProcess> runningMongo() {
 
-    @PostConstruct
-    public void startMongo() {
-        this.running = Mongod.instance()
+        TransitionWalker.ReachedState<RunningMongodProcess> running = Mongod.instance()
                 .withNet(ImmutableStart.to(Net.class)
                         .initializedWith(Net.builder()
                                 .port(27017)
@@ -27,13 +27,6 @@ public class MongoConfig {
                 .start(Version.Main.V6_0);
 
         System.out.println("🚀 Embedded MongoDB is now running on port 27017");
-    }
-
-    @PreDestroy
-    public void stopMongo() {
-        if (this.running != null) {
-            this.running.close();
-            System.out.println("🛑 Embedded MongoDB stopped");
-        }
+        return running;
     }
 }

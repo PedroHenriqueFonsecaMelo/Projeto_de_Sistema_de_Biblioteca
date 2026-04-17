@@ -26,16 +26,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers.frameOptions(f -> f.sameOrigin()))
+                .headers(headers -> headers
+                        .frameOptions(f -> f.sameOrigin())
+                        .cacheControl(cache -> cache.disable()))
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/dashboard", "/library/**", "/api/**").authenticated()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/", "/login", "/api/auth/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/dashboard/**", "/library/**", "/tickets").authenticated()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

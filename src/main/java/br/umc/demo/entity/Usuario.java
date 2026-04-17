@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Document(collection = "users")
 @Data
-public class User implements UserDetails {
+public class Usuario implements UserDetails {
 
     @Id
     private String id;

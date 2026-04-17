@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --color-primary: 58 98 135;
+    --color-primary-dim: 45 86 122;
+    --color-primary-container: 171 211 253;
+    --color-on-primary: 247 249 255;
+    --color-surface: 248 249 254;
+    --color-on-surface: 45 51 58;
+    --color-on-surface-variant: 90 96 103;
+    --color-outline-variant: 173 178 187;
+    --color-surface-container-low: 241 243 250;
+    --color-surface-container-lowest: 255 255 255;
+}
+
+.bg-primary {
+    background-color: rgb(var(--color-primary));
+}
+.text-primary {
+    color: rgb(var(--color-primary));
+}
+.bg-primary-container {
+    background-color: rgb(var(--color-primary-container));
+}
+.text-primary-container {
+    color: rgb(var(--color-primary-container));
+}
+.text-on-primary {
+    color: rgb(var(--color-on-primary));
+}
+.bg-surface {
+    background-color: rgb(var(--color-surface));
+}
+.text-on-surface {
+    color: rgb(var(--color-on-surface));
+}
+.text-on-surface-variant {
+    color: rgb(var(--color-on-surface-variant));
+}
+.border-outline-variant {
+    border-color: rgb(var(--color-outline-variant));
+}
+.bg-surface-container-low {
+    background-color: rgb(var(--color-surface-container-low));
+}
+.bg-surface-container-lowest {
+    background-color: rgb(var(--color-surface-container-lowest));
+}

@@ -3,14 +3,6 @@
     <head>
         <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Controle de Usuários - Curador Digital</title>
-
-        <style>
-            .user-card.active-selection {
-                border-color: #3a6287;
-                ring: 2px;
-                --tw-ring-color: #3a6287;
-            }
-        </style>
     </head>
     <body class="bg-surface text-on-surface flex min-h-screen">
         <div
@@ -21,38 +13,9 @@
         <main
             class="ml-64 flex-1 flex flex-col min-h-screen relative bg-surface overflow-y-auto"
         >
-            <header
-                class="flex justify-between items-center w-full px-8 h-16 bg-white/80 backdrop-blur-md sticky top-0 z-10 shadow-sm"
-            >
-                <div class="flex items-center gap-8">
-                    <h1
-                        class="text-2xl font-extrabold text-on-surface tracking-tight"
-                    >
-                        Controle de Usuários
-                    </h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="relative mr-4">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm"
-                        >search</span>
-                        <input
-                            type="text"
-                            id="userSearch"
-                            onkeyup="filterUsers()"
-                            placeholder="Buscar leitor por nome ou e-mail..."
-                            class="pl-10 pr-4 py-1.5 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 w-80 transition-all"
-                        >
-                    </div>
-                    <div
-                        class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs"
-                        th:text="${#authentication.name != null ? #strings.substring(#authentication.name, 0, 2).toUpperCase() : 'AD'}"
-                    >
-                        AD
-                    </div>
-                </div>
-            </header>
-
+            <th:block
+                th:replace="~{fragments/header :: header('Controle de Usuários', 'Buscar leitor por nome ou e-mail...')}"
+            ></th:block>
             <div class="p-8 max-w-6xl mx-auto w-full space-y-8">
                 <section class="bg-white rounded-xl p-8 shadow-sm">
                     <div class="flex justify-between items-end mb-8">
@@ -291,71 +254,13 @@
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
         <script>
-            function openUserModal() {
-                openModal("userModal");
-            }
-
-            function closeUserModal() {
-                closeModal("userModal");
-            }
-
-            function filterUsers() {
-                filterCardsByFields("userSearch", ".user-card", [
-                    ".search-name",
-                    ".search-email",
-                ]);
-            }
-
-            function editUser(element) {
-                const id = element.getAttribute("data-id");
-                const endereco = element.getAttribute("data-endereco");
-                const telefone = element.getAttribute("data-telefone");
-
-                document.getElementById("editUserId").value = id;
-                document.getElementById("editAddress").value =
-                    (endereco && endereco !== "null") ? endereco : "";
-                document.getElementById("editPhone").value =
-                    (telefone && telefone !== "null") ? telefone : "";
-
-                document.querySelectorAll(".user-card").forEach((c) => {
-                    c.classList.remove(
-                        "ring-2",
-                        "ring-primary",
-                        "bg-surface-container-high",
-                    );
-                });
-                element.classList.add(
-                    "ring-2",
-                    "ring-primary",
-                    "bg-surface-container-high",
-                );
-
-                document.getElementById("detailsForm").scrollIntoView({
-                    behavior: "smooth",
-                });
-                document.getElementById("detailsForm").classList.add(
-                    "ring-1",
-                    "ring-primary/20",
-                );
-            }
-
-            function resetForm() {
-                document.getElementById("detailsForm").reset();
-                document.getElementById("editUserId").value = "";
-                document.querySelectorAll(".user-card").forEach((c) => {
-                    c.classList.remove(
-                        "ring-2",
-                        "ring-primary",
-                        "bg-surface-container-high",
-                    );
-                });
-                document.getElementById("detailsForm").classList.remove(
-                    "ring-1",
-                    "ring-primary/20",
-                );
-            }
-
-            bindModalCloseOnBackground("userModal", closeUserModal);
+            // Init Controle page
+            controle_bindModal();
+            document.getElementById("userSearch").addEventListener(
+                "keyup",
+                controle_filterUsers,
+            );
+            window.controle_openUserModal = controle_openUserModal;
         </script>
     </body>
 </html>

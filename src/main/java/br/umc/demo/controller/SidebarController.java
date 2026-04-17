@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,15 +26,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import br.umc.demo.dto.LivroDTO;
 import br.umc.demo.entity.Livro;
 import br.umc.demo.entity.Emprestimo;
-import br.umc.demo.entity.enums.LoanStatus;
+import br.umc.demo.entity.enums.EmprestimoStatus;
 import br.umc.demo.entity.Reserva;
-import br.umc.demo.entity.User;
+import br.umc.demo.entity.SupportTicket;
+import br.umc.demo.entity.Usuario;
 import br.umc.demo.repository.EmprestimoRepository;
 import br.umc.demo.repository.LivroRepository;
 import br.umc.demo.repository.UserRepository;
 import br.umc.demo.service.LivroService;
 import br.umc.demo.service.ReservaService;
 import br.umc.demo.service.StatService;
+import br.umc.demo.service.TicketService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -48,6 +50,9 @@ public class SidebarController {
     private final UserRepository userRepository;
     private final LivroRepository bookRepository;
     private final StatService statService;
+    
+    @Autowired
+    private TicketService ticketService;
 
     // --- DASHBOARD ---
 
@@ -59,7 +64,7 @@ public class SidebarController {
 
         // 1. Métricas Básicas (Cards)
         long total = todosEmprestimos.size();
-        long atrasado = loanRepository.countByStatus(LoanStatus.ATRASADO);
+        long atrasado = loanRepository.countByStatus(EmprestimoStatus.ATRASADO);
 
         model.addAttribute("totalLoans", total);
         model.addAttribute("activeUsers", userRepository.count());
@@ -112,7 +117,6 @@ public class SidebarController {
         }
 
         topBooks.sort(new Comparator<Map<String, Object>>() {
-            @Override
             public int compare(Map<String, Object> m1, Map<String, Object> m2) {
                 Integer q1 = (Integer) m1.get("quantidadeEmprestimos");
                 Integer q2 = (Integer) m2.get("quantidadeEmprestimos");
@@ -134,9 +138,10 @@ public class SidebarController {
     @GetMapping("/livros/acervo")
     public String exibirPaginaAcervo(Model model) {
         List<Livro> todosLivros = bookService.findAll();
-        List<LivroDTO> livrosDTO = todosLivros.stream()
-                .map(this::converterParaLivroDTO)
-                .toList();
+        List<LivroDTO> livrosDTO = new ArrayList<>();
+        for (Livro livro : todosLivros) {
+            livrosDTO.add(converterParaLivroDTO(livro));
+        }
 
         model.addAttribute("livros", livrosDTO);
         return "Acervo";
@@ -159,14 +164,16 @@ public class SidebarController {
 
     @GetMapping("/emprestimos")
     public String exibirPaginaEmprestimos(Model model) {
-        List<Emprestimo> emprestimosAtivos = loanRepository.findByStatus(LoanStatus.ATIVO);
+        List<Emprestimo> emprestimosAtivos = loanRepository.findByStatus(EmprestimoStatus.ATIVO);
         List<Emprestimo> emprestimosAtrasados = processarMultasEAtrasos();
 
         List<Livro> livros = bookService.findAll();
-        List<User> usuarios = userRepository.findAll();
+        List<Usuario> usuarios = userRepository.findAll();
 
-        Map<String, String> userNameMap = usuarios.stream()
-                .collect(Collectors.toMap(User::getId, User::getNome));
+        Map<String, String> userNameMap = new HashMap<>();
+        for (Usuario u : usuarios) {
+            userNameMap.put(u.getId(), u.getNome());
+        }
 
         model.addAttribute("emprestimosAtivos", emprestimosAtivos);
         model.addAttribute("emprestimosAtrasados", emprestimosAtrasados);
@@ -189,20 +196,52 @@ public class SidebarController {
 
     // --- RESERVAS (RESERVATIONS) ---
 
+    @SuppressWarnings("null")
     @GetMapping("/reservas")
     public String exibirPaginaReservas(Model model) {
+        try {
+            List<Reserva> reservasAtivas = reservaService.listarAtivas();
 
-        List<Reserva> reservasAtivas = reservaService.listarAtivas();
+            if (reservasAtivas == null)
+                reservasAtivas = new ArrayList<>();
 
-        List<Livro> livros = bookService.findAll();
-        List<User> usuarios = userRepository.findAll();
+            for (Reserva reserva : reservasAtivas) {
+                // Preenchimento Seguro do Usuário
+                if (reserva.getUsuarioNome() == null || reserva.getUsuarioNome().isEmpty()) {
+                    if (reserva.getLeitorId() != null) {
+                        userRepository.findById(reserva.getLeitorId())
+                                .ifPresentOrElse(
+                                        u -> reserva.setUsuarioNome(u.getNome()),
+                                        () -> reserva.setUsuarioNome("Usuário não encontrado"));
+                    } else {
+                        reserva.setUsuarioNome("ID de Leitor Ausente");
+                    }
+                }
 
-        model.addAttribute("reservas", reservasAtivas);
-        model.addAttribute("livros", livros);
-        model.addAttribute("usuarios", usuarios);
-        model.addAttribute("totalReservas", reservasAtivas.size());
+                // Preenchimento Seguro do Livro
+                if (reserva.getLivroTitulo() == null || reserva.getLivroTitulo().isEmpty()) {
+                    if (reserva.getBookId() != null) {
+                        bookRepository.findById(reserva.getBookId())
+                                .ifPresentOrElse(
+                                        l -> reserva.setLivroTitulo(l.getTitulo()),
+                                        () -> reserva.setLivroTitulo("Livro não encontrado"));
+                    } else {
+                        reserva.setLivroTitulo("ID de Livro Ausente");
+                    }
+                }
+            }
 
-        return "Reservas";
+            model.addAttribute("reservas", reservasAtivas);
+            model.addAttribute("livros", bookService.findAll());
+            model.addAttribute("usuarios", userRepository.findAll());
+            model.addAttribute("totalReservas", reservasAtivas.size());
+
+            return "Reservas";
+        } catch (Exception e) {
+
+            System.err.println("Erro crítico ao carregar Reservas: " + e.getMessage());
+            return "redirect:/library/dashboard";
+        }
     }
 
     @PostMapping("/reservas/reservar")
@@ -250,14 +289,20 @@ public class SidebarController {
             emprestimos = loanRepository.findAll();
         }
 
-        Map<String, User> usuariosMap = new HashMap<>();
+        Map<String, Usuario> usuariosMap = new HashMap<>();
         for (Emprestimo e : emprestimos) {
-            userRepository.findById(e.getLeitorId()).ifPresent(u -> usuariosMap.put(e.getLeitorId(), u));
+            Optional<Usuario> optU = userRepository.findById(e.getLeitorId());
+            if (optU.isPresent()) {
+                usuariosMap.put(e.getLeitorId(), optU.get());
+            }
         }
 
         Map<String, Livro> livrosMap = new HashMap<>();
         for (Emprestimo e : emprestimos) {
-            bookRepository.findById(e.getBookId()).ifPresent(b -> livrosMap.put(e.getBookId(), b));
+            Optional<Livro> optB = bookRepository.findById(e.getBookId());
+            if (optB.isPresent()) {
+                livrosMap.put(e.getBookId(), optB.get());
+            }
         }
 
         model.addAttribute("movimentacoes", emprestimos);
@@ -270,15 +315,35 @@ public class SidebarController {
     // --- CONTROLE DE USUARIOS ---
     @GetMapping("/controle")
     public String exibirControleAcesso(Model model) {
-        List<User> usuarios = userRepository.findAll();
+        List<Usuario> usuarios = userRepository.findAll();
         model.addAttribute("usuarios", usuarios);
         return "Controle";
+    }
+
+    @SuppressWarnings("null")
+    @GetMapping("/tickets")
+    public String tickets(Model model) {
+        List<SupportTicket> tickets = ticketService.listTickets();
+
+        for (SupportTicket ticket : tickets) {
+            if (ticket.getLeitorId() != null) {
+                userRepository.findById(ticket.getLeitorId())
+                        .ifPresentOrElse(
+                                user -> ticket.setLeitorId(user.getNome()),
+                                () -> ticket.setLeitorId("Usuário não encontrado"));
+            } else {
+                ticket.setLeitorId("ID ausente");
+            }
+        }
+
+        model.addAttribute("tickets", tickets);
+        return "Tickets";
     }
 
     // --- MÉTODOS AUXILIARES (PRIVATE) ---
 
     private List<Emprestimo> processarMultasEAtrasos() {
-        List<Emprestimo> atrasados = loanRepository.findByStatus(LoanStatus.ATRASADO);
+        List<Emprestimo> atrasados = loanRepository.findByStatus(EmprestimoStatus.ATRASADO);
         for (Emprestimo loan : atrasados) {
             if (loan.getDataVencimento() != null
                     && LocalDateTime.now().isAfter(loan.getDataVencimento())

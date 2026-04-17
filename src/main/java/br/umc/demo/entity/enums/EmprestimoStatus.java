@@ -1,6 +1,6 @@
 package br.umc.demo.entity.enums;
 
-public enum LoanStatus {
+public enum EmprestimoStatus {
     ATIVO,
     RETORNADO,
     ATRASADO

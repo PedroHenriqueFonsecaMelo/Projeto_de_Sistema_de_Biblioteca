@@ -3,17 +3,6 @@
     <head>
         <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Gestão de Empréstimos - Curador Digital</title>
-
-        <style>
-            @media (min-width: 768px) {
-                .main-content {
-                    margin-left: 16rem;
-                }
-            }
-            .atraso-glow {
-                box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
-            }
-        </style>
     </head>
     <body class="bg-surface text-on-surface flex min-h-screen">
         <div
@@ -22,235 +11,207 @@
         </div>
 
         <main
-            class="main-content flex-grow p-6 md:p-10 bg-surface transition-all"
+            class="ml-64 flex-1 flex flex-col min-h-screen relative bg-surface overflow-y-auto"
         >
-            <header
-                class="flex flex-col md:flex-row justify-between items-start md:items-center w-full mb-10 gap-6"
-            >
-                <div>
-                    <h1
-                        class="text-3xl font-extrabold text-primary tracking-tight"
-                    >
-                        Circulação
-                    </h1>
-                    <p class="text-sm text-on-surface-variant font-medium">
-                        Gestão de prazos, devoluções e multas.
-                    </p>
-                </div>
+            <th:block
+                th:replace="~{fragments/header :: header('Gestão de Empréstimos', 'Filtrar livros ou leitores...')}"
+            ></th:block>
 
-                <div class="flex items-center gap-4 w-full md:w-auto">
-                    <div class="relative flex-grow">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
-                        >search</span>
-                        <input
-                            id="topSearch"
-                            onkeyup="filterEmprestimos()"
-                            class="w-full md:w-64 bg-surface-container-low border-none rounded-full py-2.5 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/20 transition-all"
-                            placeholder="Filtrar livros ou leitores..."
-                            type="text"
-                        />
-                    </div>
-                </div>
-            </header>
-
-            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
-                <section class="xl:col-span-5 order-1">
-                    <div class="mb-6 flex items-center justify-between">
-                        <div>
-                            <h2
-                                class="text-xl font-bold text-error flex items-center gap-2"
-                            >
-                                <span class="material-symbols-outlined"
-                                >warning</span>
-                                Painel de Retorno
-                            </h2>
-                            <p
-                                class="text-xs text-on-surface-variant font-medium"
-                            >
-                                Itens com prazo expirado e pendências.
-                            </p>
-                        </div>
-                        <span
-                            th:if="${!#lists.isEmpty(emprestimosAtrasados)}"
-                            class="bg-error text-white text-[10px] px-2.5 py-1 rounded-lg font-black"
-                            th:text="${#lists.size(emprestimosAtrasados) + ' PENDÊNCIAS'}"
-                        >
-                        </span>
-                    </div>
-
-                    <div
-                        class="bg-white rounded-3xl p-6 border-2 border-error/10 shadow-sm atraso-glow"
-                    >
-                        <div
-                            th:if="${#lists.isEmpty(emprestimosAtrasados)}"
-                            class="flex flex-col items-center justify-center py-12 opacity-50"
-                        >
-                            <span
-                                class="material-symbols-outlined text-5xl text-success/60"
-                            >verified_user</span>
-                            <p
-                                class="text-on-surface-variant text-sm mt-3 font-semibold text-center"
-                            >
-                                Nenhum atraso detectado.<br>Toda a circulação
-                                está em dia.
-                            </p>
-                        </div>
-
-                        <div
-                            th:each="atrasado : ${emprestimosAtrasados}"
-                            class="mb-6 last:mb-0 bg-error/5 p-5 rounded-2xl border border-error/10"
-                        >
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3
-                                        class="text-md font-extrabold text-on-surface leading-tight"
-                                        th:each="livro : ${livros}"
-                                        th:if="${livro.id == atrasado.bookId}"
-                                        th:text="${livro.titulo}"
-                                    >
-                                    </h3>
-                                    <p
-                                        class="text-xs text-on-surface-variant mt-1"
-                                    >
-                                        Solicitante: <span
-                                            class="font-bold text-on-surface"
-                                            th:text="${userNameMap[atrasado.leitorId]}"
-                                        ></span>
-                                    </p>
-                                </div>
-                                <div
-                                    class="bg-error-container text-error px-3 py-1.5 rounded-xl text-xs font-black flex flex-col items-center"
+            <div class="p-8 mt-16 max-w-7xl mx-auto w-full">
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                    <section class="xl:col-span-5 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2
+                                    class="text-xl font-bold text-error flex items-center gap-2"
                                 >
-                                    <span
-                                        class="text-[8px] uppercase opacity-70"
-                                    >Multa</span>
-                                    <span
-                                        th:text="${'R$ ' + #numbers.formatDecimal(atrasado.multaCalculada, 1, 2, 'COMMA')}"
-                                    ></span>
-                                </div>
+                                    <span class="material-symbols-outlined"
+                                    >warning</span>
+                                    Painel de Retorno
+                                </h2>
+                                <p
+                                    class="text-xs text-on-surface-variant font-medium"
+                                >
+                                    Itens com prazo expirado e pendências.
+                                </p>
+                            </div>
+                            <span
+                                th:if="${not #lists.isEmpty(emprestimosAtrasados)}"
+                                class="bg-error text-white text-[10px] px-2.5 py-1 rounded-lg font-black"
+                                th:text="${#lists.size(emprestimosAtrasados) + ' PENDÊNCIAS'}"
+                            >
+                            </span>
+                        </div>
+
+                        <div
+                            class="bg-white rounded-3xl p-6 border-2 border-error/10 shadow-sm atraso-glow min-h-[200px]"
+                        >
+                            <div
+                                th:if="${#lists.isEmpty(emprestimosAtrasados)}"
+                                class="flex flex-col items-center justify-center py-12 opacity-50 text-center"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-5xl text-success/60"
+                                >verified_user</span>
+                                <p
+                                    class="text-on-surface-variant text-sm mt-3 font-semibold"
+                                >
+                                    Nenhum atraso detectado.<br>Toda a
+                                    circulação está em dia.
+                                </p>
                             </div>
 
-                            <div class="flex gap-2">
+                            <div
+                                th:each="atrasado : ${emprestimosAtrasados}"
+                                class="mb-6 last:mb-0 bg-error/5 p-5 rounded-2xl border border-error/10"
+                            >
+                                <div
+                                    class="flex justify-between items-start mb-4"
+                                >
+                                    <div class="min-w-0 flex-1">
+                                        <h3
+                                            class="text-md font-extrabold text-on-surface leading-tight truncate"
+                                            th:text="${livros.?[id == #root.atrasado.bookId][0]?.titulo ?: 'Livro não identificado'}"
+                                        >
+                                        </h3>
+                                        <p
+                                            class="text-xs text-on-surface-variant mt-1"
+                                        >
+                                            Solicitante: <span
+                                                class="font-bold text-on-surface"
+                                                th:text="${userNameMap[atrasado.leitorId] ?: 'Usuário não encontrado'}"
+                                            ></span>
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="bg-error-container text-error px-3 py-1.5 rounded-xl text-xs font-black flex flex-col items-center shrink-0 ml-2"
+                                    >
+                                        <span
+                                            class="text-[8px] uppercase opacity-70"
+                                        >Multa</span>
+                                        <span
+                                            th:text="${'R$ ' + #numbers.formatDecimal(atrasado.multaCalculada ?: 0, 1, 2, 'COMMA')}"
+                                        ></span>
+                                    </div>
+                                </div>
+
                                 <form
                                     th:action="@{/api/loans/devolver/{id}(id=${atrasado.id})}"
                                     method="POST"
-                                    class="w-full"
                                 >
                                     <button
                                         type="submit"
                                         class="w-full py-3 bg-on-surface text-surface font-bold rounded-xl hover:opacity-90 active:scale-[0.98] transition-all text-[10px] uppercase tracking-widest"
                                     >
-                                        > Quitar e Devolver
+                                        Quitar e Devolver
                                     </button>
                                 </form>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <section class="xl:col-span-7 order-2">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h2
-                                class="text-xl font-bold text-on-surface flex items-center gap-2"
+                    <section class="xl:col-span-7 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2
+                                    class="text-xl font-bold text-on-surface flex items-center gap-2"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-primary"
+                                    >inventory_2</span>
+                                    Em Uso Geral
+                                </h2>
+                                <p
+                                    class="text-xs text-on-surface-variant font-medium"
+                                >
+                                    Todos os livros que não estão na estante.
+                                </p>
+                            </div>
+                            <span
+                                class="text-xs font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full"
+                                th:text="${(totalEmprestimos ?: 0) + ' Livros fora'}"
                             >
-                                <span
-                                    class="material-symbols-outlined text-primary"
-                                >inventory_2</span>
-                                Em Uso Geral
-                            </h2>
-                            <p
-                                class="text-xs text-on-surface-variant font-medium"
-                            >
-                                Todos os livros que não estão na estante.
-                            </p>
-                        </div>
-                        <span
-                            class="text-xs font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full"
-                            th:text="${totalEmprestimos + ' Livros fora'}"
-                        >
-                        </span>
-                    </div>
-
-                    <div class="space-y-3" id="emprestimosList">
-                        <div
-                            th:if="${#lists.isEmpty(emprestimosAtivos)}"
-                            class="bg-white p-10 rounded-3xl text-center border border-dashed border-outline-variant"
-                        >
-                            <p class="text-on-surface-variant text-sm">
-                                Nenhum livro em circulação.
-                            </p>
+                            </span>
                         </div>
 
-                        <div
-                            th:each="emprestimo : ${emprestimosAtivos}"
-                            class="emprestimo-card bg-white p-4 rounded-2xl flex gap-5 items-center hover:shadow-md hover:border-primary/20 transition-all border border-outline-variant/5"
-                        >
+                        <div class="space-y-3">
                             <div
-                                class="w-12 h-16 bg-surface-container rounded-lg flex items-center justify-center shrink-0 border border-outline-variant/10"
+                                th:if="${#lists.isEmpty(emprestimosAtivos)}"
+                                class="bg-white p-10 rounded-3xl text-center border border-dashed border-outline-variant"
                             >
-                                <span
-                                    class="material-symbols-outlined text-outline"
-                                >book</span>
+                                <p class="text-on-surface-variant text-sm">
+                                    Nenhum livro em circulação.
+                                </p>
                             </div>
 
-                            <div class="flex-grow">
-                                <h3
-                                    class="text-sm font-bold text-on-surface leading-tight"
-                                    th:each="livro : ${livros}"
-                                    th:if="${livro.id == emprestimo.bookId}"
-                                    th:text="${livro.titulo}"
-                                >
-                                </h3>
+                            <div
+                                th:each="emprestimo : ${emprestimosAtivos}"
+                                class="bg-white p-4 rounded-2xl flex gap-5 items-center hover:shadow-md border border-outline-variant/5 transition-all"
+                            >
                                 <div
-                                    class="flex flex-wrap gap-x-6 gap-y-1 mt-2"
+                                    class="w-12 h-16 bg-surface-container rounded-lg flex items-center justify-center shrink-0 border border-outline-variant/10"
                                 >
                                     <span
-                                        class="text-[11px] text-on-surface-variant flex items-center gap-1"
-                                    >
-                                        <span
-                                            class="material-symbols-outlined text-sm"
-                                        >person</span>
-                                        <span
-                                            th:text="${userNameMap[emprestimo.leitorId]}"
-                                        ></span>
-                                    </span>
-                                    <span
-                                        class="text-[11px] text-primary font-bold flex items-center gap-1"
-                                    >
-                                        <span
-                                            class="material-symbols-outlined text-sm"
-                                        >event</span>
-                                        Vencimento: <span
-                                            th:text="${#temporals.format(emprestimo.dataVencimento, 'dd/MM/yyyy')}"
-                                        ></span>
-                                    </span>
+                                        class="material-symbols-outlined text-outline"
+                                    >book</span>
                                 </div>
-                            </div>
 
-                            <form
-                                th:action="@{/api/loans/devolver/{id}(id=${emprestimo.id})}"
-                                method="POST"
-                            >
-                                <button
-                                    type="submit"
-                                    class="w-10 h-10 flex items-center justify-center text-outline hover:text-primary hover:bg-primary/5 rounded-full transition-all"
-                                    title="Devolução Simples"
+                                <div class="flex-grow min-w-0">
+                                    <h3
+                                        class="text-sm font-bold text-on-surface leading-tight truncate"
+                                        th:text="${livros.?[id == #root.emprestimo.bookId][0]?.titulo ?: 'Livro Indisponível'}"
+                                    >
+                                    </h3>
+                                    <div
+                                        class="flex flex-wrap gap-x-6 gap-y-1 mt-2"
+                                    >
+                                        <span
+                                            class="text-[11px] text-on-surface-variant flex items-center gap-1"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-sm"
+                                            >person</span>
+                                            <span
+                                                th:text="${userNameMap[emprestimo.leitorId] ?: 'N/A'}"
+                                            ></span>
+                                        </span>
+                                        <span
+                                            class="text-[11px] text-primary font-bold flex items-center gap-1"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-sm"
+                                            >event</span>
+                                            Vencimento: <span
+                                                th:text="${#temporals.format(emprestimo.dataVencimento, 'dd/MM/yyyy') ?: '--/--/----'}"
+                                            ></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <form
+                                    th:action="@{/api/loans/devolver/{id}(id=${emprestimo.id})}"
+                                    method="POST"
+                                    class="shrink-0"
                                 >
-                                    <span class="material-symbols-outlined"
-                                    >assignment_return</span>
-                                </button>
-                            </form>
+                                    <button
+                                        type="submit"
+                                        class="w-10 h-10 flex items-center justify-center text-outline hover:text-primary hover:bg-primary/5 rounded-full transition-all"
+                                        title="Devolução Simples"
+                                    >
+                                        <span class="material-symbols-outlined"
+                                        >assignment_return</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
         </main>
 
         <button
-            onclick="openLoanModal()"
-            class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group"
+            onclick="window.emprestimos_openLoanModal()"
+            class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50"
         >
             <span class="material-symbols-outlined text-3xl">add</span>
         </button>
@@ -260,7 +221,8 @@
             class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
         >
             <div
-                class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden"
+                id="loanModalContent"
+                class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform transition-all scale-95 opacity-0"
             >
                 <div class="p-8">
                     <div class="flex justify-between items-center mb-6">
@@ -268,8 +230,8 @@
                             Novo Registro
                         </h2>
                         <button
-                            onclick="closeLoanModal()"
-                            class="p-2 hover:bg-surface-container rounded-full"
+                            onclick="window.emprestimos_closeLoanModal()"
+                            class="p-2 hover:bg-surface-container rounded-full text-outline"
                         >
                             <span class="material-symbols-outlined">close</span>
                         </button>
@@ -287,7 +249,7 @@
                             <select
                                 name="bookId"
                                 required
-                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 text-sm focus:ring-primary"
+                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm outline-none focus:border-primary"
                             >
                                 <option value="" disabled selected>
                                     Selecione um título...
@@ -305,29 +267,21 @@
                             <label
                                 class="block text-xs font-bold uppercase text-outline mb-2"
                             >Leitor / Aluno</label>
-                            <div class="relative">
-                                <select
-                                    name="leitorId"
-                                    required
-                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 pl-4 pr-10 text-sm focus:ring-2 focus:ring-primary/20 appearance-none transition-all"
+                            <select
+                                name="leitorId"
+                                required
+                                class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm outline-none focus:border-primary"
+                            >
+                                <option value="" disabled selected>
+                                    Selecione quem está retirando...
+                                </option>
+                                <option
+                                    th:each="u : ${usuarios}"
+                                    th:value="${u.id}"
+                                    th:text="${u.nome}"
                                 >
-                                    <option value="" disabled selected>
-                                        Selecione quem está retirando...
-                                    </option>
-
-                                    <option
-                                        th:each="u : ${usuarios}"
-                                        th:value="${u.id}"
-                                        th:text="${u.nome}"
-                                    >
-                                    </option>
-                                </select>
-                                <span
-                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline-variant"
-                                >
-                                    expand_more
-                                </span>
-                            </div>
+                                </option>
+                            </select>
                         </div>
 
                         <input
@@ -346,8 +300,8 @@
                                     name="dataEmprestimo"
                                     id="dataRetirada"
                                     required
-                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 text-sm"
-                                />
+                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm"
+                                >
                             </div>
                             <div>
                                 <label
@@ -358,15 +312,15 @@
                                     name="dataVencimento"
                                     id="dataVencimento"
                                     required
-                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 text-sm"
-                                />
+                                    class="w-full rounded-xl border-outline-variant bg-surface-container-low py-3 px-4 text-sm"
+                                >
                             </div>
                         </div>
 
                         <div class="pt-4 flex gap-3">
                             <button
                                 type="button"
-                                onclick="closeLoanModal()"
+                                onclick="window.emprestimos_closeLoanModal()"
                                 class="flex-1 px-5 py-3 font-bold text-on-surface-variant hover:bg-surface-container rounded-xl transition-all"
                             >
                                 Cancelar
@@ -375,7 +329,7 @@
                                 type="submit"
                                 class="flex-1 px-5 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:brightness-110 transition-all"
                             >
-                                Registrar Empréstimo
+                                Confirmar Empréstimo
                             </button>
                         </div>
                     </form>
@@ -384,26 +338,45 @@
         </div>
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
-        <script>
-            function openLoanModal() {
-                openModal("loanModal");
-                setDateInputsWithOffset("dataRetirada", "dataVencimento", 14);
-            }
 
-            function closeLoanModal() {
-                closeModal("loanModal");
-            }
+        <script th:inline="javascript">
+            // Gerenciamento do Modal
+            window.emprestimos_openLoanModal = function () {
+                const modal = document.getElementById("loanModal");
+                const content = document.getElementById("loanModalContent");
+                if (modal && content) {
+                    modal.classList.remove("hidden");
+                    // Define data de hoje por padrão
+                    const hoje = new Date().toISOString().split("T")[0];
+                    const inputRetirada = document.getElementById("dataRetirada");
+                    if (inputRetirada) inputRetirada.value = hoje;
 
-            function syncAndFilter(val) {
-                document.getElementById("topSearch").value = val;
-                filterEmprestimos();
-            }
+                    setTimeout(() => {
+                        content.classList.remove("scale-95", "opacity-0");
+                        content.classList.add("scale-100", "opacity-100");
+                    }, 10);
+                    document.body.classList.add("modal-active");
+                }
+            };
 
-            function filterEmprestimos() {
-                filterTextList("topSearch", ".emprestimo-card");
-            }
+            window.emprestimos_closeLoanModal = function () {
+                const modal = document.getElementById("loanModal");
+                const content = document.getElementById("loanModalContent");
+                if (modal && content) {
+                    content.classList.remove("scale-100", "opacity-100");
+                    content.classList.add("scale-95", "opacity-0");
+                    setTimeout(() => modal.classList.add("hidden"), 300);
+                    document.body.classList.remove("modal-active");
+                }
+            };
 
-            bindModalCloseOnBackground("loanModal", closeLoanModal);
+            // Fechar modal ao clicar fora
+            window.onclick = function (event) {
+                const modal = document.getElementById("loanModal");
+                if (event.target == modal) {
+                    window.emprestimos_closeLoanModal();
+                }
+            };
         </script>
     </body>
 </html>

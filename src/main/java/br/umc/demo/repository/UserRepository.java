@@ -1,18 +1,18 @@
 package br.umc.demo.repository;
 
-import br.umc.demo.entity.User;
+import br.umc.demo.entity.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User, String> {
+public interface UserRepository extends MongoRepository<Usuario, String> {
 
-    Optional<User> findByEmail(String email);
+    Optional<Usuario> findByEmail(String email);
 
     boolean existsByEmail(String email);
 
     @Query("{ 'ativo': true }")
-    List<User> findAllAtivos();
+    List<Usuario> findAllAtivos();
 }

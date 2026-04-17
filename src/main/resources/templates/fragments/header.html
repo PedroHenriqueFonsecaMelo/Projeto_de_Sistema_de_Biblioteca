@@ -1,0 +1,48 @@
+<th:block
+    th:fragment="header(title, searchPlaceholder)"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+    <header
+        class="sticky top-0 left-64 right-0 z-40 bg-white/80 backdrop-blur-md shadow-sm flex justify-between items-center px-8 py-3"
+    >
+        <div class="flex items-center gap-6 flex-1">
+            <h1
+                class="font-bold text-primary tracking-tighter text-lg"
+                th:text="${title}"
+            >
+                Painel
+            </h1>
+            <div class="relative w-full max-w-md">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
+                >search</span>
+                <input
+                    class="w-full bg-gray-100 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+                    th:placeholder="${searchPlaceholder}"
+                    type="text"
+                    aria-label="Buscar"
+                />
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="text-right hidden sm:block">
+                <p
+                    class="text-sm font-bold text-primary leading-none"
+                    sec:authentication="name"
+                >
+                    Usuário
+                </p>
+                <p class="text-xs text-on-surface-variant font-medium mt-1">
+                    Administrador
+                </p>
+            </div>
+            <div
+                class="w-10 h-10 rounded-full bg-gray-200 border-2 border-primary/10 flex items-center justify-center overflow-hidden"
+            >
+                <span class="material-symbols-outlined text-primary"
+                >person</span>
+            </div>
+        </div>
+    </header>
+</th:block>

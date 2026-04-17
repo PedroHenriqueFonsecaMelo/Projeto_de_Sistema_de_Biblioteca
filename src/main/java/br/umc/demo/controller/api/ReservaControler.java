@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import br.umc.demo.dto.request.ReservationRequest;
+import br.umc.demo.dto.request.ReservaRequest;
 import br.umc.demo.entity.Reserva;
 import br.umc.demo.service.ReservaService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ReservaControler {
     private final ReservaService reservaService;
 
     @PostMapping
-    public ResponseEntity<Reserva> criarReserva(@RequestBody ReservationRequest req) {
+    public ResponseEntity<Reserva> criarReserva(@RequestBody ReservaRequest req) {
         return ResponseEntity.ok(reservaService.criarNovaReserva(req.getLeitorId(), req.getBookId()));
     }
 

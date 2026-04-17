@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <style>
-            /* Classe de apoio para o item ativo, caso não esteja no seu CSS global */
             .sidebar-item-active {
                 background-color: #abd3fd !important;
                 color: #3a6287 !important;
@@ -29,7 +28,7 @@
                     <h2
                         class="font-black text-primary dark:text-[#abd3fd] text-lg leading-none tracking-tighter"
                     >
-Grande Biblioteca
+                        Grande Biblioteca
                     </h2>
                     <p
                         class="text-[10px] text-on-surface-variant font-bold uppercase mt-1 tracking-widest opacity-70"
@@ -49,7 +48,7 @@ Grande Biblioteca
                         class="material-symbols-outlined"
                         th:style="${activePage == 'dashboard'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
                     >dashboard</span>
-Painel
+                    Painel
                 </a>
 
                 <a
@@ -79,11 +78,11 @@ Painel
                 <a
                     th:href="@{/library/livros/acervo}"
                     class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
-                    th:classappend="${activePage == 'livros'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                    th:classappend="${activePage == 'acervo'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
                 >
                     <span
                         class="material-symbols-outlined"
-                        th:style="${activePage == 'livros'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                        th:style="${activePage == 'acervo'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
                     >book_5</span>
                     <span>Acervo</span>
                 </a>
@@ -110,6 +109,18 @@ Painel
                         th:style="${activePage == 'controle'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
                     >settings_input_component</span>
                     <span>Controle</span>
+                </a>
+
+                <a
+                    th:href="@{/library/tickets}"
+                    class="flex items-center gap-3 px-6 py-3 transition-all text-sm"
+                    th:classappend="${activePage == 'tickets'} ? 'sidebar-item-active' : 'text-secondary hover:translate-x-1 hover:text-primary'"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        th:style="${activePage == 'tickets'} ? 'font-variation-settings: \'FILL\' 1;' : ''"
+                    >support_agent</span>
+                    <span>Tickets</span>
                 </a>
             </nav>
 

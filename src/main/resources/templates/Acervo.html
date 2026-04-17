@@ -3,18 +3,6 @@
     <head>
         <th:block th:insert="~{fragments/common-head :: headCommon}" />
         <title>Acervo - Curador Digital</title>
-
-        <style>
-            .truncate-2-lines {
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-            .book-card {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-        </style>
     </head>
 
     <body class="bg-surface text-on-surface flex min-h-screen">
@@ -24,43 +12,10 @@
         <main
             class="ml-64 flex-1 flex flex-col min-h-screen relative bg-surface"
         >
-            <header
-                class="fixed top-0 left-64 right-0 z-30 bg-white/80 backdrop-blur-md flex justify-between items-center px-8 py-3 shadow-sm"
-            >
-                <div class="flex items-center gap-8 flex-1">
-                    <h2 class="font-bold tracking-tight text-xl text-slate-900">
-                        Gestão de Acervo
-                    </h2>
-                    <div class="relative w-full max-w-md">
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                        >search</span>
-                        <input
-                            id="bookSearch"
-                            onkeyup="filterBooks()"
-                            type="text"
-                            placeholder="Filtrar por título, autor ou ISBN..."
-                            class="w-full bg-gray-100 border-none rounded-xl pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
-                        />
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs"
-                        >
-                            <span
-                                th:text="${#authentication.name != null ? #strings.substring(#authentication.name, 0, 2).toUpperCase() : 'AD'}"
-                            >AD</span>
-                        </div>
-                        <span class="text-sm font-medium text-slate-700"
-                        >Administrador</span>
-                    </div>
-                </div>
-            </header>
-
-            <div class="mt-16 p-8 flex flex-col gap-8">
+            <th:block
+                th:replace="~{fragments/header :: header('Gestão de Acervo', 'Filtrar por título, autor ou ISBN...')}"
+            ></th:block>
+            <div class="mt-20 p-8 flex flex-col gap-8">
                 <section
                     class="flex flex-col md:flex-row justify-between items-end gap-6"
                 >
@@ -295,23 +250,14 @@
 
         <th:block th:insert="~{fragments/common-js :: commonJs}" />
         <script>
-            function openBookModal() {
-                openModal("bookModal", "modalContent");
-            }
-
-            function closeBookModal() {
-                closeModal("bookModal", "modalContent");
-            }
-
-            function filterBooks() {
-                filterCardsByFields("bookSearch", ".book-card", [
-                    ".title-text",
-                    ".author-text",
-                    ".isbn-text",
-                ]);
-            }
-
-            bindModalCloseOnBackground("bookModal", closeBookModal);
+            // Init Acervo page
+            acervo_bindModal();
+            document.getElementById("bookSearch").addEventListener(
+                "keyup",
+                acervo_filterBooks,
+            );
+            window.acervo_openBookModal = acervo_openBookModal;
+            window.acervo_closeBookModal = acervo_closeBookModal;
         </script>
     </body>
 </html>

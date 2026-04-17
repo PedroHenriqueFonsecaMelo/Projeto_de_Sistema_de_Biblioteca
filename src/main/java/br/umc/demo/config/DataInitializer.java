@@ -1,7 +1,7 @@
 package br.umc.demo.config;
 
 import br.umc.demo.entity.*;
-import br.umc.demo.entity.enums.LoanStatus;
+import br.umc.demo.entity.enums.EmprestimoStatus;
 import br.umc.demo.entity.enums.TicketStatus;
 import br.umc.demo.repository.*;
 import org.springframework.boot.CommandLineRunner;
@@ -50,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
                 reservationRepository.deleteAll();
                 supportTicketRepository.deleteAll();
 
-                User admin = new User();
+                Usuario admin = new Usuario();
                 admin.setNome("Pedro Henrique (Bibliotecário)");
                 admin.setEmail("admin@library.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
@@ -65,9 +65,9 @@ public class DataInitializer implements CommandLineRunner {
                                 "pedro2@email.com", "julia@email.com", "lucas@email.com", "fernanda@email.com",
                                 "rafael@email.com",
                                 "camila@email.com", "diego@email.com" };
-                List<User> users = new ArrayList<>();
+                List<Usuario> users = new ArrayList<>();
                 for (int i = 0; i < leitorNames.length; i++) {
-                        User u = new User();
+                        Usuario u = new Usuario();
                         u.setNome(leitorNames[i]);
                         u.setEmail(leitorEmails[i]);
                         u.setPassword(passwordEncoder.encode("user123"));
@@ -76,10 +76,10 @@ public class DataInitializer implements CommandLineRunner {
                         users.add(u);
                 }
 
-                List<User> savedUsers = userRepository.saveAll(users);
+                List<Usuario> savedUsers = userRepository.saveAll(users);
                 System.out.println("Saved " + savedUsers.size() + " users");
 
-                String[] userIds = savedUsers.stream().map(User::getId).toArray(String[]::new);
+                String[] userIds = savedUsers.stream().map(Usuario::getId).toArray(String[]::new);
 
                 Livro[] books = {
                                 createBook("Clean Code", "Robert C. Martin", "Prentice Hall", 2008, "Est A1",
@@ -154,52 +154,52 @@ public class DataInitializer implements CommandLineRunner {
                 Emprestimo[] loans = {
                                 createLoan(userIds[1], bookIds[0], LocalDateTime.now().minusDays(5),
                                                 LocalDateTime.now().plusDays(9),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(userIds[2], bookIds[1], LocalDateTime.now().minusDays(20),
                                                 LocalDateTime.now().minusDays(1),
-                                                LoanStatus.ATRASADO, 5.0),
+                                                EmprestimoStatus.ATRASADO, 5.0),
                                 createLoan(userIds[3], bookIds[8], LocalDateTime.now().minusDays(10),
                                                 LocalDateTime.now().minusDays(3),
-                                                LoanStatus.RETORNADO),
+                                                EmprestimoStatus.RETORNADO),
 
                                 createLoan(userIds[4], bookIds[3], LocalDateTime.now().minusDays(3),
                                                 LocalDateTime.now().plusDays(11),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(userIds[5], bookIds[9], LocalDateTime.now().minusDays(25),
                                                 LocalDateTime.now().minusDays(2),
-                                                LoanStatus.ATRASADO, 8.0),
+                                                EmprestimoStatus.ATRASADO, 8.0),
                                 createLoan(userIds[6], bookIds[2], LocalDateTime.now().minusDays(7),
                                                 LocalDateTime.now().plusDays(7),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(userIds[7], bookIds[10], LocalDateTime.now().minusDays(30),
-                                                LocalDateTime.now().minusDays(10), LoanStatus.ATRASADO, 10.0),
+                                                LocalDateTime.now().minusDays(10), EmprestimoStatus.ATRASADO, 10.0),
                                 createLoan(userIds[8], bookIds[4], LocalDateTime.now().minusDays(12),
                                                 LocalDateTime.now(),
-                                                LoanStatus.RETORNADO),
+                                                EmprestimoStatus.RETORNADO),
                                 createLoan(userIds[9], bookIds[5], LocalDateTime.now().minusDays(2),
                                                 LocalDateTime.now().plusDays(12),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(userIds[10], bookIds[6], LocalDateTime.now().minusDays(18),
                                                 LocalDateTime.now().minusDays(4),
-                                                LoanStatus.ATRASADO, 6.0),
+                                                EmprestimoStatus.ATRASADO, 6.0),
                                 createLoan(adminId, bookIds[7], LocalDateTime.now().minusDays(8),
                                                 LocalDateTime.now().plusDays(6),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(userIds[1], bookIds[11], LocalDateTime.now().minusDays(15),
                                                 LocalDateTime.now().minusDays(5),
-                                                LoanStatus.RETORNADO),
+                                                EmprestimoStatus.RETORNADO),
                                 createLoan(userIds[2], bookIds[12], LocalDateTime.now().minusDays(4),
                                                 LocalDateTime.now().plusDays(10),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(userIds[3], bookIds[13], LocalDateTime.now().minusDays(22),
                                                 LocalDateTime.now().minusDays(1),
-                                                LoanStatus.ATRASADO, 7.0),
+                                                EmprestimoStatus.ATRASADO, 7.0),
                                 createLoan(userIds[4], bookIds[14], LocalDateTime.now().minusDays(6),
                                                 LocalDateTime.now().plusDays(8),
-                                                LoanStatus.ATIVO),
+                                                EmprestimoStatus.ATIVO),
                                 createLoan(adminId, bookIds[15], LocalDateTime.now().minusDays(1),
                                                 LocalDateTime.now().plusDays(13),
-                                                LoanStatus.ATIVO)
+                                                EmprestimoStatus.ATIVO)
                 };
                 loanRepository.saveAll(Arrays.asList(loans));
 
@@ -264,13 +264,13 @@ public class DataInitializer implements CommandLineRunner {
 
         private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo,
                         LocalDateTime vencimento,
-                        LoanStatus status) {
+                        EmprestimoStatus status) {
                 return createLoan(leitorId, bookId, emprestimo, vencimento, status, 0.0);
         }
 
         private Emprestimo createLoan(String leitorId, String bookId, LocalDateTime emprestimo,
                         LocalDateTime vencimento,
-                        LoanStatus status, double multa) {
+                        EmprestimoStatus status, double multa) {
                 Emprestimo l = new Emprestimo();
                 l.setLeitorId(leitorId);
                 l.setBookId(bookId);

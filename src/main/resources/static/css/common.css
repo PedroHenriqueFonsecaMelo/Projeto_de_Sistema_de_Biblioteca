@@ -36,3 +36,53 @@ h1, h2, h3, h4, .headline {
     background: #cbd5e1;
     border-radius: 10px;
 }
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* Moved from Acervo.html */
+.truncate-2-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.book-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Moved from Emprestimos.html */
+@media (min-width: 768px) {
+    .main-content {
+        margin-left: 16rem;
+    }
+}
+.atraso-glow {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+}
+
+/* Moved from Controle.html */
+.user-card.active-selection {
+    border-color: #3a6287;
+    ring: 2px;
+    --tw-ring-color: #3a6287;
+}
+
+/* Moved from Relatorio.html */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* Moved from error.html */
+.brand-font {
+    font-family: "Manrope", sans-serif;
+}

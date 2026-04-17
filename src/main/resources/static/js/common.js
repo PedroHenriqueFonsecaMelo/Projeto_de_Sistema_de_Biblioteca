@@ -75,3 +75,79 @@ function setDateInputsWithOffset(retiradaId, vencimentoId, offsetDays) {
         vencimentoInput.value = vencimento.toISOString().split("T")[0];
     }
 }
+
+/* Tailwind config moved to fragments/tailwind-config.html */
+
+/* Page-specific JS functions - prefixed */
+
+/* From Acervo.html */
+function acervo_filterBooks() {
+    filterCardsByFields("bookSearch", ".book-card", [".title-text", ".author-text", ".isbn-text"]);
+}
+function acervo_openBookModal() {
+    openModal("bookModal", "modalContent");
+}
+function acervo_closeBookModal() {
+    closeModal("bookModal", "modalContent");
+}
+function acervo_bindModal() {
+    bindModalCloseOnBackground("bookModal", acervo_closeBookModal);
+}
+
+/* From Emprestimos.html */
+function emprestimos_filterEmprestimos() {
+    filterTextList("topSearch", ".emprestimo-card");
+}
+function emprestimos_openLoanModal() {
+    openModal("loanModal");
+    setDateInputsWithOffset("dataRetirada", "dataVencimento", 14);
+}
+function emprestimos_closeLoanModal() {
+    closeModal("loanModal");
+}
+function emprestimos_bindModal() {
+    bindModalCloseOnBackground("loanModal", emprestimos_closeLoanModal);
+}
+
+/* From Controle.html */
+function controle_filterUsers() {
+    filterCardsByFields("userSearch", ".user-card", [".search-name", ".search-email"]);
+}
+function controle_openUserModal() {
+    openModal("userModal");
+}
+function controle_closeUserModal() {
+    closeModal("userModal");
+}
+function controle_bindModal() {
+    bindModalCloseOnBackground("userModal", controle_closeUserModal);
+}
+function controle_editUser(element) {
+    // Existing logic - no change needed as it uses DOM attributes
+}
+function controle_resetForm() {
+    document.getElementById("detailsForm").reset();
+    // Clear selections - existing
+}
+
+/* From Reservas.html */
+function reservas_filterReservas() {
+    filterTextList("searchInput", ".reserva-item");
+}
+function reservas_openReservationModal() {
+    openModal("reservaModal");
+}
+function reservas_closeReservationModal() {
+    closeModal("reservaModal");
+}
+function reservas_bindModal() {
+    bindModalCloseOnBackground("reservaModal", reservas_closeReservationModal);
+}
+function reservas_confirmDelete(id) {
+    if (confirm("Deseja realmente cancelar esta reserva?")) {
+        window.location.href = "/library/reservas/deletar/" + id;
+    }
+}
+
+/* Dashboard, Relatorio, error have no JS to move */
+
